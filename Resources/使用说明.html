@@ -1,1 +1,46 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Relive · 使用说明</title><style>body{background:#0b0d0e;color:#eef1ef;font:16px/1.8 -apple-system,BlinkMacSystemFont,sans-serif;max-width:760px;margin:64px auto;padding:0 28px}h1{font-size:42px;margin-bottom:6px}h2{font-size:22px;margin-top:42px}a{color:#55c891}small,p{color:#b4beb8}li{padding:5px 0}code{color:#55c891}aside{border-left:3px solid #34b27b;padding-left:18px}strong{color:#eef1ef}</style><h1>Relive</h1><p>把喜欢的瞬间，变成 Live Photo。版本 1.0 · Mac Apple Silicon</p><h2>制作一张实况图</h2><ol><li>拖入素材，或点击「导入素材」。支持 SVG、GIF、MOV、MP4、MPV、MKV、WebM、AVI 等 FFmpeg 可解码的视频，以及 PNG/JPEG 等静态图片。</li><li>播放预览，拖动时间轴定位；使用左右箭头逐帧切换。点击「设为封面」，或输入<strong>从 1 开始</strong>的帧号并确认。「首帧」会选择第 1 帧。</li><li>默认导出完整素材。可设置片段的开始和结束时间；封面必须位于所选片段内。长边上限可选 1080 或 1920 像素，始终保持原比例。</li><li>选择输出文件夹和是否保留声音，点击「导出 Live Photo」。生成的 <code>.pvt</code> 包内含配对 JPEG、MOV、实况封面时间标记，导出前会由 Apple Photos 框架验证。</li></ol><h2>在 iPhone 上发布小红书</h2><ol><li>点击「导入照片」，或双击导出的 <code>.pvt</code>，将其导入 Mac「照片」App。</li><li>通过同一 Apple 账户的 iCloud 照片同步到 iPhone；也可以在 Mac「照片」App 内使用隔空投送分享这张实况照片。请保留实况信息。</li><li>在 iPhone「照片」中确认出现 <strong>LIVE</strong> 标识，长按可以播放。</li><li>打开 iPhone 小红书 App，从相册选择该实况照片，并在发布界面保留实况效果。具体界面及可用能力随小红书版本变化。</li></ol><aside><p>Relive 导出的是 Apple Live Photo。请先进入 iPhone 相册，再从小红书选择；将单独的 JPG、MOV 或 .pvt 上传到网页不会等同于上传实况照片。软件已验证 Mac 系统识别；当前尚未在你的 iPhone 账号实际发布测试。</p></aside><h2>SVG 与透明背景</h2><p>SVG 支持 SMIL 和 CSS 动画；导入前可以设置录制时长（1–30 秒）及白色/黑色背景。静态 SVG 会生成静态画面的实况片段，不会自动添加运动。为让文件在离线环境中可靠渲染，SVG 的外链资源与 JavaScript 不执行；请使用 UTF-8 普通 SVG，并将图片和字体内嵌；DTD 和实体定义不接受。视频、GIF 的透明区域也会在导入时铺为所选背景。素材预览在本地转为 H.264，帧率最高 60 fps、长边最高 1920 像素。</p><h2>文件与隐私</h2><p>全部转换在本机执行，不上传素材。原文件保持不变。导出重名文件会自动编号，避免覆盖。素材列表为当前编辑会话，关闭软件后清除临时预览；已导出的文件保留。</p><h2>安装与维护</h2><p>此版本适用于 Apple Silicon Mac，macOS 13 或更新。软件内已包含 FFmpeg、ffprobe 和所需库，无需安装 Python 或命令行工具。本地包采用临时签名，未进行 Apple 公证。第三方许可证随软件附带，可从「帮助 → 第三方许可」查看。</p><h2>官方参考</h2><p><a href="https://support.apple.com/zh-cn/guide/iphone/iphf28f17237/ios">Apple：共享照片和视频</a> · <a href="https://support.apple.com/zh-cn/guide/icloud/mm8b32f3ae27/icloud">Apple：iCloud 照片</a> · <a href="https://agora.xiaohongshu.com/doc/download">小红书分享开放平台：Live Photo 支持记录</a></p></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Relive · 使用说明</title>
+  <style>body{background:#0b0d0e;color:#eef1ef;font:16px/1.8 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;max-width:760px;margin:64px auto;padding:0 28px}h1{font-size:42px;margin-bottom:6px}h2{font-size:22px;margin-top:42px}a{color:#55c891}small,p{color:#b4beb8}li{padding:5px 0}code{color:#55c891}aside{padding:12px 18px;background:#121416;border-radius:8px}strong{color:#eef1ef}</style>
+</head>
+<body>
+  <h1>Relive</h1>
+  <p>把喜欢的瞬间，变成 Live Photo。版本 1.1.0 · Apple Silicon / Intel Mac · Windows x64</p>
+
+  <h2>安装与打开</h2>
+  <p>Mac 版适用于 macOS 13 或更新：选择对应芯片的 DMG，将 Relive 拖入「应用程序」。Windows 版适用于 Windows 10 / 11 x64：运行安装程序，或解压便携 ZIP 后打开 <code>Relive.exe</code>。三平台均内置 FFmpeg、ffprobe 及所需运行时，无需额外安装 Python、Node.js 或命令行工具。</p>
+  <p>Mac 包采用临时签名，未进行 Apple 公证；Windows 包未正式代码签名。第三方许可证和构建来源随软件附带。</p>
+
+  <h2>制作一张实况图</h2>
+  <ol>
+    <li>拖入素材，或点击「导入素材」。支持 SVG、GIF、MOV、MP4、MPV，以及其他 FFmpeg 可解码的视频和静态图片。</li>
+    <li>播放预览，拖动时间线定位；使用左右箭头逐帧切换。点击「设为封面」，或输入<strong>从 1 开始</strong>的帧号并确认。「使用首帧」选择第 1 帧。</li>
+    <li>默认导出完整素材。Mac 使用开始 / 结束时间裁切；Windows 使用开始 / 结束帧裁切，两端帧均保留。封面须位于片段内。最长边可选 1080 或 1920 像素，保持原比例。</li>
+    <li>选择输出文件夹和是否保留声音，点击「导出 Live Photo」。生成 <code>.pvt</code> 包，内含配对 JPEG、MOV 和实况封面时间标记。Mac 原生版通过 Apple Photos 框架识别校验；Windows 版检查配对结构、媒体和时间标记。</li>
+  </ol>
+
+  <h2>通过 Mac 传到 iPhone</h2>
+  <ol>
+    <li>点击「导入照片」，或双击导出的 <code>.pvt</code>，导入 Mac「照片」App。</li>
+    <li>通过同一 Apple 账户的 iCloud 照片同步到 iPhone，或从 Mac「照片」App 内使用隔空投送分享，并保留实况信息。</li>
+    <li>在 iPhone「照片」中确认 <strong>LIVE</strong> 标识，长按可以播放。</li>
+  </ol>
+
+  <h2>仅用 Windows 传到 iPhone</h2>
+  <p>使用支持 Live Photo 配对导入的 iOS 相册工具，将 <code>.pvt</code> 包内的配对 JPEG 和 MOV 一起导入 iPhone 系统相册。也可以将 <code>.pvt</code> 交由 Mac「照片」导入，再按上面的步骤传到 iPhone。单独保存 JPEG 不会自动成为实况照片。</p>
+
+  <h2>在小红书发布</h2>
+  <p>先在 iPhone「照片」确认 LIVE 并可播放，再打开小红书，从相册选择这张实况照片并保留实况效果。具体界面和识别能力随小红书版本变化。</p>
+  <aside><p>Relive 已通过原生 Intel CI 自测、Windows 完整转换与打包后烟雾测试。iPhone 小红书实际发布尚未测试。直接上传 JPEG、MOV 或 .pvt 不会等同于从 iPhone 相册发布 Live Photo。</p></aside>
+
+  <h2>SVG 与透明背景</h2>
+  <p>SVG 支持 SMIL 和 CSS 动画；导入前可设置录制时长（1–30 秒）及白色 / 黑色背景。静态 SVG 保持静态，不会自动添加运动。SVG 外链与脚本不执行，DTD 和实体定义不接受；请使用 UTF-8，并内嵌图片和字体。视频、GIF 的透明区域铺为所选背景。素材预览在本地转为 H.264，帧率最高 60 fps、最长边最高 1920 像素。</p>
+
+  <h2>文件与隐私</h2>
+  <p>全部转换在本机执行，不上传素材。原文件保持不变，重名输出自动编号。素材列表仅保留当前会话，关闭软件后清理临时预览，已导出的作品保留。</p>
+  <p>源码与构建记录保存在 <a href="https://github.com/AbigBlackCat/Relive">Relive 私有 GitHub 仓库</a>，需要仓库访问权限。</p>
+</body>
+</html>

@@ -10,6 +10,10 @@ on:
         type: choice
         options: [all, windows, intel]
         default: all
+      publish_release:
+        description: Upload installers to an existing draft release matching package.json
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -17,6 +21,8 @@ jobs:
     if: github.event_name != 'workflow_dispatch' || inputs.platform != 'intel'
     runs-on: windows-latest
     timeout-minutes: 25
+    permissions:
+      contents: write
     env:
       CSC_IDENTITY_AUTO_DISCOVERY: 'false'
     steps:
@@ -52,6 +58,18 @@ jobs:
             dist/windows/*.zip
           if-no-files-found: error
           retention-days: 30
+      - name: Upload Windows installers to draft release
+        if: github.event_name == 'workflow_dispatch' && inputs.publish_release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $version = (Get-Content package.json | ConvertFrom-Json).version
+          $tag = "v$version"
+          $draft = gh release view $tag --repo $env:GITHUB_REPOSITORY --json isDraft --jq '.isDraft'
+          if ($LASTEXITCODE -ne 0 -or $draft -ne 'true') { throw "Expected an existing draft release: $tag" }
+          gh release upload $tag "dist/windows/Relive-$version-Windows-x64-Setup.exe" "dist/windows/Relive-$version-Windows-x64.zip" --repo $env:GITHUB_REPOSITORY --clobber
+          if ($LASTEXITCODE -ne 0) { throw 'Release asset upload failed' }
   intel-mac:
     if: github.event_name == 'workflow_dispatch' && inputs.platform != 'windows'
     runs-on: macos-15-intel
