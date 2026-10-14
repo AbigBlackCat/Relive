@@ -1,0 +1,67 @@
+name: Build Relive
+on:
+  push:
+    branches: [main]
+    paths: ['desktop/**', 'package*.json', '.github/workflows/build.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install desktop build tools
+        run: npm ci --no-audit --no-fund
+      - name: Prepare checksum-pinned FFmpeg
+        run: python desktop/scripts/prepare_windows_ffmpeg.py
+      - name: Test Live Photo format and decoded media
+        shell: pwsh
+        run: |
+          $env:RELIVE_FFMPEG = Join-Path $PWD 'desktop/vendor/win32-x64/ffmpeg.exe'
+          $env:RELIVE_FFPROBE = Join-Path $PWD 'desktop/vendor/win32-x64/ffprobe.exe'
+          npm run test:portable
+      - name: Test full Windows conversion and SVG capture
+        run: npm run test:desktop
+      - name: Build Windows installer and portable ZIP
+        run: npm run build:windows
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: Relive-Windows-x64
+          path: |
+            dist/windows/*.exe
+            dist/windows/*.zip
+          if-no-files-found: error
+          retention-days: 30
+  intel-mac:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: macos-15-intel
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: conda-incubator/setup-miniconda@v4.1.0
+        with:
+          miniforge-version: latest
+          activate-environment: ''
+          auto-activate-base: false
+      - name: Prepare Intel FFmpeg
+        shell: bash -el {0}
+        run: python3 scripts/prepare_intel_ffmpeg.py
+      - name: Compile and validate native Intel app
+        run: |
+          scripts/build.sh x86_64
+          scripts/test.sh x86_64
+          scripts/package.sh x86_64
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: Relive-Intel-Mac
+          path: dist/*Intel.dmg
+          if-no-files-found: error
+          retention-days: 30

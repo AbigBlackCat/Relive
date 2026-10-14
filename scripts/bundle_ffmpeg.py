@@ -43,7 +43,8 @@ def dependency_graph(executables, architecture):
         path = path.resolve()
         if path in graph:
             return
-        if architecture not in run("/usr/bin/lipo", "-archs", str(path)).split():
+        expected_cpu = {"arm64": "ARM64", "x86_64": "X86_64"}[architecture]
+        if expected_cpu not in run("/usr/bin/otool", "-hv", str(path)).split():
             raise RuntimeError(f"Not a {architecture} Mach-O binary: {path}")
         dependencies, rpaths = load_commands(path)
         search_paths = tuple(expand(item, path) for item in rpaths) + inherited_rpaths
@@ -64,12 +65,14 @@ def dependency_graph(executables, architecture):
     return graph
 
 
-def collect_licenses(prefix, graph, destination, architecture):
+def collect_licenses(prefix, graph, destination, architecture, skip_runtime_test=False):
     """Copy original notices, source recipes, and exact binary provenance."""
     owners = {}
+    installed_packages = []
     wanted_names = {path.name for path in graph}
     for metadata_path in sorted((prefix / "conda-meta").glob("*.json")):
         metadata = json.loads(metadata_path.read_text())
+        installed_packages.append(metadata)
         for filename in metadata.get("files", []):
             if Path(filename).name not in wanted_names:
                 continue
@@ -95,6 +98,26 @@ def collect_licenses(prefix, graph, destination, architecture):
             continue
         cache = Path(package.get("extracted_package_dir") or package["link"]["source"])
         notices = cache / "info" / "licenses"
+        about_path = cache / "info" / "about.json"
+        about = json.loads(about_path.read_text()) if about_path.exists() else {}
+        notices_package = key
+        # Split runtime packages can keep their original notices in a sibling from the same recipe.
+        if not notices.is_dir() or not any(notices.iterdir()):
+            parent_recipe = about.get("extra", {}).get("parent_recipe")
+            for sibling in installed_packages if parent_recipe else ():
+                sibling_cache = Path(sibling.get("extracted_package_dir") or sibling["link"]["source"])
+                sibling_about_path = sibling_cache / "info/about.json"
+                if not sibling_about_path.exists():
+                    continue
+                sibling_about = json.loads(sibling_about_path.read_text())
+                extra = sibling_about.get("extra", {})
+                candidate = sibling_cache / "info/licenses"
+                if (extra.get("parent_recipe") == parent_recipe
+                        and extra.get("sha") == about.get("extra", {}).get("sha")
+                        and candidate.is_dir() and any(candidate.iterdir())):
+                    notices = candidate
+                    notices_package = f"{sibling['name']}-{sibling['version']}-{sibling['build']}"
+                    break
         if not notices.is_dir() or not any(notices.iterdir()):
             raise RuntimeError(f"Missing original license notices: {key}")
         package_dest = destination / key
@@ -102,13 +125,12 @@ def collect_licenses(prefix, graph, destination, architecture):
         recipe = cache / "info" / "recipe"
         if recipe.is_dir():
             shutil.copytree(recipe, package_dest / "recipe")
-        about_path = cache / "info" / "about.json"
-        about = json.loads(about_path.read_text()) if about_path.exists() else {}
         recipe_text = "\n".join(p.read_text(errors="replace") for p in recipe.glob("meta.yaml*"))
         source_block = re.search(r"^source:\s*\n(.*?)(?=^\w|\Z)", recipe_text, re.M | re.S)
         included[key] = {
             "name": package["name"], "version": package["version"], "build": package["build"],
             "license": about.get("license", package.get("license", "")),
+            "license_notices_package": notices_package,
             "binary_download": package.get("url", ""),
             "homepage": about.get("home", ""), "upstream_repository": about.get("dev_url", ""),
             "source_recipe": source_block.group(1).strip() if source_block else "See the copied recipe files.",
@@ -119,8 +141,12 @@ def collect_licenses(prefix, graph, destination, architecture):
 
     manifest = {"architecture": architecture, "packages": included, "binaries": files}
     (destination / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
-    version = run(str(prefix / "bin" / "ffmpeg"), "-version")
-    license_statement = run(str(prefix / "bin" / "ffmpeg"), "-hide_banner", "-L")
+    if skip_runtime_test:
+        version = "Runtime version check skipped for cross-architecture packaging. Exact package versions are in manifest.json.\n"
+        license_statement = "Runtime license query skipped. Original FFmpeg and dependency license notices are included verbatim in their package folders.\n"
+    else:
+        version = run(str(prefix / "bin" / "ffmpeg"), "-version")
+        license_statement = run(str(prefix / "bin" / "ffmpeg"), "-hide_banner", "-L")
     (destination / "ffmpeg-version.txt").write_text(version)
     (destination / "ffmpeg-license.txt").write_text(license_statement)
     lines = [
@@ -174,6 +200,8 @@ def main():
     parser.add_argument("--arch", choices=("arm64", "x86_64"), default="arm64")
     parser.add_argument("--resources", type=Path)
     parser.add_argument("--licenses", type=Path)
+    parser.add_argument("--skip-runtime-test", action="store_true",
+                        help="For cross-architecture packaging without Rosetta; the manifest records that execution was not tested.")
     args = parser.parse_args()
     if platform.system() != "Darwin":
         parser.error("This bundler requires macOS and Apple's command line tools.")
@@ -209,8 +237,10 @@ def main():
         dependencies, rpaths = load_commands(target)
         assert not rpaths, (target, rpaths)
         assert all(dep.startswith(SYSTEM_PREFIXES + ("@loader_path/",)) for dep in dependencies), (target, dependencies)
-    manifest = collect_licenses(args.prefix, graph, args.licenses, args.arch)
-    manifest["smoke_test"] = smoke_test(resources)
+    manifest = collect_licenses(args.prefix, graph, args.licenses, args.arch, args.skip_runtime_test)
+    manifest["smoke_test"] = ({"passed": False, "skipped": True,
+                               "reason": "Cross-architecture packaging; run the native architecture CI test before release."}
+                              if args.skip_runtime_test else smoke_test(resources))
     manifest["bundled_bytes"] = sum(path.stat().st_size for path in destinations.values())
     for binary in manifest["binaries"]:
         target = next(path for path in destinations.values() if path.name == binary["binary"])

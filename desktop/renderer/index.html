@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' file: data:; media-src 'self' file:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Relive</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <svg class="icon-definitions" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-live" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="10" stroke-dasharray="1 3"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-import" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 14v6h16v-6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m9 5 11 7-11 7Z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M6 5v14m12-14L8 12l10 7Z"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="M18 5v14M6 5l10 7-10 7Z"/></symbol>
+    <symbol id="i-photo" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8" cy="9" r="1.5"/><path d="m4 18 6-6 4 4 3-3 4 5"/></symbol>
+    <symbol id="i-scissors" viewBox="0 0 24 24"><circle cx="5" cy="6" r="3"/><circle cx="5" cy="18" r="3"/><path d="m7.5 7.5 13 13M7.5 16.5l13-13"/></symbol>
+    <symbol id="i-export" viewBox="0 0 24 24"><path d="M12 15V3m-4 4 4-4 4 4M4 12v9h16v-9"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 20V4h7l2 3h9v13Z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-5-5 5 5-5 5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m7 12 3 3 7-7"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6m0 4h.01"/></symbol>
+  </svg>
+
+  <div class="app" id="app">
+    <header class="toolbar">
+      <div class="brand"><svg class="icon brand-icon" aria-hidden="true"><use href="#i-live"/></svg><h1>Relive</h1></div>
+      <span class="toolbar-divider" aria-hidden="true"></span>
+      <p class="tagline">把喜欢的瞬间，变成 Live Photo</p>
+      <span class="local-label">本地处理</span>
+      <button class="button" id="import-button" data-edit><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>导入素材</button>
+    </header>
+
+    <main class="workspace">
+      <aside class="panel media-sidebar" aria-label="素材库">
+        <div class="panel-heading"><h2>素材</h2><span class="muted numeric" id="media-count">0</span></div>
+        <div class="media-list" id="media-list"></div>
+        <div class="sidebar-empty" id="sidebar-empty"><svg class="icon" aria-hidden="true"><use href="#i-import"/></svg><strong>从一个素材开始</strong><p>拖入文件，或点击上方<br>「导入素材」。</p></div>
+        <div class="sidebar-settings">
+          <p class="format-label">视频 · GIF · SVG</p>
+          <details id="svg-settings">
+            <summary>SVG 导入设置</summary>
+            <div class="details-content">
+              <label class="field-label" for="svg-duration">录制时长 <span class="muted">秒</span></label>
+              <input id="svg-duration" type="number" min="1" max="30" step="1" value="3" data-edit>
+              <label class="field-label" for="svg-background">背景</label>
+              <select id="svg-background" data-edit><option value="#FFFFFF">白色</option><option value="#000000">黑色</option></select>
+              <p class="hint">导入前设置。录制 SMIL / CSS 动画；静态 SVG 保持静态。外链与脚本不运行。</p>
+            </div>
+          </details>
+        </div>
+      </aside>
+
+      <section class="editor" aria-label="预览与时间线">
+        <div class="panel preview-panel">
+          <div class="panel-heading preview-heading"><h2>预览</h2><span id="preview-name" class="muted ellipsis"></span><span class="aspect-label muted">原始比例</span></div>
+          <div class="preview-stage" id="preview-stage">
+            <video id="preview" playsinline preload="metadata" hidden aria-label="素材预览"></video>
+            <div class="preview-empty" id="preview-empty">
+              <svg class="icon empty-live" aria-hidden="true"><use href="#i-live"/></svg>
+              <h2>把这一刻，留成实况图</h2>
+              <p>导入视频、GIF 或 SVG<br>选择一帧作为封面，然后导出。</p>
+              <button class="button" id="empty-import-button" data-edit><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>导入素材</button>
+            </div>
+          </div>
+          <div class="player-controls">
+            <div class="transport">
+              <button class="button icon-button" id="previous-frame" data-edit data-media aria-label="上一帧" title="上一帧 · ←"><svg class="icon" aria-hidden="true"><use href="#i-back"/></svg></button>
+              <button class="button icon-button" id="play-button" data-edit data-media aria-label="播放" title="播放 / 暂停 · 空格"><svg class="icon" aria-hidden="true"><use id="play-icon" href="#i-play"/></svg></button>
+              <button class="button icon-button" id="next-frame" data-edit data-media aria-label="下一帧" title="下一帧 · →"><svg class="icon" aria-hidden="true"><use href="#i-next"/></svg></button>
+            </div>
+            <span class="timecode numeric" id="timecode">00:00.00 / 00:00.00</span>
+            <button class="button cover-current" id="mark-cover" data-edit data-media><svg class="icon" aria-hidden="true"><use href="#i-photo"/></svg>设为封面</button>
+          </div>
+        </div>
+
+        <div class="panel timeline-panel">
+          <div class="timeline-heading"><h2>时间线</h2><span id="media-metadata" class="muted numeric">尚未导入素材</span></div>
+          <input type="range" id="timeline" min="1" max="1" step="1" value="1" data-edit data-media aria-label="定位预览帧" aria-valuetext="尚未导入素材">
+          <div class="filmstrip" id="filmstrip" aria-label="素材帧预览"></div>
+          <div class="timeline-footer"><span class="numeric" id="current-frame">第 — 帧</span><span class="muted numeric" id="cover-summary">首帧从第 1 帧开始</span></div>
+        </div>
+      </section>
+
+      <aside class="panel inspector" aria-label="导出设置">
+        <div class="panel-heading"><svg class="icon accent" aria-hidden="true"><use href="#i-live"/></svg><h2>导出 Live Photo</h2></div>
+        <div class="inspector-content">
+          <section class="setting-section" aria-labelledby="cover-heading">
+            <h3 id="cover-heading"><svg class="icon" aria-hidden="true"><use href="#i-photo"/></svg>封面</h3>
+            <div class="button-pair"><button class="button" id="first-cover" data-edit data-media>使用首帧</button><button class="button" id="current-cover" data-edit data-media>使用当前帧</button></div>
+            <div class="frame-input-row"><label class="muted" for="cover-frame">第</label><input type="number" id="cover-frame" min="1" step="1" value="1" data-edit data-media aria-label="封面帧号，从第 1 帧开始" aria-describedby="cover-hint cover-error"><span class="muted">帧</span><button class="button" id="apply-cover" data-edit data-media>确定</button></div>
+            <p class="hint" id="cover-hint">首帧从第 1 帧开始计数。</p>
+            <p class="field-error" id="cover-error" role="status" hidden></p>
+          </section>
+
+          <section class="setting-section" aria-labelledby="clip-heading">
+            <h3 id="clip-heading"><svg class="icon" aria-hidden="true"><use href="#i-scissors"/></svg>片段</h3>
+            <div class="clip-fields"><div><label for="start-frame" class="field-label">开始 / 帧</label><input type="number" id="start-frame" min="1" step="1" value="1" data-edit data-media aria-describedby="clip-hint clip-error"></div><div><label for="end-frame" class="field-label">结束 / 帧</label><input type="number" id="end-frame" min="1" step="1" value="1" data-edit data-media aria-describedby="clip-hint clip-error"></div></div>
+            <div class="clip-actions"><button class="text-button" id="trim-start" data-edit data-media>当前帧为开始</button><button class="text-button" id="trim-end" data-edit data-media>当前帧为结束</button></div>
+            <p class="hint" id="clip-hint">默认保留完整视频，可选取片段。</p>
+            <p class="field-error" id="clip-error" role="status" hidden></p>
+            <button class="text-button" id="reset-trim" data-edit data-media>恢复完整片段</button>
+          </section>
+
+          <section class="setting-section" aria-labelledby="output-heading">
+            <h3 id="output-heading"><svg class="icon" aria-hidden="true"><use href="#i-export"/></svg>输出</h3>
+            <label for="max-side" class="field-label">最长边 <span class="muted">像素</span></label>
+            <select id="max-side" data-edit><option value="1080">1080</option><option value="1920">1920</option></select>
+            <label class="toggle-label" for="keep-audio"><span>保留原声音</span><input id="keep-audio" type="checkbox" checked data-edit><span class="switch" aria-hidden="true"></span></label>
+            <button class="directory-button" id="choose-directory" data-edit><svg class="icon muted" aria-hidden="true"><use href="#i-folder"/></svg><span><span class="directory-label muted">保存位置</span><span id="output-directory" class="ellipsis">正在读取…</span></span><svg class="icon muted" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          </section>
+
+          <details class="publishing-help">
+            <summary>如何在 iPhone 小红书发布</summary>
+            <div class="details-content">
+              <p>有 Mac：将导出的 .pvt 导入 Mac「照片」，从「照片」隔空投送到 iPhone。</p>
+              <p>仅用 Windows：将配对 JPEG 和 MOV 交由支持 Live Photo 配对导入的 iOS 相册工具，存入 iPhone 系统相册。</p>
+              <p>确认 iPhone 相册显示 LIVE，再从小红书相册选择。发布识别以手机当前版本为准。</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="export-actions">
+          <div id="progress-area" hidden><div class="progress-label"><span id="progress-stage" role="status">正在处理…</span><span class="muted numeric" id="progress-percent">0%</span></div><progress id="progress" max="1" value="0" aria-label="处理进度"></progress><button class="button" id="cancel-button">取消</button></div>
+          <button class="button primary" id="export-button" data-edit data-media><svg class="icon" aria-hidden="true"><use href="#i-live"/></svg><span>导出 Live Photo</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          <div class="export-result" id="export-result" hidden><p><svg class="icon accent" aria-hidden="true"><use href="#i-check"/></svg><span id="result-name" class="ellipsis"></span></p><p class="hint">已完成文件结构校验。请在 iPhone 相册确认 LIVE。</p><div class="button-pair"><button class="button" id="reveal-result" data-edit>打开文件夹</button><button class="button" id="open-result" data-edit>打开结果</button></div></div>
+        </div>
+      </aside>
+    </main>
+
+    <div class="error-banner" id="error-banner" role="alert" hidden><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><p id="error-message"></p><button class="icon-button" id="close-error" aria-label="关闭错误信息"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <footer class="status-bar"><span class="status-dot" id="status-dot" aria-hidden="true"></span><span id="status-text" class="ellipsis" role="status">就绪</span><span class="shortcut-hint">Ctrl / ⌘ O 导入 · ← → 逐帧</span><span class="status-divider" aria-hidden="true"></span><span>Relive</span></footer>
+    <div class="drop-overlay" id="drop-overlay" hidden aria-hidden="true"><span>松开鼠标，导入素材</span></div>
+  </div>
+</body>
+</html>

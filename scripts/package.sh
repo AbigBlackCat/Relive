@@ -1,10 +1,11 @@
 #!/bin/zsh
 set -euo pipefail
 relive_root="${0:A:h:h}"
+relive_version="$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$relive_root/Resources/Info.plist")"
 relive_arch="${1:-arm64}"
 case "$relive_arch" in
-  arm64) relive_app="$relive_root/dist/Relive.app"; relive_label=AppleSilicon; relive_destination="${2:-$relive_root/dist/Relive-1.0-AppleSilicon.dmg}" ;;
-  x86_64) relive_app="$relive_root/dist/Relive-Intel.app"; relive_label=Intel; relive_destination="${2:-$relive_root/dist/Relive-1.0-Intel.dmg}" ;;
+  arm64) relive_app="$relive_root/dist/Relive.app"; relive_label=AppleSilicon; relive_destination="${2:-$relive_root/dist/Relive-$relive_version-AppleSilicon.dmg}" ;;
+  x86_64) relive_app="$relive_root/dist/Relive-Intel.app"; relive_label=Intel; relive_destination="${2:-$relive_root/dist/Relive-$relive_version-Intel.dmg}" ;;
   *.dmg) relive_app="$relive_root/dist/Relive.app"; relive_label=AppleSilicon; relive_destination="$relive_arch" ;;
   *) print -u2 "Usage: scripts/package.sh [arm64|x86_64] [output.dmg]"; exit 2 ;;
 esac
