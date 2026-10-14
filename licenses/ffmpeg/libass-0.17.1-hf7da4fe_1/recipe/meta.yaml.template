@@ -1,0 +1,52 @@
+{% set name = "libass" %}
+{% set version = "0.17.1" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://github.com/libass/libass/releases/download/{{ version }}/libass-{{ version }}.tar.xz
+  sha256: f0da0bbfba476c16ae3e1cfd862256d30915911f7abaa1b16ce62ee653192784
+
+build:
+  number: 1
+  skip: true  # [win]
+  run_exports:
+    - {{ pin_subpackage('libass', max_pin='x.x.x') }}
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - make
+    - autoconf
+    - automake
+    - pkg-config
+    - libtool
+    - nasm
+  host:
+    - freetype
+    - fribidi
+    - fontconfig
+    - expat
+    - zlib
+    - harfbuzz
+  run:
+
+test:
+  commands:
+    - test -f $PREFIX/lib/libass$SHLIB_EXT  # [unix]
+
+about:
+  home: https://github.com/libass/libass
+  license: ISC
+  license_family: OTHER
+  license_file: COPYING
+  summary: A portable subtitle renderer for the ASS/SSA (Advanced Substation Alpha/Substation Alpha) subtitle format.
+  doc_url: https://github.com/libass/libass
+  dev_url: https://github.com/libass/libass
+
+extra:
+  recipe-maintainers:
+    - Tobias-Fischer
+    - scopatz

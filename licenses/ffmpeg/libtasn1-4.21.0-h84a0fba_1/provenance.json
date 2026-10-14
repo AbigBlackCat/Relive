@@ -1,0 +1,12 @@
+{
+  "name": "libtasn1",
+  "version": "4.21.0",
+  "build": "h84a0fba_1",
+  "license": "LGPL-2.1-or-later",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-arm64/libtasn1-4.21.0-h84a0fba_1.conda",
+  "homepage": "https://www.gnu.org/software/libtasn1/",
+  "upstream_repository": "https://gitlab.com/gnutls/libtasn1/",
+  "source_recipe": "url: http://ftp.gnu.org/gnu/libtasn1/libtasn1-4.21.0.tar.gz\n  sha256: 1d8a444a223cc5464240777346e125de51d8e6abf0b8bac742ac84609167dc87",
+  "recipe_repository": "https://github.com/conda-forge/libtasn1-feedstock",
+  "recipe_commit": "49cff4b73da09b7aa16808f3fd7f88af7f01832d"
+}

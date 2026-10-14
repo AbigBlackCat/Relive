@@ -1,0 +1,57 @@
+context:
+  version: "1.6.1"
+
+package:
+  name: libopus
+  version: ${{ version }}
+
+source:
+  url: https://github.com/xiph/opus/archive/v${{ version }}.tar.gz
+  sha256: bf0b97ec7a65890b8db90ef94c4d6c18de12584c3085031953a10986f5917745
+
+build:
+  number: 1
+
+requirements:
+  build:
+    - ${{ compiler('c') }}
+    - ${{ stdlib('c') }}
+    - if: unix
+      then:
+        - make
+        - autoconf
+        - libtool
+        - automake
+        - wget # required for DNN autogen.sh
+      else:
+        - ninja
+        - cmake <4
+
+  # seems to be maintaining compatibility across minor versions
+  # https://abi-laboratory.pro/tracker/timeline/opus/
+  run_exports:
+    - ${{ pin_subpackage('libopus', upper_bound='x') }}
+tests:
+  - package_contents:
+      lib:
+        - opus
+about:
+  homepage: http://opus-codec.org/
+  license: BSD-3-Clause
+  license_file: COPYING
+  summary: Opus Interactive Audio Codec
+  description: |
+    Opus is a totally open, royalty-free, highly versatile
+    audio codec. Opus is unmatched for interactive speech
+    and music transmission over the Internet, but is also
+    intended for storage and streaming applications. It is
+    standardized by the Internet Engineering Task Force
+    (IETF) as RFC 6716 which incorporated technology from
+    Skype's SILK codec and Xiph.Org's CELT codec.
+  documentation: http://opus-codec.org/docs/
+  repository: https://github.com/xiph/opus
+
+extra:
+  recipe-maintainers:
+    - SeaOtocinclus
+    - wolfv

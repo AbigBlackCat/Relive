@@ -1,0 +1,12 @@
+{
+  "name": "libexpat",
+  "version": "2.8.1",
+  "build": "hf6b4638_1",
+  "license": "MIT",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-arm64/libexpat-2.8.1-hf6b4638_1.conda",
+  "homepage": "http://expat.sourceforge.net/",
+  "upstream_repository": "https://github.com/libexpat/libexpat",
+  "source_recipe": "url: https://github.com/libexpat/libexpat/releases/download/R_2_8_1/expat-2.8.1.tar.xz\n  sha256: 10b195ee78160a908388180a8fe3603d4e9a12f4755fbf5f3816b23a9d750da0\n  patches:\n    - 3cdd1df2644388aff25dd0ed7128c7bb1de1a7d8.patch",
+  "recipe_repository": "https://github.com/conda-forge/expat-feedstock",
+  "recipe_commit": "37fdaf6bff57691b844fa77a8af99357f0ec218f"
+}

@@ -1,0 +1,114 @@
+# This file created by conda-build 3.23.3
+# meta.yaml template originally from:
+# /var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_1cshfkkus3/clone/recipe, last modified Thu Apr 13 04:44:34 2023
+# ------------------------------------------------
+
+package:
+  name: pcre2
+  version: '10.42'
+source:
+  sha256: a8e52a9bd1bca8f51c5c24823adc2a99acb12288e289a6507090c1a4a4815010
+  url: https://github.com/PCRE2Project/pcre2/archive/refs/tags/pcre2-10.42.tar.gz
+build:
+  number: '0'
+  run_exports:
+    - pcre2 >=10.42,<10.43.0a0
+  string: hb066dcc_0
+requirements:
+  build:
+    - bzip2 1.0.8 h620ffc9_4
+    - c-ares 1.19.0 h80987f9_0
+    - ca-certificates 2023.01.10 hca03da5_0
+    - cctools_osx-arm64 949.0.1 h332cad3_25
+    - clang 14.0.6 hca03da5_1
+    - clang-14 14.0.6 default_h1b80db6_1
+    - clang_osx-arm64 14.0.6 h9ff6fda_0
+    - clangxx 14.0.6 default_h1b80db6_1
+    - cmake 3.22.1 hae769c0_0
+    - compiler-rt 14.0.6 h4ccfd99_0
+    - compiler-rt_osx-arm64 14.0.6 h4fb70ea_0
+    - expat 2.4.9 hc377ac9_0
+    - krb5 1.19.4 h8380606_0
+    - ld64_osx-arm64 530 h001ce53_25
+    - ldid 2.1.2 h64d1936_2
+    - libclang-cpp14 14.0.6 default_h1b80db6_1
+    - libcurl 7.88.1 h0f1d93c_0
+    - libcxx 14.0.6 h848a8c0_0
+    - libedit 3.1.20221030 h80987f9_0
+    - libev 4.33 h1a28f6b_1
+    - libffi 3.4.2 hca03da5_6
+    - libllvm14 14.0.6 h7ec7a93_2
+    - libnghttp2 1.46.0 h95c9599_0
+    - libssh2 1.10.0 hf27765b_0
+    - libuv 1.44.2 h80987f9_0
+    - llvm-tools 14.0.6 hfd8c8a6_2
+    - lz4-c 1.9.4 h313beb8_0
+    - ncurses 6.4 h313beb8_0
+    - ninja 1.10.2 hca03da5_5
+    - ninja-base 1.10.2 h525c30c_5
+    - openssl 1.1.1t h1a28f6b_0
+    - python 3.11.2 hc0d8a6c_0
+    - readline 8.2 h1a28f6b_0
+    - rhash 1.4.1 hf27765b_1
+    - sqlite 3.41.1 h80987f9_0
+    - tapi 1100.0.11 h8754e6a_1
+    - tk 8.6.12 hb8d0fd4_0
+    - tzdata 2023c h04d1e81_0
+    - xz 5.2.10 h80987f9_1
+    - zlib 1.2.13 h5a0b063_0
+    - zstd 1.5.5 hd90d995_0
+  host:
+    - bzip2 1.0.8 h620ffc9_4
+    - zlib 1.2.13 h5a0b063_0
+  run:
+    - bzip2 >=1.0.8,<2.0a0
+    - zlib >=1.2.13,<1.3.0a0
+test:
+  commands:
+    - pcre2test --version
+    - pcre2grep --version
+    - pcre2-config --version
+    - test -f ${PREFIX}/include/pcre2.h
+    - test -f ${PREFIX}/include/pcre2posix.h
+    - test -f ${PREFIX}/lib/libpcre2-posix${SHLIB_EXT}
+    - test -f ${PREFIX}/lib/libpcre2-posix.3${SHLIB_EXT}
+    - test -f ${PREFIX}/lib/libpcre2-8${SHLIB_EXT}
+    - test -f ${PREFIX}/lib/libpcre2-8.0${SHLIB_EXT}
+    - test -f ${PREFIX}/lib/libpcre2-16${SHLIB_EXT}
+    - test -f ${PREFIX}/lib/libpcre2-16.0${SHLIB_EXT}
+    - test -f ${PREFIX}/lib/libpcre2-32${SHLIB_EXT}
+    - test -f ${PREFIX}/lib/libpcre2-32.0${SHLIB_EXT}
+    - test -f ${PREFIX}/lib/pkgconfig/libpcre2-8.pc
+    - test -f ${PREFIX}/lib/pkgconfig/libpcre2-16.pc
+    - test -f ${PREFIX}/lib/pkgconfig/libpcre2-32.pc
+    - test -f ${PREFIX}/lib/pkgconfig/libpcre2-posix.pc
+about:
+  description: 'The PCRE library is a set of functions that implement regular expression
+    pattern matching
+
+    using the same syntax and semantics as Perl 5. PCRE has its own native API, as
+    well as a set of
+
+    wrapper functions that correspond to the POSIX regular expression API. The PCRE
+    library is
+
+    free, even for building proprietary software.
+
+    '
+  dev_url: https://github.com/PCRE2Project/pcre2
+  doc_url: https://www.pcre.org/current/doc/html/
+  home: https://www.pcre.org/
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file: LICENCE
+  summary: Regular expression pattern matching using Perl 5 syntax and semantics.
+extra:
+  copy_test_source_files: true
+  final: true
+  flow_run_id: 1c43bf8f-ff8a-47ad-aad7-d7892534123a
+  recipe-maintainers:
+    - dfornika
+    - mariusvniekerk
+    - xhochy
+  remote_url: git@github.com:AnacondaRecipes/pcre2-feedstock.git
+  sha: e8c71eed8c153a861b355484226e4a7923d2c9bb

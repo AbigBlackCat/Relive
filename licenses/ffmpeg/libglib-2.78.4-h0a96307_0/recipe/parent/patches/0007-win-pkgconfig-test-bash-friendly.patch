@@ -1,0 +1,112 @@
+diff --git a/gio/tests/meson.build b/gio/tests/meson.build
+index 4ef3343ab..29bfe60c4 100644
+--- a/gio/tests/meson.build
++++ b/gio/tests/meson.build
+@@ -1116,14 +1116,14 @@ if have_bash and have_pkg_config
+ 
+   pkg_config_tests = [
+     'pkg-config --validate gio-2.0',
+-    'test "$(pkg-config --modversion gio-2.0)" = "@0@"'.format(glib_version),
+-    'test "$(pkg-config --variable=prefix gio-2.0)" = "@0@"'.format(
++    'test "$(pkg-config --modversion gio-2.0)" = "@0@\r"'.format(glib_version),
++    'test "$(pkg-config --variable=prefix gio-2.0)" = "@0@\r"'.format(
+       get_option('prefix')),
+-    'test "$(pkg-config --variable=datadir gio-2.0)" = "@0@"'.format(
++    'test "$(pkg-config --variable=datadir gio-2.0)" = "@0@\r"'.format(
+       prefix / get_option('datadir')),
+-    'test "$(pkg-config --variable=schemasdir gio-2.0)" = "@0@"'.format(
++    'test "$(pkg-config --variable=schemasdir gio-2.0)" = "@0@\r"'.format(
+       prefix / get_option('datadir') / schemas_subdir),
+-    'test "$(pkg-config --variable=giomoduledir gio-2.0)" = "@0@"'.format(
++    'test "$(pkg-config --variable=giomoduledir gio-2.0)" = "@0@\r"'.format(
+       get_option('gio_module_dir') != '' ?
+         prefix / get_option('gio_module_dir') :
+         prefix / get_option('libdir') / 'gio' / 'modules'),
+@@ -1144,7 +1144,7 @@ if have_bash and have_pkg_config
+ 
+   foreach binary: gio_binaries
+     pkg_config_tests += [
+-      'test "$(pkg-config --variable=@0@ gio-2.0)" = "@1@"'.format(
++      'test "$(pkg-config --variable=@0@ gio-2.0)" = "@1@\r"'.format(
+         binary.underscorify(),
+         prefix / get_option('bindir') / binary)
+     ]
+@@ -1152,7 +1152,7 @@ if have_bash and have_pkg_config
+ 
+   foreach binary: gio_multiarch_binaries
+     pkg_config_tests += [
+-      'test "$(pkg-config --variable=@0@ gio-2.0)" = "@1@"'.format(
++      'test "$(pkg-config --variable=@0@ gio-2.0)" = "@1@\r"'.format(
+         binary.underscorify(),
+         prefix / multiarch_bindir / binary)
+     ]
+@@ -1170,9 +1170,9 @@ if have_bash and have_pkg_config
+   platform_module = host_system == 'windows' ? 'gio-windows-2.0' : 'gio-unix-2.0'
+   pkg_config_tests = [
+     'pkg-config --validate ' + platform_module,
+-    'test "$(pkg-config --modversion @0@)" = "@1@"'.format(platform_module,
++    'test "$(pkg-config --modversion @0@)" = "@1@\r"'.format(platform_module,
+       glib_version),
+-    'test "$(pkg-config --variable=prefix @0@)" = "@1@"'.format(platform_module,
++    'test "$(pkg-config --variable=prefix @0@)" = "@1@\r"'.format(platform_module,
+       get_option('prefix')),
+   ]
+ 
+diff --git a/glib/tests/meson.build b/glib/tests/meson.build
+index d80c86efe..82cc93ff5 100644
+--- a/glib/tests/meson.build
++++ b/glib/tests/meson.build
+@@ -528,16 +528,16 @@ if have_bash and have_pkg_config
+       '-xe', '-c',
+       '\n'.join([
+         'pkg-config --validate glib-2.0',
+-        'test "$(pkg-config --modversion glib-2.0)" = "@0@"'.format(glib_version),
+-        'test "$(pkg-config --variable=prefix glib-2.0)" = "@0@"'.format(
++        'test "$(pkg-config --modversion glib-2.0)" = "@0@\r"'.format(glib_version),
++        'test "$(pkg-config --variable=prefix glib-2.0)" = "@0@\r"'.format(
+           get_option('prefix')),
+-        'test "$(pkg-config --variable=datadir glib-2.0)" = "@0@"'.format(
++        'test "$(pkg-config --variable=datadir glib-2.0)" = "@0@\r"'.format(
+           prefix / get_option('datadir')),
+-        'test "$(pkg-config --variable=gobject_query glib-2.0)" = "@0@"'.format(
++        'test "$(pkg-config --variable=gobject_query glib-2.0)" = "@0@\r"'.format(
+           prefix / get_option('bindir') / 'gobject-query'),
+-        'test "$(pkg-config --variable=glib_mkenums glib-2.0)" = "@0@"'.format(
++        'test "$(pkg-config --variable=glib_mkenums glib-2.0)" = "@0@\r"'.format(
+           prefix / get_option('bindir') / 'glib-mkenums'),
+-        'test "$(pkg-config --variable=glib_valgrind_suppressions glib-2.0)" = "@0@"'.format(
++        'test "$(pkg-config --variable=glib_valgrind_suppressions glib-2.0)" = "@0@\r"'.format(
+           prefix / get_option('datadir') /
+           valgrind_suppression_file_install_subdir / fs.name(valgrind_suppression_file)),
+       ]),
+diff --git a/gmodule/tests/meson.build b/gmodule/tests/meson.build
+index 5374c1c2a..683768ad1 100644
+--- a/gmodule/tests/meson.build
++++ b/gmodule/tests/meson.build
+@@ -139,9 +139,9 @@ if have_bash and have_pkg_config
+         '-xe', '-c',
+         '\n'.join([
+           'pkg-config --validate ' + module,
+-          'test "$(pkg-config --modversion @0@)" = "@1@"'.format(
++          'test "$(pkg-config --modversion @0@)" = "@1@\r"'.format(
+             module, glib_version),
+-          'test "$(pkg-config --variable=prefix @0@)" = "@1@"'.format(
++          'test "$(pkg-config --variable=prefix @0@)" = "@1@\r"'.format(
+             module, get_option('prefix')),
+         ]),
+       ],
+diff --git a/gthread/tests/meson.build b/gthread/tests/meson.build
+index 41fad1de4..d7e4c3702 100644
+--- a/gthread/tests/meson.build
++++ b/gthread/tests/meson.build
+@@ -60,8 +60,8 @@ if have_bash and have_pkg_config
+       '-xe', '-c',
+       '\n'.join([
+         'pkg-config --validate gthread-2.0',
+-        'test "$(pkg-config --modversion gthread-2.0)" = "@0@"'.format(glib_version),
+-        'test "$(pkg-config --variable=prefix gthread-2.0)" = "@0@"'.format(
++        'test "$(pkg-config --modversion gthread-2.0)" = "@0@\r"'.format(glib_version),
++        'test "$(pkg-config --variable=prefix gthread-2.0)" = "@0@\r"'.format(
+           get_option('prefix')),
+       ]),
+     ],

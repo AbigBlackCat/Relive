@@ -1,0 +1,12 @@
+{
+  "name": "x265",
+  "version": "3.5",
+  "build": "h55d2f36_4",
+  "license": "GPL-2.0-or-later",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-arm64/x265-3.5-h55d2f36_4.conda",
+  "homepage": "https://www.x265.org/",
+  "upstream_repository": "https://bitbucket.org/multicoreware/x265_git",
+  "source_recipe": "url: https://bitbucket.org/multicoreware/x265_git/downloads/x265_3.5.tar.gz\n  sha256: e70a3335cacacbba0b3a20ec6fecd6783932288ebc8163ad74bcc9606477cae8\n  patches:\n    - patches/0001-Fix-the-build-with-CMake-4.patch\n    - patches/0002-json11-include-cstdint-for-uint8_t.patch\n    - patches/0003-Assemble-asm-objects-once-before-linking.patch",
+  "recipe_repository": "https://github.com/conda-forge/x265-feedstock",
+  "recipe_commit": "c99a2f3e7c9bc7ea3056b1e306608d72c6226eec"
+}

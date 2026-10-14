@@ -1,0 +1,12 @@
+{
+  "name": "ffmpeg",
+  "version": "6.1.1",
+  "build": "gpl_ha63e52a_101",
+  "license": "GPL-2.0-or-later",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-arm64/ffmpeg-6.1.1-gpl_ha63e52a_101.conda",
+  "homepage": "https://www.ffmpeg.org/",
+  "upstream_repository": "https://git.ffmpeg.org/ffmpeg.git",
+  "source_recipe": "patches:\n    - patches/0001-Revert-compat-Use-instead-of-for-rc.exe-options.patch\n  sha256: b0aee531e4a91fed6bc031445dfc3ad8eb36de1fcb0fa2acdb589ecc9f8dc9cb\n  url: https://ffmpeg.org/releases/ffmpeg-6.1.1.tar.gz",
+  "recipe_repository": "https://github.com/conda-forge/ffmpeg-feedstock",
+  "recipe_commit": "c669402ae63c81fb6bc0f20ee7f01162e5e02527"
+}

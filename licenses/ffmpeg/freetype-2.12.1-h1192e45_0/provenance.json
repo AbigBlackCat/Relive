@@ -1,0 +1,12 @@
+{
+  "name": "freetype",
+  "version": "2.12.1",
+  "build": "h1192e45_0",
+  "license": "GPL-2-only and LicenseRef-FreeType",
+  "binary_download": "https://repo.anaconda.com/pkgs/main/osx-arm64/freetype-2.12.1-h1192e45_0.conda",
+  "homepage": "https://freetype.org/",
+  "upstream_repository": "https://gitlab.freedesktop.org/freetype/freetype",
+  "source_recipe": "sha256: efe71fd4b8246f1b0b1b9bfca13cfff1c9ad85930340c27df469733bbb620938\n  url: https://download.savannah.gnu.org/releases/freetype/freetype-2.12.1.tar.gz",
+  "recipe_repository": "git@github.com:AnacondaRecipes/freetype-feedstock.git",
+  "recipe_commit": "7112aa3b6f409b1bde037cbc16f274ecfecfd533"
+}

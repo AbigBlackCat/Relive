@@ -1,0 +1,79 @@
+# This file created by conda-build 25.5.0
+# ------------------------------------------------
+
+package:
+  name: libintl
+  version: 0.25.1
+source:
+  url: https://ftp.gnu.org/pub/gnu/gettext/gettext-0.25.1.tar.xz
+  sha256: 2c8294be238f03fb3fa65b8051057e5b68167f3e21f08008070cf40a7051ba22
+build:
+  run_exports:
+    - libintl >=0.25.1,<1.0a0
+  ignore_run_exports_from:
+    - clangxx_osx-arm64 18.*
+  number: 0
+  string: h493aca8_0
+requirements:
+  build:
+    - ca-certificates 2025.6.15 hbd8a1cb_0
+    - cctools_osx-64 1010.6 hd19c6af_6
+    - cctools_osx-arm64 1010.6 hd9414f1_6
+    - clang 18.1.8 default_h576c50e_10
+    - clang-18 18.1.8 default_h3571c67_10
+    - clang_impl_osx-arm64 18.1.8 hadf8e89_25
+    - clang_osx-arm64 18.1.8 h1728699_25
+    - clangxx 18.1.8 default_heb2e8d1_10
+    - clangxx_impl_osx-arm64 18.1.8 hd2305f4_25
+    - clangxx_osx-arm64 18.1.8 h1728699_25
+    - compiler-rt 18.1.8 h1020d70_1
+    - compiler-rt_osx-64 18.1.8 hf2b8a54_1
+    - icu 75.1 h120a0e1_0
+    - ld64_osx-64 951.9 h33512f0_6
+    - ld64_osx-arm64 951.9 h0ae773b_6
+    - libclang-cpp18.1 18.1.8 default_h3571c67_10
+    - libcxx 20.1.7 hf95d169_0
+    - libcxx-devel 18.1.8 h7c275be_8
+    - libiconv 1.18 h4b5e92a_1
+    - libllvm18 18.1.8 default_h3571c67_5
+    - libltdl 2.4.3a h240833e_0
+    - liblzma 5.8.1 hd471939_2
+    - libtool 2.5.4 h240833e_0
+    - libxml2 2.14.4 h8c082e5_0
+    - libzlib 1.3.1 hd23fc13_2
+    - llvm-tools 18.1.8 default_h3571c67_5
+    - llvm-tools-18 18.1.8 default_h3571c67_5
+    - macosx_deployment_target_osx-arm64 11.0 h6553868_2
+    - make 4.4.1 h00291cd_2
+    - ncurses 6.5 h0622a9a_3
+    - openssl 3.5.1 hc426f3f_0
+    - sigtool 0.1.3 h88f4db0_0
+    - tapi 1300.6.5 h390ca13_0
+    - zstd 1.5.7 h8210216_2
+  host:
+    - libiconv 1.18 hfe07756_1
+  run:
+    - __osx >=11.0
+    - libiconv >=1.18,<2.0a0
+test:
+  commands:
+    - test -f ${PREFIX}/lib/libintl.*.dylib
+    - test ! -f ${PREFIX}/lib/libintl$SHLIB_EXT
+    - test ! -f ${PREFIX}/include/libintl.h
+about:
+  home: https://www.gnu.org/software/gettext/
+  license: LGPL-2.1-or-later
+  license_file: COPYING
+  summary: library that provides native language support to programs
+extra:
+  feedstock-name: gettext
+  recipe-maintainers:
+    - ocefpaf
+    - pkgw
+    - scopatz
+    - xhochy
+  final: true
+  copy_test_source_files: true
+  flow_run_id: azure_20250703.1.2
+  remote_url: https://github.com/conda-forge/gettext-feedstock
+  sha: c130be150ccb9b8d7540e17aeb582a0e065f0666

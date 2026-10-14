@@ -1,0 +1,12 @@
+{
+  "name": "tbb",
+  "version": "2021.8.0",
+  "build": "h48ca7d4_0",
+  "license": "Apache-2.0",
+  "binary_download": "https://repo.anaconda.com/pkgs/main/osx-arm64/tbb-2021.8.0-h48ca7d4_0.conda",
+  "homepage": "https://github.com/oneapi-src/oneTBB",
+  "upstream_repository": "https://github.com/oneapi-src/oneTBB",
+  "source_recipe": "sha256: eee380323bb7ce864355ed9431f85c43955faaae9e9bce35c62b372d7ffd9f8b\n  url: https://github.com/oneapi-src/oneTBB/archive/v2021.8.0.tar.gz",
+  "recipe_repository": "git@github.com:AnacondaRecipes/tbb-feedstock.git",
+  "recipe_commit": "cb408eec4d907f95a745160f914d99435585809d"
+}

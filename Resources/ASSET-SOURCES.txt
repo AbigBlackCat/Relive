@@ -1,0 +1,1 @@
+Relive.icns is an original AppKit vector drawing: a near-black rounded-square tile with three mint concentric circles and a center dot; no third-party bitmap asset or AI image generation was used.

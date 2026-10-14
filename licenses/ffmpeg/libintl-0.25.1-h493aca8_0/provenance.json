@@ -1,0 +1,12 @@
+{
+  "name": "libintl",
+  "version": "0.25.1",
+  "build": "h493aca8_0",
+  "license": "LGPL-2.1-or-later",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-arm64/libintl-0.25.1-h493aca8_0.conda",
+  "homepage": "https://www.gnu.org/software/gettext/",
+  "upstream_repository": "",
+  "source_recipe": "url: https://ftp.gnu.org/pub/gnu/gettext/gettext-0.25.1.tar.xz\n  sha256: 2c8294be238f03fb3fa65b8051057e5b68167f3e21f08008070cf40a7051ba22",
+  "recipe_repository": "https://github.com/conda-forge/gettext-feedstock",
+  "recipe_commit": "c130be150ccb9b8d7540e17aeb582a0e065f0666"
+}

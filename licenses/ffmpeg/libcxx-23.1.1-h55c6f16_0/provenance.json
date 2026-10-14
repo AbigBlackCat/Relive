@@ -1,0 +1,12 @@
+{
+  "name": "libcxx",
+  "version": "23.1.1",
+  "build": "h55c6f16_0",
+  "license": "Apache-2.0 WITH LLVM-exception",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-arm64/libcxx-23.1.1-h55c6f16_0.conda",
+  "homepage": "http://libcxx.llvm.org/",
+  "upstream_repository": "https://github.com/llvm/llvm-project",
+  "source_recipe": "- url: https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-23.1.1.tar.gz\n    sha256: 851b3d701a4fbdd9f69536d4acda578469e810ca7056687d6556443f5fd39557\n    patches:\n      - patches/0002-custom-error-message-for-old-sdk.patch\n      - patches/0003-disable-_LIBCPP_AVAILABILITY_HAS_INIT_PRIMARY_EXCEPT.patch\n      - patches/0004-Work-around-stray-nostdlib-flags-causing-errors-with.patch\n      - patches/0005-patch-__libcpp_tzdb_directory-to-allow-use-on-osx.patch\n      - patches/0006-make-headers-platform-neutral-for-conda-forge.patch\n      - patches/0007-Fix-compiling-with-gcc.patch",
+  "recipe_repository": "https://github.com/conda-forge/libcxx-feedstock",
+  "recipe_commit": "559800cbc75e324b3f7ceee2d71ea440c6e57e15"
+}

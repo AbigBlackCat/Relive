@@ -1,0 +1,12 @@
+{
+  "name": "pcre2",
+  "version": "10.42",
+  "build": "hb066dcc_0",
+  "license": "BSD-3-Clause",
+  "binary_download": "https://repo.anaconda.com/pkgs/main/osx-arm64/pcre2-10.42-hb066dcc_0.conda",
+  "homepage": "https://www.pcre.org/",
+  "upstream_repository": "https://github.com/PCRE2Project/pcre2",
+  "source_recipe": "sha256: a8e52a9bd1bca8f51c5c24823adc2a99acb12288e289a6507090c1a4a4815010\n  url: https://github.com/PCRE2Project/pcre2/archive/refs/tags/pcre2-10.42.tar.gz",
+  "recipe_repository": "git@github.com:AnacondaRecipes/pcre2-feedstock.git",
+  "recipe_commit": "e8c71eed8c153a861b355484226e4a7923d2c9bb"
+}

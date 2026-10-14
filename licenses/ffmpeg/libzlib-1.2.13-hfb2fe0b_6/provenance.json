@@ -1,0 +1,12 @@
+{
+  "name": "libzlib",
+  "version": "1.2.13",
+  "build": "hfb2fe0b_6",
+  "license": "Zlib",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-arm64/libzlib-1.2.13-hfb2fe0b_6.conda",
+  "homepage": "http://zlib.net/",
+  "upstream_repository": "https://github.com/madler/zlib",
+  "source_recipe": "sha256: 1525952a0a567581792613a9723333d7f8cc20b87a81f920fb8bc7e3f2251428\n  url: https://github.com/madler/zlib/archive/refs/tags/v1.2.13.tar.gz",
+  "recipe_repository": "https://github.com/conda-forge/zlib-feedstock",
+  "recipe_commit": "204eac3c5491860a24ddcea39c10e6302d6eefb6"
+}

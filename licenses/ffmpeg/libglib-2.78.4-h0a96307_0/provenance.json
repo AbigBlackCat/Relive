@@ -1,0 +1,12 @@
+{
+  "name": "libglib",
+  "version": "2.78.4",
+  "build": "h0a96307_0",
+  "license": "LGPL-2.1-or-later",
+  "binary_download": "https://repo.anaconda.com/pkgs/main/osx-arm64/libglib-2.78.4-h0a96307_0.conda",
+  "homepage": "https://docs.gtk.org/glib/",
+  "upstream_repository": "https://gitlab.gnome.org/GNOME/glib/",
+  "source_recipe": "patches:\n    - patches/0001-replace-hardcoded-paths.patch\n    - patches/0006-correct-osx-tests-skips.patch\n  sha256: 24b8e0672dca120cc32d394bccb85844e732e04fe75d18bb0573b2dbc7548f63\n  url: https://download.gnome.org/sources/glib/2.78/glib-2.78.4.tar.xz",
+  "recipe_repository": "git@github.com:AnacondaRecipes/glib-feedstock.git",
+  "recipe_commit": "8ed0dc19ccca9bc320217125f50a1dd9094e3c32"
+}

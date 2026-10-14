@@ -1,0 +1,26 @@
+From 904ee77d4dd79c7c97a0ff693c41c8e399cec7bc Mon Sep 17 00:00:00 2001
+From: Charles Bousseau <cbousseau@anaconda.com>
+Date: Fri, 26 Jan 2024 15:13:25 -0500
+Subject: [PATCH] codegen tests: fix on_win32 detection
+
+https://gitlab.gnome.org/GNOME/glib/-/merge_requests/3857
+---
+ gio/tests/codegen.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gio/tests/codegen.py b/gio/tests/codegen.py
+index 0681bb4e84..8b2ff26610 100644
+--- a/gio/tests/codegen.py
++++ b/gio/tests/codegen.py
+@@ -42,7 +42,7 @@ Result = collections.namedtuple("Result", ("info", "out", "err", "subs"))
+ 
+ 
+ def on_win32():
+-    return sys.platform.find("win") != -1
++    return sys.platform.find("win") != -1 and sys.platform.find("darwin") == -1
+ 
+ 
+ class TestCodegen(unittest.TestCase):
+-- 
+GitLab
+

@@ -1,0 +1,43 @@
+{% set version = "2.3.8" %}
+
+package:
+  name: libidn2
+  version: {{ version }}
+
+source:
+  url: https://ftp.gnu.org/gnu/libidn/libidn2-{{ version }}.tar.gz
+  sha256: f557911bf6171621e1f72ff35f5b1825bb35b52ed45325dcdee931e5d3c0787a
+
+build:
+  skip: true  # [win]
+  number: 1
+  run_exports:
+    # _Amazing_ backwards compatibility so pin to major number:
+    #    https://abi-laboratory.pro/tracker/timeline/libidn2/
+    - {{ pin_subpackage('libidn2', min_pin='x', max_pin='x') }}
+
+requirements:
+  build:
+    - gnuconfig  # [unix]
+    - {{ compiler('c') }}
+    - {{ stdlib('c') }}
+    - make
+    - pkg-config
+  host:
+    - libintl-devel  # [not linux]
+    - libunistring
+
+test:
+  commands:
+    - test -f "${PREFIX}/include/idn2.h"
+    - test -f "${PREFIX}/lib/libidn2${SHLIB_EXT}"
+
+about:
+  home: https://www.gnu.org/software/libidn/#libidn2
+  license: LGPL-2.0-only
+  license_file: COPYING
+  summary: Library for internationalized domain names (IDNA2008) support
+
+extra:
+  recipe-maintainers:
+    - hmaarrfk

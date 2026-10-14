@@ -1,0 +1,60 @@
+# This file created by conda-build 26.7.0
+# ------------------------------------------------
+
+package:
+  name: libiconv
+  version: '1.18'
+source:
+  url: http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.18.tar.gz
+  sha256: 3b08f5f4f9b4eb82f151a7040bfd6fe6c6fb922efe4b1659c66ea933276965e8
+  patches:
+    - utf_8_mac.patch
+build:
+  run_exports:
+    - libiconv >=1.18,<2.0a0
+  number: 3
+  string: he4c29f2_3
+requirements:
+  build:
+    - clang_bootstrap_osx-arm64 21.1.8 hd5368c5_34
+    - libltdl 2.4.3a h286801f_0
+    - libtool 2.5.4 h286801f_0
+    - macosx_deployment_target_osx-arm64 11.0 h214bdd9_7
+    - make 4.4.1 h84a0fba_3
+  host:
+    - __osx >=11.0
+  run:
+    - __osx >=11.0
+test:
+  requires:
+    - jq
+  commands:
+    - test ! -f ${PREFIX}/bin/iconv
+    - test_man_files=$(jq '.files[] | select( . | startswith("share/man"))' $CONDA_PREFIX/conda-meta/libiconv-1.18-${PKG_BUILD_STRING}.json)
+    - if [[ ${test_man_files} ]]; then echo "found GPL licensed files being packaged
+      ${test_man_files}"; exit 1; fi
+    - test_doc_files=$(jq '.files[] | select( . | startswith("share/doc"))' $CONDA_PREFIX/conda-meta/libiconv-1.18-${PKG_BUILD_STRING}.json)
+    - if [[ ${test_doc_files} ]]; then echo "found GPL licensed files being packaged
+      ${test_doc_files}"; exit 1; fi
+    - test -f $CONDA_PREFIX/lib/libiconv${SHLIB_EXT}
+    - test -f $CONDA_PREFIX/lib/libcharset${SHLIB_EXT}
+about:
+  home: https://www.gnu.org/software/libiconv/
+  license: LGPL-2.1-only
+  license_file: COPYING.LIB
+  summary: Provides iconv for systems which don't have one (or that cannot convert
+    from/to Unicode.)
+extra:
+  feedstock-name: libiconv
+  recipe-maintainers:
+    - h-vetinari
+    - jakirkham
+    - jhamman
+    - mbargull
+    - ocefpaf
+    - scopatz
+  final: true
+  copy_test_source_files: true
+  flow_run_id: azure_20260818.1.1
+  remote_url: https://github.com/conda-forge/libiconv-feedstock
+  sha: c7fdcb1b68d6579a08d0c5dc5f34cbbf38780538

@@ -1,0 +1,91 @@
+# This file created by conda-build 3.23.3
+# ------------------------------------------------
+
+package:
+  name: tbb
+  version: 2021.8.0
+source:
+  sha256: eee380323bb7ce864355ed9431f85c43955faaae9e9bce35c62b372d7ffd9f8b
+  url: https://github.com/oneapi-src/oneTBB/archive/v2021.8.0.tar.gz
+build:
+  missing_dso_whitelist: null
+  number: 0
+  script:
+    - cmake $CMAKE_ARGS -DPython3_EXECUTABLE=${PYTHON} -DPYTHON_EXECUTABLE=${PYTHON}
+      -DTBB_TEST=OFF -S . -B build
+    - cmake --build build --parallel
+    - cmake -DCOMPONENT=runtime -P build/cmake_install.cmake
+  string: h48ca7d4_0
+requirements:
+  build:
+    - bzip2 1.0.8 h620ffc9_4
+    - c-ares 1.19.0 h80987f9_0
+    - ca-certificates 2023.01.10 hca03da5_0
+    - cctools_osx-arm64 949.0.1 h332cad3_25
+    - clang 14.0.6 hca03da5_0
+    - clang-14 14.0.6 default_hf5194b7_0
+    - clang_osx-arm64 14.0.6 h9ff6fda_0
+    - clangxx 14.0.6 default_hf5194b7_0
+    - clangxx_osx-arm64 14.0.6 h72866fe_0
+    - cmake 3.22.1 hae769c0_0
+    - compiler-rt 14.0.6 h4ccfd99_0
+    - compiler-rt_osx-arm64 14.0.6 h4fb70ea_0
+    - expat 2.4.9 hc377ac9_0
+    - krb5 1.19.4 h8380606_0
+    - ld64_osx-arm64 530 h001ce53_25
+    - ldid 2.1.2 h64d1936_2
+    - libclang-cpp14 14.0.6 default_hf5194b7_0
+    - libcurl 7.88.1 h0f1d93c_0
+    - libcxx 14.0.6 h848a8c0_0
+    - libedit 3.1.20221030 h80987f9_0
+    - libev 4.33 h1a28f6b_1
+    - libffi 3.4.2 hca03da5_6
+    - libllvm14 14.0.6 h7ec7a93_1
+    - libnghttp2 1.46.0 h95c9599_0
+    - libssh2 1.10.0 hf27765b_0
+    - libuv 1.44.2 h80987f9_0
+    - llvm-tools 14.0.6 h7ec7a93_1
+    - lz4-c 1.9.4 h313beb8_0
+    - make 4.3 h620ffc9_1
+    - ncurses 6.4 h313beb8_0
+    - openssl 1.1.1t h1a28f6b_0
+    - rhash 1.4.1 hf27765b_1
+    - tapi 1100.0.11 h8754e6a_1
+    - xz 5.2.10 h80987f9_1
+    - zlib 1.2.13 h5a0b063_0
+    - zstd 1.5.4 hd90d995_0
+  host:
+    - libcxx 14.0.6 h848a8c0_0
+  run:
+    - libcxx >=14.0.6
+test:
+  commands:
+    - python -c "import ctypes; assert 12080 == ctypes.cdll[r'libtbb.12.8${SHLIB_EXT}']['TBB_runtime_interface_version']()"
+  requires:
+    - python
+about:
+  description: 'oneTBB is a flexible C++ library that simplifies the work of adding
+    parallelism to complex applications, even if you
+
+    are not a threading expert.
+
+    '
+  dev_url: https://github.com/oneapi-src/oneTBB
+  doc_url: https://oneapi-src.github.io/oneTBB/
+  home: https://github.com/oneapi-src/oneTBB
+  license: Apache-2.0
+  license_family: Apache
+  license_file:
+    - LICENSE.txt
+    - third-party-programs.txt
+  summary: High level abstract threading library
+extra:
+  copy_test_source_files: true
+  final: true
+  flow_run_id: 385cf56c-64b7-4712-a2e2-cb23422d60e3
+  recipe-maintainers:
+    - AlexVeprev
+    - anton-malakhov
+    - jschueller
+  remote_url: git@github.com:AnacondaRecipes/tbb-feedstock.git
+  sha: cb408eec4d907f95a745160f914d99435585809d

@@ -1,0 +1,12 @@
+{
+  "name": "libffi",
+  "version": "3.4.4",
+  "build": "hca03da5_0",
+  "license": "MIT",
+  "binary_download": "https://repo.anaconda.com/pkgs/main/osx-arm64/libffi-3.4.4-hca03da5_0.conda",
+  "homepage": "https://sourceware.org/libffi/",
+  "upstream_repository": "https://github.com/libffi/libffi",
+  "source_recipe": "patches:\n    - 0001-arm64-changes-from-v3.3-patch.patch\n  sha256: d66c56ad259a82cf2a9dfc408b32bf5da52371500b84745f7fb8b645712df676\n  url: https://github.com/libffi/libffi/releases/download/v3.4.4/libffi-3.4.4.tar.gz",
+  "recipe_repository": "git@github.com:AnacondaRecipes/libffi-feedstock.git",
+  "recipe_commit": "51c485b94e09cdd4bd6550dea0c5bd0b06a8488a"
+}

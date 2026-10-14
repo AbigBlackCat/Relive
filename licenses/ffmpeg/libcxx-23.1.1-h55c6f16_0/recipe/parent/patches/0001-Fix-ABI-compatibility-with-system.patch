@@ -1,0 +1,57 @@
+From d22c1ef64d36100dc2e3b1c622a0c6bfa471b60a Mon Sep 17 00:00:00 2001
+From: Isuru Fernando <isuruf@gmail.com>
+Date: Tue, 13 Jul 2021 01:57:06 -0500
+Subject: [PATCH 1/7] Fix ABI compatibility with system
+
+---
+ libcxx/src/locale.cpp | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/libcxx/src/locale.cpp b/libcxx/src/locale.cpp
+index b0a69ab74f94..f2b1088dfae6 100644
+--- a/libcxx/src/locale.cpp
++++ b/libcxx/src/locale.cpp
+@@ -159,10 +159,6 @@ locale::__imp::__imp(size_t refs) : facet(refs), facets_(N), name_("C") {
+   _LIBCPP_SUPPRESS_DEPRECATED_PUSH
+   install(&make<codecvt<char16_t, char, mbstate_t> >(1u));
+   install(&make<codecvt<char32_t, char, mbstate_t> >(1u));
+-#if _LIBCPP_HAS_CHAR8_T
+-  install(&make<codecvt<char16_t, char8_t, mbstate_t> >(1u));
+-  install(&make<codecvt<char32_t, char8_t, mbstate_t> >(1u));
+-#endif
+   _LIBCPP_SUPPRESS_DEPRECATED_POP
+   install(&make<numpunct<char> >(1u));
+ #if _LIBCPP_HAS_WIDE_CHARACTERS
+@@ -202,6 +198,10 @@ locale::__imp::__imp(size_t refs) : facet(refs), facets_(N), name_("C") {
+ #if _LIBCPP_HAS_WIDE_CHARACTERS
+   install(&make<std::messages<wchar_t> >(1u));
+ #endif
++#if _LIBCPP_HAS_CHAR8_T
++  install(&make<codecvt<char16_t, char8_t, mbstate_t> >(1u));
++  install(&make<codecvt<char32_t, char8_t, mbstate_t> >(1u));
++#endif
+ }
+ 
+ locale::__imp::__imp(const string& name, size_t refs) : facet(refs), facets_(N), name_(name) {
+@@ -229,10 +229,6 @@ locale::__imp::__imp(const string& name, size_t refs) : facet(refs), facets_(N),
+   _LIBCPP_SUPPRESS_DEPRECATED_PUSH
+   install(new codecvt_byname<char16_t, char, mbstate_t>(name_));
+   install(new codecvt_byname<char32_t, char, mbstate_t>(name_));
+-#if _LIBCPP_HAS_CHAR8_T
+-  install(new codecvt_byname<char16_t, char8_t, mbstate_t>(name_));
+-  install(new codecvt_byname<char32_t, char8_t, mbstate_t>(name_));
+-#endif
+   _LIBCPP_SUPPRESS_DEPRECATED_POP
+   install(new numpunct_byname<char>(name_));
+ #if _LIBCPP_HAS_WIDE_CHARACTERS
+@@ -255,6 +251,10 @@ locale::__imp::__imp(const string& name, size_t refs) : facet(refs), facets_(N),
+   install(new messages_byname<char>(name_));
+ #if _LIBCPP_HAS_WIDE_CHARACTERS
+   install(new messages_byname<wchar_t>(name_));
++#endif
++#if _LIBCPP_HAS_CHAR8_T
++  install(new codecvt_byname<char16_t, char8_t, mbstate_t>(name_));
++  install(new codecvt_byname<char32_t, char8_t, mbstate_t>(name_));
+ #endif
+   guard.__complete();
+ }

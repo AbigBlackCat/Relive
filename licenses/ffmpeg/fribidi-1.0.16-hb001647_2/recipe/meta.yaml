@@ -1,0 +1,99 @@
+# This file created by conda-build 26.7.1
+# meta.yaml template originally from:
+# /Users/runner/work/1/s/recipe, last modified Wed Sep  2 21:44:34 2026
+# ------------------------------------------------
+
+package:
+  name: fribidi
+  version: 1.0.16
+source:
+  url: https://github.com/fribidi/fribidi/releases/download/v1.0.16/fribidi-1.0.16.tar.xz
+  sha256: 1b1cde5b235d40479e91be2f0e88a309e3214c8ab470ec8a2744d82a5a9ea05c
+build:
+  number: '2'
+  run_exports:
+    - fribidi >=1.0.16,<2.0a0
+  string: hb001647_2
+requirements:
+  build:
+    - bzip2 1.0.8 h4e30115_10
+    - ca-certificates 2026.7.22 hbd8a1cb_0
+    - cctools_impl_osx-arm64 1030.6.3 llvm21_1_h2e2604f_6
+    - cctools_osx-arm64 1030.6.3 llvm21_1_h8e84c17_6
+    - clang-21 21.1.8 default_h4399b93_6
+    - clang_impl_osx-arm64 21.1.8 default_hc11f16d_6
+    - clang_osx-arm64 21.1.8 h15b5089_34
+    - compiler-rt 21.1.8 hce30654_2
+    - compiler-rt21 21.1.8 hdb3d66b_2
+    - compiler-rt21_osx-arm64 21.1.8 hb8825d9_2
+    - compiler-rt_osx-arm64 21.1.8 hce30654_2
+    - icu 78.3 py310h579977c_2
+    - ld64_osx-arm64 956.6 llvm21_1_h1a10cc4_6
+    - libclang-cpp21.1 21.1.8 default_h4399b93_6
+    - libcompiler-rt 21.1.8 hdb3d66b_2
+    - libcxx 23.1.0 h55c6f16_0
+    - libexpat 2.8.1 hf6b4638_1
+    - libffi 3.7.0 h47dc5ef_1
+    - libiconv 1.18 he4c29f2_3
+    - libllvm21 21.1.8 h759d1ac_1
+    - liblzma 5.8.3 h8088a28_1
+    - libmpdec 4.0.0 h84a0fba_2
+    - libpython 3.14.7 h4311e70_105_cp314
+    - libsigtool 0.1.3 h98dc951_1
+    - libsqlite 3.53.4 hca69786_1
+    - libxml2 2.15.3 h5654f7c_1
+    - libxml2-16 2.15.3 h5ef1a60_1
+    - libzlib 1.3.2 h8088a28_3
+    - llvm-tools 21.1.8 hdb3d66b_1
+    - llvm-tools-21 21.1.8 h79441dc_1
+    - macosx_deployment_target_osx-arm64 11.0 h214bdd9_7
+    - meson 1.12.0 pyhcf101f3_0
+    - ncurses 6.6 he64c551_1
+    - ninja 1.13.2 h3feff0a_1
+    - openssl 3.6.4 h55eecbc_0
+    - python 3.14.7 h0ae1c2c_105_cp314
+    - python_abi 3.14 9_cp314
+    - readline 8.3 h8b90a29_1
+    - sdkroot_env_osx-arm64 26.0 ha3f98da_7
+    - sigtool-codesign 0.1.3 h98dc951_1
+    - tapi 1600.0.11.8 hb561403_3
+    - tk 8.6.13 hbeba79b_4
+    - tzdata 2026c h151e31d_0
+    - zstd 1.5.7 hf451053_7
+  host:
+    - __osx >=11.0
+  run:
+    - __osx >=11.0
+test:
+  requires: null
+  commands:
+    - fribidi -h
+about:
+  home: https://github.com/fribidi/fribidi
+  license: LGPL-2.1-or-later
+  license_file: COPYING
+  summary: The Free Implementation of the Unicode Bidirectional Algorithm.
+  description: 'One of the missing links stopping the penetration of free software
+    in Middle
+
+    East is the lack of support for the Arabic and Hebrew alphabets. In order to
+
+    have proper Arabic and Hebrew support, the bidi algorithm needs to be
+
+    implemented. It is our hope that this library will stimulate more free
+
+    software in the Middle Eastern countries.
+
+    '
+  doc_url: https://github.com/fribidi/fribidi
+  dev_url: https://github.com/fribidi/fribidi
+extra:
+  recipe-maintainers:
+    - h-vetinari
+    - mariusvniekerk
+    - msarahan
+  final: true
+  copy_test_source_files: true
+  flow_run_id: azure_20260902.2.1
+  remote_url: https://github.com/conda-forge/fribidi-feedstock
+  sha: 9478e861af459210d329cd284e24cf84204cdb14

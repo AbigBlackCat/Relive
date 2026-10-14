@@ -1,0 +1,12 @@
+{
+  "name": "openh264",
+  "version": "2.4.0",
+  "build": "h965bd2d_0",
+  "license": "BSD-2-Clause",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-arm64/openh264-2.4.0-h965bd2d_0.conda",
+  "homepage": "http://www.openh264.org/",
+  "upstream_repository": "https://github.com/cisco/openh264",
+  "source_recipe": "sha256: a44d1ccc348a790f9a272bba2d1c2eb9a9bbd0302e4e9b655d709e1c32f92691\n  url: https://github.com/cisco/openh264/archive/v2.4.0.tar.gz",
+  "recipe_repository": "https://github.com/conda-forge/openh264-feedstock",
+  "recipe_commit": "4cb7d4d2e4cbf2c5e53757664e0dc858373ea301"
+}

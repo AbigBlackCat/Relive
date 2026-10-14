@@ -1,0 +1,12 @@
+{
+  "name": "dav1d",
+  "version": "1.2.1",
+  "build": "h80987f9_0",
+  "license": "BSD-2-Clause",
+  "binary_download": "https://repo.anaconda.com/pkgs/main/osx-arm64/dav1d-1.2.1-h80987f9_0.conda",
+  "homepage": "https://code.videolan.org/videolan/dav1d",
+  "upstream_repository": "https://code.videolan.org/videolan/dav1d",
+  "source_recipe": "sha256: 2dd85860d213479672b1c708e31593446e8c2b53ff41e2ca25a2eafb718424e2\n  url: https://code.videolan.org/videolan/dav1d/-/archive/1.2.1/dav1d-1.2.1.tar.gz",
+  "recipe_repository": "git@github.com:AnacondaRecipes/dav1d-feedstock.git",
+  "recipe_commit": "b966a3b5d56df9672db86a7589d522bff07cf37e"
+}

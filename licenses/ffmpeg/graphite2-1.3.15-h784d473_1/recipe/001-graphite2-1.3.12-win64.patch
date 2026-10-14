@@ -1,0 +1,30 @@
+diff --git a/src/inc/json.h b/src/inc/json.h
+index 72011ef..9f59dd5 100644
+--- a/src/inc/json.h
++++ b/src/inc/json.h
+@@ -64,6 +64,10 @@ public:
+     json & operator << (number) throw();
+     json & operator << (integer) throw();
+     json & operator << (integer_u) throw();
++#ifdef _WIN32
++    json & operator << (unsigned __int64 d) throw();
++    json & operator << (__int64 d) throw();
++#endif
+     json & operator << (boolean) throw();
+     json & operator << (std::nullptr_t) throw();
+     json & operator << (_context_t) throw();
+diff --git a/src/json.cpp b/src/json.cpp
+index 7990654..f9d36d6 100644
+--- a/src/json.cpp
++++ b/src/json.cpp
+@@ -118,6 +118,10 @@ json & json::operator << (json::number f) throw()
+ }
+ json & json::operator << (json::integer d) throw()  { context(seq); fprintf(_stream, FORMAT_INTMAX, intmax_t(d)); return *this; }
+ json & json::operator << (json::integer_u d) throw()  { context(seq); fprintf(_stream, FORMAT_UINTMAX, uintmax_t(d)); return *this; }
++#ifdef _WIN32
++json & json::operator << (unsigned __int64 d) throw()	{ context(seq); fprintf(_stream, "%I64", d); return *this; }
++json & json::operator << (__int64 d) throw()	{ context(seq); fprintf(_stream, "%I64", d); return *this; }
++#endif
+ json & json::operator << (json::boolean b) throw()  { context(seq); fputs(b ? "true" : "false", _stream); return *this; }
+ json & json::operator << (std::nullptr_t)  throw()  { context(seq); fputs("null",_stream); return *this; }
+ 

@@ -1,0 +1,12 @@
+{
+  "name": "libopus",
+  "version": "1.6.1",
+  "build": "h74c22ad_1",
+  "license": "BSD-3-Clause",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-arm64/libopus-1.6.1-h74c22ad_1.conda",
+  "homepage": "http://opus-codec.org/",
+  "upstream_repository": "https://github.com/xiph/opus",
+  "source_recipe": "See the copied recipe files.",
+  "recipe_repository": "https://github.com/conda-forge/libopus-feedstock",
+  "recipe_commit": "edc1135009230e49f9f85b1277f886041e82199f"
+}

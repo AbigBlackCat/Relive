@@ -1,0 +1,61 @@
+# This file created by conda-build 26.5.0
+# ------------------------------------------------
+
+package:
+  name: libcxx
+  version: 23.1.1
+source:
+  - url: https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-23.1.1.tar.gz
+    sha256: 851b3d701a4fbdd9f69536d4acda578469e810ca7056687d6556443f5fd39557
+    patches:
+      - patches/0002-custom-error-message-for-old-sdk.patch
+      - patches/0003-disable-_LIBCPP_AVAILABILITY_HAS_INIT_PRIMARY_EXCEPT.patch
+      - patches/0004-Work-around-stray-nostdlib-flags-causing-errors-with.patch
+      - patches/0005-patch-__libcpp_tzdb_directory-to-allow-use-on-osx.patch
+      - patches/0006-make-headers-platform-neutral-for-conda-forge.patch
+      - patches/0007-Fix-compiling-with-gcc.patch
+build:
+  string: h55c6f16_0
+  ignore_run_exports_from:
+    - clang_bootstrap_osx-arm64 *
+  number: 0
+requirements:
+  build:
+    - clang_bootstrap_osx-arm64 23.1.0 hbe68926_34
+    - macosx_deployment_target_osx-arm64 11.0 h214bdd9_7
+  host:
+    - __osx >=11.0
+  run:
+    - __osx >=11.0
+test:
+  commands:
+    - test -f $PREFIX/lib/libc++.dylib
+    - test -f $PREFIX/lib/libc++.a
+    - test -f $PREFIX/lib/libc++experimental.a
+    - test ! -d $PREFIX/include/c++
+  downstreams:
+    - libcxx-testing 0.19
+    - libcxx-testing 0.20
+    - libcxx-testing 0.21
+about:
+  home: http://libcxx.llvm.org/
+  license: Apache-2.0 WITH LLVM-exception
+  license_file: libcxx/LICENSE.TXT
+  license_family: Apache
+  summary: LLVM C++ standard library
+  dev_url: https://github.com/llvm/llvm-project
+extra:
+  recipe-maintainers:
+    - SylvainCorlay
+    - beckermr
+    - h-vetinari
+    - inducer
+    - isuruf
+    - jakirkham
+    - timsnyder
+  feedstock-name: libcxx
+  final: true
+  copy_test_source_files: true
+  flow_run_id: azure_20260908.2.1
+  remote_url: https://github.com/conda-forge/libcxx-feedstock
+  sha: 559800cbc75e324b3f7ceee2d71ea440c6e57e15

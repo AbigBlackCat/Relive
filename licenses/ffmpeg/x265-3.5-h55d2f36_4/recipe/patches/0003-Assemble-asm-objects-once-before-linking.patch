@@ -1,0 +1,67 @@
+Assemble the asm objects once, before anything links them
+
+The asm custom commands declare a bare relative OUTPUT, and ${ASM_OBJS}
+is then listed among the sources of both x265-static and x265-shared.
+CMake therefore emits an independent rule for the same output path in
+each target, and the two targets are built by concurrent sub-makes.
+
+GNU as opens its output with O_CREAT|O_TRUNC and fills it as it goes, so
+the object exists, and is newer than the .S it comes from, long before it
+is complete.  A sub-make that reaches the rule while the other is still
+assembling therefore considers it up to date, skips it, and links the
+partial object.  On aarch64 that yields a libx265.so with undefined NEON
+symbols:
+
+    x265: symbol lookup error: libx265.so.199:
+          undefined symbol: x265_interp_8tap_horiz_ps_8x32_neon
+
+and on Windows the same collision surfaces at link time instead, because
+the object is still open in the concurrent nasm:
+
+    LINK : fatal error LNK1104: cannot open file 'ipfilter8.asm.obj'
+
+The window is normally microseconds, but widens to seconds under an
+emulated builder, which is where this reproduces.
+
+Assemble them through one dedicated target and order every consumer
+after it, so no target can observe a half-written object.
+---
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -562,6 +562,16 @@
+         endforeach()
+     endif()
+ endif()
++# Every target that lists ${ASM_OBJS} among its sources gets its own
++# independent rule for the same output path, because the custom commands
++# above declare a relative OUTPUT rather than a real per-target object.  A
++# parallel build can therefore have one target's assembler truncating an
++# object while another target's linker is reading it, which shows up as
++# missing NEON symbols on aarch64 and as LNK1104 on Windows.  Assemble them
++# once through a dedicated target and order every consumer after it.
++if(ASM_OBJS)
++    add_custom_target(x265-asm-objs DEPENDS ${ASM_OBJS})
++endif()
+ source_group(ASM FILES ${ASM_SRCS})
+ if(ENABLE_HDR10_PLUS)
+     add_library(x265-static STATIC $<TARGET_OBJECTS:encoder> $<TARGET_OBJECTS:common> $<TARGET_OBJECTS:dynamicHDR10> ${ASM_OBJS})
+@@ -573,6 +583,9 @@
+ if(NOT MSVC)
+     set_target_properties(x265-static PROPERTIES OUTPUT_NAME x265)
+ endif()
++if(ASM_OBJS)
++    add_dependencies(x265-static x265-asm-objs)
++endif()
+ if(EXTRA_LIB)
+     target_link_libraries(x265-static ${EXTRA_LIB})
+ endif()
+@@ -646,6 +659,9 @@
+         add_library(x265-shared SHARED "${PROJECT_BINARY_DIR}/x265.def" ${ASM_OBJS}
+                    ${X265_RC_FILE} $<TARGET_OBJECTS:encoder> $<TARGET_OBJECTS:common>)
+     endif()
++    if(ASM_OBJS)
++        add_dependencies(x265-shared x265-asm-objs)
++    endif()
+     if(EXTRA_LIB)
+         target_link_libraries(x265-shared ${EXTRA_LIB})
+     endif()

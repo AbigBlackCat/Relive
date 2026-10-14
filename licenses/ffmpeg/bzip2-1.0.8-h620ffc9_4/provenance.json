@@ -1,0 +1,12 @@
+{
+  "name": "bzip2",
+  "version": "1.0.8",
+  "build": "h620ffc9_4",
+  "license": "bzip2-1.0.6",
+  "binary_download": "https://repo.anaconda.com/pkgs/main/osx-arm64/bzip2-1.0.8-h620ffc9_4.conda",
+  "homepage": "http://www.bzip.org/",
+  "upstream_repository": "",
+  "source_recipe": "patches:\n    - 0001-cross.patch\n  sha256: ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269\n  url: https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz",
+  "recipe_repository": "",
+  "recipe_commit": ""
+}

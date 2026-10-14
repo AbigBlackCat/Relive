@@ -1,0 +1,10 @@
+dist/
+.DS_Store
+.build/
+node_modules/
+desktop/vendor/
+Resources/bin/
+Resources/lib/
+Resources/macos-x86_64/
+Resources/macos-arm64/
+*.log

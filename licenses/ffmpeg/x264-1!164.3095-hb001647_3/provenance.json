@@ -1,0 +1,12 @@
+{
+  "name": "x264",
+  "version": "1!164.3095",
+  "build": "hb001647_3",
+  "license": "GPL-2.0-or-later",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-arm64/x264-1!164.3095-hb001647_3.conda",
+  "homepage": "http://www.videolan.org/developers/x264.html",
+  "upstream_repository": "https://code.videolan.org/videolan/x264",
+  "source_recipe": "- url: https://code.videolan.org/videolan/x264/-/archive/baee400fa9ced6f5481a728138fed6e867b0ff7f/x264-baee400fa9ced6f5481a728138fed6e867b0ff7f.tar.gz\n    sha256: 436a2be54d8bc0cb05dd33ecbbcb7df9c3b57362714fcdaa3a5991189a33319b\n    patches:\n      - patches/0001-ppc-Fix-incompatible-pointer-type-errors.patch\n  - path: /Users/runner/work/1/s/recipe/version.sh",
+  "recipe_repository": "https://github.com/conda-forge/x264-feedstock",
+  "recipe_commit": "624400ff394d04904e9967b5710fc7eb6ff94d5a"
+}

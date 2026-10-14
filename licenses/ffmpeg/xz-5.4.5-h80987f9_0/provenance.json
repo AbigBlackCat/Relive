@@ -1,0 +1,12 @@
+{
+  "name": "xz",
+  "version": "5.4.5",
+  "build": "h80987f9_0",
+  "license": "LGPL-2.1-or-later and GPL-2.0-or-later",
+  "binary_download": "https://repo.anaconda.com/pkgs/main/osx-arm64/xz-5.4.5-h80987f9_0.conda",
+  "homepage": "https://tukaani.org/xz/",
+  "upstream_repository": "https://git.tukaani.org/",
+  "source_recipe": "sha256: 8ccf5fff868c006f29522e386fb4c6a1b66463fbca65a4cfc3c4bd596e895e79\n  url: https://sourceforge.net/projects/lzmautils/files/xz-5.4.5.tar.bz2",
+  "recipe_repository": "git@github.com:AnacondaRecipes/xz-feedstock.git",
+  "recipe_commit": "9833f6c15b880055c2e94d02eb10db64346bd313"
+}

@@ -1,0 +1,12 @@
+{
+  "name": "fontconfig",
+  "version": "2.14.2",
+  "build": "h82840c6_0",
+  "license": "MIT",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-arm64/fontconfig-2.14.2-h82840c6_0.conda",
+  "homepage": "http://www.freedesktop.org/wiki/Software/fontconfig/",
+  "upstream_repository": "https://cgit.freedesktop.org/fontconfig/",
+  "source_recipe": "patches: null\n  sha256: 3ba2dd92158718acec5caaf1a716043b5aa055c27b081d914af3ccb40dce8a55\n  url: http://www.freedesktop.org/software/fontconfig/release/fontconfig-2.14.2.tar.gz",
+  "recipe_repository": "",
+  "recipe_commit": ""
+}

@@ -1,0 +1,12 @@
+{
+  "name": "libopenvino",
+  "version": "2023.2.0",
+  "build": "h965bd2d_0",
+  "license": "",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-arm64/libopenvino-2023.2.0-h965bd2d_0.conda",
+  "homepage": "",
+  "upstream_repository": "",
+  "source_recipe": "- patches: null\n    sha256: 419b3137a1a549fc5054edbba5b71da76cbde730e8a271769126e021477ad47b\n    url: https://github.com/openvinotoolkit/openvino/archive/refs/tags/2023.2.0.tar.gz\n  - folder: src/plugins/intel_cpu/thirdparty/ComputeLibrary\n    sha256: 62f514a555409d4401e5250b290cdf8cf1676e4eb775e5bd61ea6a740a8ce24f\n    url: https://github.com/ARM-software/ComputeLibrary/archive/refs/tags/v23.08.tar.gz\n  - folder: src/plugins/intel_cpu/thirdparty/onednn\n    sha256: 3c51d577f9e7e4cbd94ad08d267502953ec64513241dda6595b2608fafc8314c\n    url: https://github.com/openvinotoolkit/oneDNN/archive/2ead5d4fe5993a797d9a7a4b8b5557b96f6ec90e.tar.gz\n  - folder: src/plugins/intel_cpu/thirdparty/mlas\n    sha256: 707a6634d62ea5563042a67161472b4be3ffe73c9783719519abdd583b0295f4\n    url: https://github.com/openvinotoolkit/mlas/archive/f6425b1394334822390fcd9da12788c9cd0d11da.tar.gz\n  - folder: thirdparty/ade\n    sha256: edefba61a33d6cd4b78a9976cb3309c95212610a81ba6dade09882d1794198ff\n    url: https://github.com/opencv/ade/archive/refs/tags/v0.1.2d.tar.gz\n  - folder: thirdparty/onnx/onnx\n    sha256: e296f8867951fa6e71417a18f2e550a730550f8829bd35e947b4df5e3e777aa1\n    url: https://github.com/onnx/onnx/archive/refs/tags/v1.14.1.tar.gz\n  - folder: thirdparty/gflags/gflags\n    sha256: 34af2f15cf7367513b352bdcd2493ab14ce43692d2dcd9dfc499492966c64dcf\n    url: https://github.com/gflags/gflags/archive/refs/tags/v2.2.2.tar.gz\n  - folder: thirdparty/json/nlohmann_json\n    sha256: d69f9deb6a75e2580465c6c4c5111b89c4dc2fa94e3a85fcd2ffcd9a143d9273\n    url: https://github.com/nlohmann/json/archive/refs/tags/v3.11.2.tar.gz\n  - folder: thirdparty/zlib/zlib\n    sha256: 1525952a0a567581792613a9723333d7f8cc20b87a81f920fb8bc7e3f2251428\n    url: https://github.com/madler/zlib/archive/refs/tags/v1.2.13.tar.gz",
+  "recipe_repository": "https://github.com/conda-forge/openvino-feedstock",
+  "recipe_commit": "200a7c76cdf6c844bdb67ac5abbabfc9bc4f59d8"
+}

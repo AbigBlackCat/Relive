@@ -1,0 +1,12 @@
+{
+  "name": "icu",
+  "version": "73.2",
+  "build": "hc8870d7_0",
+  "license": "MIT",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-arm64/icu-73.2-hc8870d7_0.conda",
+  "homepage": "https://icu.unicode.org",
+  "upstream_repository": "https://github.com/unicode-org/icu",
+  "source_recipe": "- patches:\n      - mach-port-t.patch\n    sha256: 818a80712ed3caacd9b652305e01afc7fa167e6f2e94996da44b90c2ab604ce1\n    url: https://github.com/unicode-org/icu/releases/download/release-73-2/icu4c-73_2-src.tgz\n  - folder: source/data\n    sha256: ca1ee076163b438461e484421a7679fc33a64cd0a54f9d4b401893fa1eb42701\n    url: https://github.com/unicode-org/icu/releases/download/release-73-2/icu4c-73_2-data.zip",
+  "recipe_repository": "",
+  "recipe_commit": ""
+}

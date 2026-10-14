@@ -1,0 +1,12 @@
+{
+  "name": "libpng",
+  "version": "1.6.39",
+  "build": "h80987f9_0",
+  "license": "Zlib",
+  "binary_download": "https://repo.anaconda.com/pkgs/main/osx-arm64/libpng-1.6.39-h80987f9_0.conda",
+  "homepage": "http://www.libpng.org/pub/png/libpng.html",
+  "upstream_repository": "https://sourceforge.net/p/libpng/code/ci/libpng16/tree/",
+  "source_recipe": "patches:\n    - 0001-Include-pkg-config-files-in-the-Windows-packages-too.patch\n    - 0002-Ensure-that-lm-is-not-included-in-Windows-pkg-config.patch\n  sha256: af4fb7f260f839919e5958e5ab01a275d4fe436d45442a36ee62f73e5beb75ba\n  url: https://download.sourceforge.net/libpng/libpng-1.6.39.tar.gz",
+  "recipe_repository": "git@github.com:AnacondaRecipes/libpng-feedstock.git",
+  "recipe_commit": "cb4734baa7676085ec79b6d3a95cba5460ef27a7"
+}

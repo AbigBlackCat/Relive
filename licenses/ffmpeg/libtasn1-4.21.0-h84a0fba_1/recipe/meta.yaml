@@ -1,0 +1,83 @@
+# This file created by conda-build 26.7.0
+# meta.yaml template originally from:
+# /Users/runner/work/1/s/recipe, last modified Wed Aug  5 04:53:41 2026
+# ------------------------------------------------
+
+package:
+  name: libtasn1
+  version: 4.21.0
+source:
+  url: http://ftp.gnu.org/gnu/libtasn1/libtasn1-4.21.0.tar.gz
+  sha256: 1d8a444a223cc5464240777346e125de51d8e6abf0b8bac742ac84609167dc87
+build:
+  number: '1'
+  run_exports:
+    - libtasn1 >=4.21.0,<5.0a0
+  string: h84a0fba_1
+requirements:
+  build:
+    - ca-certificates 2026.7.22 hbd8a1cb_0
+    - cctools_impl_osx-64 1030.6.3 llvm19_1_h6ae9dcd_5
+    - cctools_impl_osx-arm64 1030.6.3 llvm19_1_h317eeb0_5
+    - cctools_osx-arm64 1030.6.3 llvm19_1_h0e16ad9_5
+    - clang 19.1.7 default_h1323312_5
+    - clang-19 19.1.7 default_hc369343_5
+    - clang_impl_osx-64 19.1.7 hc73cdc9_28
+    - clang_impl_osx-arm64 19.1.7 h4c5f930_34
+    - clang_osx-arm64 19.1.7 h877a2d5_34
+    - compiler-rt 19.1.7 he914875_1
+    - compiler-rt_osx-64 19.1.7 h138dee1_1
+    - gnuconfig 2025.07.09 hd8ed1ab_0
+    - ld64_osx-64 956.6 llvm19_1_hf4e8e46_5
+    - ld64_osx-arm64 956.6 llvm19_1_hd5dc7e1_5
+    - libclang-cpp19.1 19.1.7 default_hc369343_5
+    - libcxx 22.1.8 h19cb2f5_0
+    - libiconv 1.18 h57a12c2_2
+    - libllvm19 19.1.7 h56e7563_2
+    - liblzma 5.8.3 hbb4bfdb_0
+    - libsigtool 0.1.3 hc0f2934_0
+    - libxml2 2.15.3 h0712280_0
+    - libxml2-16 2.15.3 h0d7f165_0
+    - libzlib 1.3.2 hbb4bfdb_3
+    - llvm-tools 19.1.7 hb0207f0_2
+    - llvm-tools-19 19.1.7 h879f4bc_2
+    - macosx_deployment_target_osx-arm64 11.0 h214bdd9_7
+    - make 4.4.1 ha1e9b39_3
+    - ncurses 6.6 hcc0dc9a_0
+    - openssl 3.6.3 hc881268_0
+    - sdkroot_env_osx-arm64 26.0 ha3f98da_7
+    - sigtool-codesign 0.1.3 hc0f2934_0
+    - tapi 1600.0.11.8 h8d8e812_2
+    - zstd 1.5.7 h3eecb57_6
+  host:
+    - __osx >=11.0
+  run:
+    - __osx >=11.0
+test:
+  commands:
+    - test -f $PREFIX/lib/libtasn1${SHLIB_EXT}
+about:
+  home: https://www.gnu.org/software/libtasn1/
+  license: LGPL-2.1-or-later
+  license_file: COPYING
+  summary: Libtasn1 is the ASN.1 library used by GnuTLS, p11-kit and some other packages
+  description: 'The Libtasn1 library provides Abstract Syntax Notation One
+
+    (ASN.1, as specified by the X.680 ITU-T recommendation) parsing and structures
+    management,
+
+    and Distinguished Encoding Rules (DER, as per X.690) encoding and decoding functions.
+
+    '
+  doc_url: https://www.gnu.org/software/libtasn1/manual/libtasn1.html
+  dev_url: https://gitlab.com/gnutls/libtasn1/
+extra:
+  recipe-maintainers:
+    - ceholden
+    - gillins
+    - ocefpaf
+  final: true
+  copy_test_source_files: true
+  flow_run_id: azure_20260805.1.1
+  remote_url: https://github.com/conda-forge/libtasn1-feedstock
+  sha: 49cff4b73da09b7aa16808f3fd7f88af7f01832d

@@ -1,0 +1,24 @@
+diff --git a/graphite2.pc.in b/graphite2.pc.in
+index a4f19b3..8788239 100644
+--- a/graphite2.pc.in
++++ b/graphite2.pc.in
+@@ -1,3 +1,7 @@
++prefix=${prefix}
++exec_prefix=${prefix}
++libdir=${prefix}/lib
++includedir=${prefix}/include
+ 
+ Name: Graphite2
+ Description: Font rendering engine for Complex Scripts
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bbbc300..338574d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -92,6 +92,7 @@ if (NOT GRAPHITE2_NFILEFACE)
+ endif()
+ 
+ get_property(version DIRECTORY src PROPERTY lib_so_version)
++set(prefix ${CMAKE_INSTALL_PREFIX})
+ set(libdir ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+ set(includedir ${CMAKE_INSTALL_PREFIX}/include)
+ 
