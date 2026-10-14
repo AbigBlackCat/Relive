@@ -4,7 +4,7 @@
   "version": "1.1.0",
   "description": "Offline Live Photo editor for macOS and Windows",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "main": "desktop/main.cjs",
   "scripts": {
     "desktop": "electron .",
