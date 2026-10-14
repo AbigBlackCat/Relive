@@ -37,4 +37,4 @@ FFmpeg 已独立打包在 `Resources/bin` 与 `Resources/lib`。如需从本机 
 
 ## 许可与分发
 
-macOS 原生元数据实现参考 MIT makelive，操作台参考 MIT OpenScreen；保留相应声明在 `licenses/`。FFmpeg 及部分依赖采用 GPL v3 或更高版本；依赖的原始许可证、精确版本、Conda 构建 recipe、patch 和源代码地址也在 `licenses/ffmpeg/`。本地软件采用 ad-hoc 签名，未 Apple 公证。若未来公开分发，需要按这些许可证补齐对应源代码提供方式与正式签名/公证；当前包是为本机使用构建。
+本项目采用MIT License
