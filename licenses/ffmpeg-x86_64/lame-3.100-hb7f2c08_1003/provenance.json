@@ -1,0 +1,13 @@
+{
+  "name": "lame",
+  "version": "3.100",
+  "build": "hb7f2c08_1003",
+  "license": "LGPL-2.0-only",
+  "license_notices_package": "lame-3.100-hb7f2c08_1003",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/lame-3.100-hb7f2c08_1003.tar.bz2",
+  "homepage": "https://lame.sourceforge.io/",
+  "upstream_repository": "https://svn.code.sf.net/p/lame/svn/trunk/lame/",
+  "source_recipe": "patches:\n    - fixup_windows_build.patch\n    - libmp3lame.patch\n  sha256: ddfe36cab873794038ae2c1210557ad34857a4b6bdc515785d1da9e175b1da1e\n  url: https://downloads.sourceforge.net/sourceforge/lame/lame-3.100.tar.gz",
+  "recipe_repository": "",
+  "recipe_commit": ""
+}

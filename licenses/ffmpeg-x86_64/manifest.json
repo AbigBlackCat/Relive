@@ -1,0 +1,808 @@
+{
+  "architecture": "x86_64",
+  "packages": {
+    "ffmpeg-6.1.1-gpl_h5747b2d_117": {
+      "name": "ffmpeg",
+      "version": "6.1.1",
+      "build": "gpl_h5747b2d_117",
+      "license": "GPL-2.0-or-later",
+      "license_notices_package": "ffmpeg-6.1.1-gpl_h5747b2d_117",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/ffmpeg-6.1.1-gpl_h5747b2d_117.conda",
+      "homepage": "https://www.ffmpeg.org/",
+      "upstream_repository": "https://git.ffmpeg.org/ffmpeg.git",
+      "source_recipe": "patches:\n    - patches/0001-Revert-compat-Use-instead-of-for-rc.exe-options.patch\n    - patches/add-av_stream_get_first_dts-for-chromium.patch\n  sha256: b0aee531e4a91fed6bc031445dfc3ad8eb36de1fcb0fa2acdb589ecc9f8dc9cb\n  url: https://ffmpeg.org/releases/ffmpeg-6.1.1.tar.gz",
+      "recipe_repository": "https://github.com/conda-forge/ffmpeg-feedstock",
+      "recipe_commit": "beb2f7b4afb3708338d48b8a4295e5720b4eb339"
+    },
+    "svt-av1-2.1.2-hf036a51_0": {
+      "name": "svt-av1",
+      "version": "2.1.2",
+      "build": "hf036a51_0",
+      "license": "BSD-2-Clause",
+      "license_notices_package": "svt-av1-2.1.2-hf036a51_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/svt-av1-2.1.2-hf036a51_0.conda",
+      "homepage": "https://gitlab.com/AOMediaCodec/SVT-AV1",
+      "upstream_repository": "",
+      "source_recipe": "sha256: 65e90af18f31f8c8d2e9febf909a7d61f36172536abb25a7089f152210847cd9\n  url: https://gitlab.com/AOMediaCodec/SVT-AV1/-/archive/v2.1.2/SVT-AV1-v2.1.2.tar.gz",
+      "recipe_repository": "https://github.com/conda-forge/svt-av1-feedstock",
+      "recipe_commit": "926e1e1065829a798d1bf82872ffc8887101ce0e"
+    },
+    "aom-3.9.1-hf036a51_0": {
+      "name": "aom",
+      "version": "3.9.1",
+      "build": "hf036a51_0",
+      "license": "BSD-2-Clause",
+      "license_notices_package": "aom-3.9.1-hf036a51_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/aom-3.9.1-hf036a51_0.conda",
+      "homepage": "https://aomedia.org/",
+      "upstream_repository": "https://aomedia.googlesource.com/aom/",
+      "source_recipe": "patches:\n    - 0001-Fix-compilation-flags-for-win32.patch\n    - 0002-Remove-all-reference-of-aom_static.patch\n  sha256: dba99fc1c28aaade28dda59821166b2fa91c06162d1bc99fde0ddaad7cecc50e\n  url: https://storage.googleapis.com/aom-releases/libaom-3.9.1.tar.gz",
+      "recipe_repository": "https://github.com/conda-forge/aom-feedstock",
+      "recipe_commit": "c1faf437f87255df6eddb5529886869ab6df463e"
+    },
+    "libass-0.17.3-h07fa1ac_1": {
+      "name": "libass",
+      "version": "0.17.3",
+      "build": "h07fa1ac_1",
+      "license": "ISC",
+      "license_notices_package": "libass-0.17.3-h07fa1ac_1",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libass-0.17.3-h07fa1ac_1.conda",
+      "homepage": "https://github.com/libass/libass",
+      "upstream_repository": "https://github.com/libass/libass",
+      "source_recipe": "See the copied recipe files.",
+      "recipe_repository": "https://github.com/conda-forge/libass-feedstock",
+      "recipe_commit": "46cab36f1782584524eb86065c44563c8f34f84c"
+    },
+    "bzip2-1.0.8-h374f1ed_10": {
+      "name": "bzip2",
+      "version": "1.0.8",
+      "build": "h374f1ed_10",
+      "license": "bzip2-1.0.6",
+      "license_notices_package": "bzip2-1.0.8-h374f1ed_10",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/bzip2-1.0.8-h374f1ed_10.conda",
+      "homepage": "https://gitlab.com/bzip2/bzip2",
+      "upstream_repository": "https://gitlab.com/bzip2/bzip2",
+      "source_recipe": "url: https://gitlab.com/bzip2/bzip2/-/archive/bzip2-1.0.8/bzip2-bzip2-1.0.8.tar.gz\n  sha256: db106b740252669664fd8f3a1c69fe7f689d5cd4b132f82ba82b9afba27627df\n  patches:\n    - patches/0001-cross.patch\n    - patches/0002-Windows-Make-library-name-lowercase.patch\n    - patches/0003-Windows-Add-dyn-lib-build-rename-libbz2_static.patch",
+      "recipe_repository": "https://github.com/conda-forge/bzip2-feedstock",
+      "recipe_commit": "f0f345e062aed39aa7f500c0746efed2dcea6971"
+    },
+    "libcxx-23.1.3-h19cb2f5_0": {
+      "name": "libcxx",
+      "version": "23.1.3",
+      "build": "h19cb2f5_0",
+      "license": "Apache-2.0 WITH LLVM-exception",
+      "license_notices_package": "libcxx-23.1.3-h19cb2f5_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libcxx-23.1.3-h19cb2f5_0.conda",
+      "homepage": "http://libcxx.llvm.org/",
+      "upstream_repository": "https://github.com/llvm/llvm-project",
+      "source_recipe": "- url: https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-23.1.3.tar.gz\n    sha256: 791b560dee8f65fdf7b19ad5db0b4ac627467824d8b687957d8a437b806103f0\n    patches:\n      - patches/0002-custom-error-message-for-old-sdk.patch\n      - patches/0003-disable-_LIBCPP_AVAILABILITY_HAS_INIT_PRIMARY_EXCEPT.patch\n      - patches/0004-Work-around-stray-nostdlib-flags-causing-errors-with.patch\n      - patches/0005-patch-__libcpp_tzdb_directory-to-allow-use-on-osx.patch\n      - patches/0006-make-headers-platform-neutral-for-conda-forge.patch\n      - patches/0007-Fix-compiling-with-gcc.patch",
+      "recipe_repository": "https://github.com/conda-forge/libcxx-feedstock",
+      "recipe_commit": "e550d9a15b723e7abf5573fbe7b6051fa30144aa"
+    },
+    "dav1d-1.2.1-h0dc2134_0": {
+      "name": "dav1d",
+      "version": "1.2.1",
+      "build": "h0dc2134_0",
+      "license": "BSD-2-Clause",
+      "license_notices_package": "dav1d-1.2.1-h0dc2134_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/dav1d-1.2.1-h0dc2134_0.conda",
+      "homepage": "https://code.videolan.org/videolan/dav1d",
+      "upstream_repository": "",
+      "source_recipe": "sha256: 2dd85860d213479672b1c708e31593446e8c2b53ff41e2ca25a2eafb718424e2\n  url: https://code.videolan.org/videolan/dav1d/-/archive/1.2.1/dav1d-1.2.1.tar.gz",
+      "recipe_repository": "",
+      "recipe_commit": ""
+    },
+    "libexpat-2.8.5-h6e061ac_0": {
+      "name": "libexpat",
+      "version": "2.8.5",
+      "build": "h6e061ac_0",
+      "license": "MIT",
+      "license_notices_package": "libexpat-2.8.5-h6e061ac_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libexpat-2.8.5-h6e061ac_0.conda",
+      "homepage": "https://libexpat.github.io",
+      "upstream_repository": "https://github.com/libexpat/libexpat",
+      "source_recipe": "url: https://github.com/libexpat/libexpat/releases/download/R_2_8_5/expat-2.8.5.tar.xz\n  sha256: 1e727b8933ec51a77a9a9d9afcf8e688bce45d907c13e36ab7393fe36e703182",
+      "recipe_repository": "https://github.com/conda-forge/expat-feedstock",
+      "recipe_commit": "9bed6b038b32ec3f0d9cd7f55d4483911a0451c4"
+    },
+    "libffi-3.4.6-h281671d_1": {
+      "name": "libffi",
+      "version": "3.4.6",
+      "build": "h281671d_1",
+      "license": "MIT",
+      "license_notices_package": "libffi-3.4.6-h281671d_1",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libffi-3.4.6-h281671d_1.conda",
+      "homepage": "https://sourceware.org/libffi/",
+      "upstream_repository": "https://github.com/libffi/libffi",
+      "source_recipe": "patches:\n    - 0001-arm64-use-a-dedicated-dylib-for-trampolines-so-it-ca.patch\n    - 0002-Add-support-for-ffi_find_closure_for_code_np-on-Appl.patch\n  sha256: b0dea9df23c863a7a50e825440f3ebffabd65df1497108e5d437747843895a4e\n  url: https://github.com/libffi/libffi/releases/download/v3.4.6/libffi-3.4.6.tar.gz",
+      "recipe_repository": "https://github.com/conda-forge/libffi-feedstock",
+      "recipe_commit": "1105c826e22f4eb4ef5147621f839770764a85b2"
+    },
+    "fontconfig-2.18.3-h7f3b9c9_1": {
+      "name": "fontconfig",
+      "version": "2.18.3",
+      "build": "h7f3b9c9_1",
+      "license": "MIT",
+      "license_notices_package": "fontconfig-2.18.3-h7f3b9c9_1",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/fontconfig-2.18.3-h7f3b9c9_1.conda",
+      "homepage": "http://www.freedesktop.org/wiki/Software/fontconfig/",
+      "upstream_repository": "https://cgit.freedesktop.org/fontconfig/",
+      "source_recipe": "url: https://gitlab.freedesktop.org/api/v4/projects/890/packages/generic/fontconfig/2.18.3/fontconfig-2.18.3.tar.xz\n  sha256: 4f7b554a38cdf78c033f666c8871f3749e14a094f65a07f630c91ed0b43d35e3\n  patches: null",
+      "recipe_repository": "https://github.com/conda-forge/fontconfig-feedstock",
+      "recipe_commit": "7f94a24652814e2985044aeae8b2966fae633035"
+    },
+    "libfreetype6-2.14.3-h8afe040_2": {
+      "name": "libfreetype6",
+      "version": "2.14.3",
+      "build": "h8afe040_2",
+      "license": "GPL-2.0-only OR FTL",
+      "license_notices_package": "freetype-2.14.3-h694c41f_2",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libfreetype6-2.14.3-h8afe040_2.conda",
+      "homepage": "",
+      "upstream_repository": "",
+      "source_recipe": "url: https://download.savannah.gnu.org/releases/freetype/freetype-2.14.3.tar.gz\n  sha256: e61b31ab26358b946e767ed7eb7f4bb2e507da1cfefeb7a8861ace7fd5c899a1",
+      "recipe_repository": "https://github.com/conda-forge/freetype-feedstock",
+      "recipe_commit": "3520c4122afde3a5c30609f035de7cc4f501c069"
+    },
+    "fribidi-1.0.17-hd115831_0": {
+      "name": "fribidi",
+      "version": "1.0.17",
+      "build": "hd115831_0",
+      "license": "LGPL-2.1-or-later",
+      "license_notices_package": "fribidi-1.0.17-hd115831_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/fribidi-1.0.17-hd115831_0.conda",
+      "homepage": "https://github.com/fribidi/fribidi",
+      "upstream_repository": "https://github.com/fribidi/fribidi",
+      "source_recipe": "url: https://github.com/fribidi/fribidi/releases/download/v1.0.17/fribidi-1.0.17.tar.xz\n  sha256: 6949dcde27d41cebad1fd741fcafc36d55a1020d2d872d4a6eb3914caabbada2",
+      "recipe_repository": "https://github.com/conda-forge/fribidi-feedstock",
+      "recipe_commit": "f0153760c34a31830b8f7c29647a262daae058bc"
+    },
+    "libglib-2.86.0-h7cafd41_0": {
+      "name": "libglib",
+      "version": "2.86.0",
+      "build": "h7cafd41_0",
+      "license": "LGPL-2.1-or-later",
+      "license_notices_package": "libglib-2.86.0-h7cafd41_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libglib-2.86.0-h7cafd41_0.conda",
+      "homepage": "https://developer.gnome.org/glib/",
+      "upstream_repository": "https://gitlab.gnome.org/GNOME/glib/",
+      "source_recipe": "url: https://download.gnome.org/sources/glib/2.86/glib-2.86.0.tar.xz\n  sha256: b5739972d737cfb0d6fd1e7f163dfe650e2e03740bb3b8d408e4d1faea580d6d\n  patches:\n    - patches/0001-Remove-hard-coded-paths.patch\n    - patches/0002-crossplatform-test-tweaks.patch\n    - patches/0006-gio-tests-socket-listener-Depend-on-libdl.patch",
+      "recipe_repository": "https://github.com/conda-forge/glib-feedstock",
+      "recipe_commit": "b90fd82b3853d3e11a537bee874ef9d59b080f27"
+    },
+    "gnutls-3.7.9-h1951705_0": {
+      "name": "gnutls",
+      "version": "3.7.9",
+      "build": "h1951705_0",
+      "license": "LGPL-2.1-or-later",
+      "license_notices_package": "gnutls-3.7.9-h1951705_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/gnutls-3.7.9-h1951705_0.conda",
+      "homepage": "http://www.gnutls.org/index.html",
+      "upstream_repository": "https://gitlab.com/gnutls/gnutls/tree/master",
+      "source_recipe": "patches:\n    - 1794_specify_osstatus_error_signature.patch\n    - correct_ssl_test.patch\n  sha256: aaa03416cdbd54eb155187b359e3ec3ed52ec73df4df35a0edd49429ff64d844\n  url: https://www.gnupg.org/ftp/gcrypt/gnutls/v3.7/gnutls-3.7.9.tar.xz",
+      "recipe_repository": "https://github.com/conda-forge/gnutls-feedstock",
+      "recipe_commit": "cd6b4ba8a4588131b6bf0575959332861f127c93"
+    },
+    "graphite2-1.3.15-h2fb4741_1": {
+      "name": "graphite2",
+      "version": "1.3.15",
+      "build": "h2fb4741_1",
+      "license": "LGPL-2.0-or-later",
+      "license_notices_package": "graphite2-1.3.15-h2fb4741_1",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/graphite2-1.3.15-h2fb4741_1.conda",
+      "homepage": "http://graphite.sil.org/",
+      "upstream_repository": "https://github.com/silnrsi/graphite",
+      "source_recipe": "See the copied recipe files.",
+      "recipe_repository": "https://github.com/conda-forge/graphite2-feedstock",
+      "recipe_commit": "ba0a8e0362b411f2fa172e105d805270ac086509"
+    },
+    "harfbuzz-12.1.0-hc5d3ef4_0": {
+      "name": "harfbuzz",
+      "version": "12.1.0",
+      "build": "hc5d3ef4_0",
+      "license": "MIT",
+      "license_notices_package": "harfbuzz-12.1.0-hc5d3ef4_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/harfbuzz-12.1.0-hc5d3ef4_0.conda",
+      "homepage": "https://harfbuzz.github.io/",
+      "upstream_repository": "https://github.com/harfbuzz/harfbuzz",
+      "source_recipe": "url: https://github.com/harfbuzz/harfbuzz/archive/12.1.0.tar.gz\n  sha256: 0238bf7ada6b1fb92984f69f8b9cd66518af83cf24f7db1cfe60c772c42312d3\n  patches:\n    - createfontdescriptors.patch",
+      "recipe_repository": "https://github.com/conda-forge/harfbuzz-feedstock",
+      "recipe_commit": "85fc363c3fd5d5d112f6cadb87f34b6b58461aa6"
+    },
+    "nettle-3.9.1-h8e11ae5_0": {
+      "name": "nettle",
+      "version": "3.9.1",
+      "build": "h8e11ae5_0",
+      "license": "GPL 2 and LGPL3",
+      "license_notices_package": "nettle-3.9.1-h8e11ae5_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/nettle-3.9.1-h8e11ae5_0.conda",
+      "homepage": "https://www.lysator.liu.se/~nisse/nettle/",
+      "upstream_repository": "https://git.lysator.liu.se/nettle/nettle",
+      "source_recipe": "fn: nettle-3.9.1.tar.gz\n  sha256: ccfeff981b0ca71bbd6fbcb054f407c60ffb644389a5be80d6716d5b550c6ce3\n  url: https://ftp.gnu.org/gnu/nettle/nettle-3.9.1.tar.gz",
+      "recipe_repository": "",
+      "recipe_commit": ""
+    },
+    "libiconv-1.18-h4ae439b_3": {
+      "name": "libiconv",
+      "version": "1.18",
+      "build": "h4ae439b_3",
+      "license": "LGPL-2.1-only",
+      "license_notices_package": "libiconv-1.18-h4ae439b_3",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libiconv-1.18-h4ae439b_3.conda",
+      "homepage": "https://www.gnu.org/software/libiconv/",
+      "upstream_repository": "",
+      "source_recipe": "url: http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.18.tar.gz\n  sha256: 3b08f5f4f9b4eb82f151a7040bfd6fe6c6fb922efe4b1659c66ea933276965e8\n  patches:\n    - utf_8_mac.patch",
+      "recipe_repository": "https://github.com/conda-forge/libiconv-feedstock",
+      "recipe_commit": "c7fdcb1b68d6579a08d0c5dc5f34cbbf38780538"
+    },
+    "icu-75.1-h120a0e1_0": {
+      "name": "icu",
+      "version": "75.1",
+      "build": "h120a0e1_0",
+      "license": "MIT",
+      "license_notices_package": "icu-75.1-h120a0e1_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/icu-75.1-h120a0e1_0.conda",
+      "homepage": "https://icu.unicode.org",
+      "upstream_repository": "https://github.com/unicode-org/icu",
+      "source_recipe": "- patches:\n      - mach-port-t.patch\n    sha256: cb968df3e4d2e87e8b11c49a5d01c787bd13b9545280fc6642f826527618caef\n    url: https://github.com/unicode-org/icu/releases/download/release-75-1/icu4c-75_1-src.tgz\n  - folder: source/data\n    sha256: a5104212dc317a64f9b035723ea706f2f4fd5a0f37b7923fae7aeb9d1d0061b1\n    url: https://github.com/unicode-org/icu/releases/download/release-75-1/icu4c-75_1-data.zip",
+      "recipe_repository": "https://github.com/conda-forge/icu-feedstock",
+      "recipe_commit": "dc39a238c7b171624dee6c0f1b0765e3a6abe868"
+    },
+    "libidn2-2.3.8-h13f126c_1": {
+      "name": "libidn2",
+      "version": "2.3.8",
+      "build": "h13f126c_1",
+      "license": "LGPL-2.0-only",
+      "license_notices_package": "libidn2-2.3.8-h13f126c_1",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libidn2-2.3.8-h13f126c_1.conda",
+      "homepage": "https://www.gnu.org/software/libidn/#libidn2",
+      "upstream_repository": "",
+      "source_recipe": "url: https://ftp.gnu.org/gnu/libidn/libidn2-2.3.8.tar.gz\n  sha256: f557911bf6171621e1f72ff35f5b1825bb35b52ed45325dcdee931e5d3c0787a",
+      "recipe_repository": "https://github.com/conda-forge/libidn2-feedstock",
+      "recipe_commit": "6bc03881332d1ce29abb23a6a52bc99e7ca933e6"
+    },
+    "libintl-0.25.1-h98e67c8_2": {
+      "name": "libintl",
+      "version": "0.25.1",
+      "build": "h98e67c8_2",
+      "license": "LGPL-2.1-or-later",
+      "license_notices_package": "libintl-0.25.1-h98e67c8_2",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libintl-0.25.1-h98e67c8_2.conda",
+      "homepage": "https://www.gnu.org/software/gettext/",
+      "upstream_repository": "",
+      "source_recipe": "url: https://ftp.gnu.org/pub/gnu/gettext/gettext-0.25.1.tar.xz\n  sha256: 2c8294be238f03fb3fa65b8051057e5b68167f3e21f08008070cf40a7051ba22\n  patches:\n    - 0009-string-h-dont-redeclare-macro-functions.patch",
+      "recipe_repository": "https://github.com/conda-forge/gettext-feedstock",
+      "recipe_commit": "19edcefc1ebbaa06c80f9af85d8f0d32ad5d8d40"
+    },
+    "liblzma-5.8.3-hbb4bfdb_1": {
+      "name": "liblzma",
+      "version": "5.8.3",
+      "build": "hbb4bfdb_1",
+      "license": "0BSD",
+      "license_notices_package": "liblzma-5.8.3-hbb4bfdb_1",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/liblzma-5.8.3-hbb4bfdb_1.conda",
+      "homepage": "http://tukaani.org/xz/",
+      "upstream_repository": "http://git.tukaani.org/",
+      "source_recipe": "url: https://github.com/tukaani-project/xz/releases/download/v5.8.3/xz-5.8.3.tar.gz\n  sha256: 3d3a1b973af218114f4f889bbaa2f4c037deaae0c8e815eec381c3d546b974a0",
+      "recipe_repository": "https://github.com/conda-forge/xz-feedstock",
+      "recipe_commit": "bc37fbf54469221332fc589c1404294a159f403b"
+    },
+    "lame-3.100-hb7f2c08_1003": {
+      "name": "lame",
+      "version": "3.100",
+      "build": "hb7f2c08_1003",
+      "license": "LGPL-2.0-only",
+      "license_notices_package": "lame-3.100-hb7f2c08_1003",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/lame-3.100-hb7f2c08_1003.tar.bz2",
+      "homepage": "https://lame.sourceforge.io/",
+      "upstream_repository": "https://svn.code.sf.net/p/lame/svn/trunk/lame/",
+      "source_recipe": "patches:\n    - fixup_windows_build.patch\n    - libmp3lame.patch\n  sha256: ddfe36cab873794038ae2c1210557ad34857a4b6bdc515785d1da9e175b1da1e\n  url: https://downloads.sourceforge.net/sourceforge/lame/lame-3.100.tar.gz",
+      "recipe_repository": "",
+      "recipe_commit": ""
+    },
+    "openh264-2.4.1-h73e2aa4_0": {
+      "name": "openh264",
+      "version": "2.4.1",
+      "build": "h73e2aa4_0",
+      "license": "BSD-2-Clause",
+      "license_notices_package": "openh264-2.4.1-h73e2aa4_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/openh264-2.4.1-h73e2aa4_0.conda",
+      "homepage": "http://www.openh264.org/",
+      "upstream_repository": "https://github.com/cisco/openh264",
+      "source_recipe": "sha256: 8ffbe944e74043d0d3fb53d4a2a14c94de71f58dbea6a06d0dc92369542958ea\n  url: https://github.com/cisco/openh264/archive/v2.4.1.tar.gz",
+      "recipe_repository": "https://github.com/conda-forge/openh264-feedstock",
+      "recipe_commit": "869a976db97541274cf97f311b748b1911af9985"
+    },
+    "libopenvino-2024.3.0-h3d2f4b3_0": {
+      "name": "libopenvino",
+      "version": "2024.3.0",
+      "build": "h3d2f4b3_0",
+      "license": "",
+      "license_notices_package": "libopenvino-2024.3.0-h3d2f4b3_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libopenvino-2024.3.0-h3d2f4b3_0.conda",
+      "homepage": "",
+      "upstream_repository": "",
+      "source_recipe": "- patches:\n      - patches/001-fix-python-build.patch\n    sha256: 53fccad05279d0975eca84ec75517a7c360be9b0f7bcd822da29a7949c12ce70\n    url: https://github.com/openvinotoolkit/openvino/archive/refs/tags/2024.3.0.tar.gz\n  - folder: src/plugins/intel_cpu/thirdparty/onednn\n    sha256: 13bee5b8522177f297e095e3eba5948c1a7ee7a816d19d5a59ce0f717f82cedc\n    url: https://github.com/openvinotoolkit/oneDNN/archive/f0f8defe2dff5058391f2a66e775e20b5de33b08.tar.gz\n  - folder: src/plugins/intel_cpu/thirdparty/mlas\n    sha256: 0a44fbfd4b13e8609d66ddac4b11a27c90c1074cde5244c91ad197901666004c\n    url: https://github.com/openvinotoolkit/mlas/archive/d1bc25ec4660cddd87804fcf03b2411b5dfb2e94.tar.gz\n  - folder: thirdparty/onnx/onnx\n    sha256: c757132e018dd0dd171499ef74fca88b74c5430a20781ec53da19eb7f937ef68\n    url: https://github.com/onnx/onnx/archive/refs/tags/v1.15.0.tar.gz",
+      "recipe_repository": "https://github.com/conda-forge/openvino-feedstock",
+      "recipe_commit": "5e5f3726befb187b834c3c1dd5facd5f58e72ae6"
+    },
+    "libopus-1.6.1-had63097_1": {
+      "name": "libopus",
+      "version": "1.6.1",
+      "build": "had63097_1",
+      "license": "BSD-3-Clause",
+      "license_notices_package": "libopus-1.6.1-had63097_1",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libopus-1.6.1-had63097_1.conda",
+      "homepage": "http://opus-codec.org/",
+      "upstream_repository": "https://github.com/xiph/opus",
+      "source_recipe": "See the copied recipe files.",
+      "recipe_repository": "https://github.com/conda-forge/libopus-feedstock",
+      "recipe_commit": "edc1135009230e49f9f85b1277f886041e82199f"
+    },
+    "p11-kit-0.24.1-h65f8906_0": {
+      "name": "p11-kit",
+      "version": "0.24.1",
+      "build": "h65f8906_0",
+      "license": "MIT",
+      "license_notices_package": "p11-kit-0.24.1-h65f8906_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/p11-kit-0.24.1-h65f8906_0.tar.bz2",
+      "homepage": "https://github.com/p11-glue/p11-kit",
+      "upstream_repository": "",
+      "source_recipe": "sha256: d8be783efd5cd4ae534cee4132338e3f40f182c3205d23b200094ec85faaaef8\n  url: https://github.com/p11-glue/p11-kit/releases/download/0.24.1/p11-kit-0.24.1.tar.xz",
+      "recipe_repository": "",
+      "recipe_commit": ""
+    },
+    "pcre2-10.46-ha3e7e28_0": {
+      "name": "pcre2",
+      "version": "10.46",
+      "build": "ha3e7e28_0",
+      "license": "BSD-3-Clause",
+      "license_notices_package": "pcre2-10.46-ha3e7e28_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/pcre2-10.46-ha3e7e28_0.conda",
+      "homepage": "http://www.pcre.org/",
+      "upstream_repository": "",
+      "source_recipe": "- url: https://github.com/PCRE2Project/pcre2/archive/refs/tags/pcre2-10.46.tar.gz\n    sha256: ffde0c6ead457c4f8edcd8f9ce490bbabd30adabdfd179ecaddd320946cf3872\n  - url: https://github.com/zherczeg/sljit/archive/e51eabbfb8eabc6526f56e4e88b29fb10d1ee048.tar.gz\n    sha256: 5caf31959f4c2dfa9fdbaf290b0e16538527d929d5c1c5bd1a3e6df01436c1cf\n    folder: deps/sljit",
+      "recipe_repository": "https://github.com/conda-forge/pcre2-feedstock",
+      "recipe_commit": "2f1ae03cb6acdef03df8b3d0499bfad7719dbb27"
+    },
+    "libpng-1.6.59-h4382c61_0": {
+      "name": "libpng",
+      "version": "1.6.59",
+      "build": "h4382c61_0",
+      "license": "zlib-acknowledgement",
+      "license_notices_package": "libpng-1.6.59-h4382c61_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libpng-1.6.59-h4382c61_0.conda",
+      "homepage": "http://www.libpng.org/pub/png/libpng.html",
+      "upstream_repository": "https://sourceforge.net/p/libpng/code/ci/libpng16/tree/",
+      "source_recipe": "See the copied recipe files.",
+      "recipe_repository": "https://github.com/conda-forge/libpng-feedstock",
+      "recipe_commit": "fb861d8ff886d5bfe7fc4f01c6545d59779798ff"
+    },
+    "pugixml-1.14-he965462_0": {
+      "name": "pugixml",
+      "version": "1.14",
+      "build": "he965462_0",
+      "license": "MIT",
+      "license_notices_package": "pugixml-1.14-he965462_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/pugixml-1.14-he965462_0.conda",
+      "homepage": "http://pugixml.org/",
+      "upstream_repository": "https://github.com/zeux/pugixml",
+      "source_recipe": "fn: pugixml-1.14.tar.gz\n  sha256: 610f98375424b5614754a6f34a491adbddaaec074e9044577d965160ec103d2e\n  url: https://github.com/zeux/pugixml/archive/v1.14.tar.gz",
+      "recipe_repository": "",
+      "recipe_commit": ""
+    },
+    "libtasn1-4.21.0-ha1e9b39_1": {
+      "name": "libtasn1",
+      "version": "4.21.0",
+      "build": "ha1e9b39_1",
+      "license": "LGPL-2.1-or-later",
+      "license_notices_package": "libtasn1-4.21.0-ha1e9b39_1",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libtasn1-4.21.0-ha1e9b39_1.conda",
+      "homepage": "https://www.gnu.org/software/libtasn1/",
+      "upstream_repository": "https://gitlab.com/gnutls/libtasn1/",
+      "source_recipe": "url: http://ftp.gnu.org/gnu/libtasn1/libtasn1-4.21.0.tar.gz\n  sha256: 1d8a444a223cc5464240777346e125de51d8e6abf0b8bac742ac84609167dc87",
+      "recipe_repository": "https://github.com/conda-forge/libtasn1-feedstock",
+      "recipe_commit": "49cff4b73da09b7aa16808f3fd7f88af7f01832d"
+    },
+    "tbb-2022.3.0-hf0c99ee_1": {
+      "name": "tbb",
+      "version": "2022.3.0",
+      "build": "hf0c99ee_1",
+      "license": "Apache-2.0",
+      "license_notices_package": "tbb-2022.3.0-hf0c99ee_1",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/tbb-2022.3.0-hf0c99ee_1.conda",
+      "homepage": "https://github.com/oneapi-src/oneTBB",
+      "upstream_repository": "https://github.com/oneapi-src/oneTBB",
+      "source_recipe": "url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2022.3.0.tar.gz\n  sha256: 01598a46c1162c27253a0de0236f520fd8ee8166e9ebb84a4243574f88e6e50a",
+      "recipe_repository": "https://github.com/conda-forge/tbb-feedstock",
+      "recipe_commit": "11a01d9a76f722ade959ebdbd4c7c7386798ce37"
+    },
+    "libunistring-0.9.10-h0d85af4_0": {
+      "name": "libunistring",
+      "version": "0.9.10",
+      "build": "h0d85af4_0",
+      "license": "GPL-3.0-only OR LGPL-3.0-only",
+      "license_notices_package": "libunistring-0.9.10-h0d85af4_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libunistring-0.9.10-h0d85af4_0.tar.bz2",
+      "homepage": "https://www.gnu.org/software/libunistring",
+      "upstream_repository": "",
+      "source_recipe": "fn: libunistring-0.9.10.tar.xz\n  sha256: eb8fb2c3e4b6e2d336608377050892b54c3c983b646c561836550863003c05d7\n  url: http://ftpmirror.gnu.org/libunistring/libunistring-0.9.10.tar.xz",
+      "recipe_repository": "",
+      "recipe_commit": ""
+    },
+    "libvpx-1.14.1-hf036a51_0": {
+      "name": "libvpx",
+      "version": "1.14.1",
+      "build": "hf036a51_0",
+      "license": "BSD-3-Clause",
+      "license_notices_package": "libvpx-1.14.1-hf036a51_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libvpx-1.14.1-hf036a51_0.conda",
+      "homepage": "https://www.webmproject.org/",
+      "upstream_repository": "https://chromium.googlesource.com/webm/libvpx",
+      "source_recipe": "sha256: 901747254d80a7937c933d03bd7c5d41e8e6c883e0665fadcb172542167c7977\n  url: https://download.videolan.org/contrib/vpx/libvpx-1.14.1.tar.gz",
+      "recipe_repository": "https://github.com/conda-forge/libvpx-feedstock",
+      "recipe_commit": "49e323da98865719f590a7cd98729c902337e6d9"
+    },
+    "x264-1!164.3095-pl5321h892666e_3": {
+      "name": "x264",
+      "version": "1!164.3095",
+      "build": "pl5321h892666e_3",
+      "license": "GPL-2.0-or-later",
+      "license_notices_package": "x264-1!164.3095-pl5321h892666e_3",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/x264-1!164.3095-pl5321h892666e_3.conda",
+      "homepage": "http://www.videolan.org/developers/x264.html",
+      "upstream_repository": "https://code.videolan.org/videolan/x264",
+      "source_recipe": "See the copied recipe files.",
+      "recipe_repository": "https://github.com/conda-forge/x264-feedstock",
+      "recipe_commit": "8e8f340576ba8cac2b66fb21a3cbb1298788ff09"
+    },
+    "x265-3.5-h78a8136_4": {
+      "name": "x265",
+      "version": "3.5",
+      "build": "h78a8136_4",
+      "license": "GPL-2.0-or-later",
+      "license_notices_package": "x265-3.5-h78a8136_4",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/x265-3.5-h78a8136_4.conda",
+      "homepage": "https://www.x265.org/",
+      "upstream_repository": "https://bitbucket.org/multicoreware/x265_git",
+      "source_recipe": "url: https://bitbucket.org/multicoreware/x265_git/downloads/x265_3.5.tar.gz\n  sha256: e70a3335cacacbba0b3a20ec6fecd6783932288ebc8163ad74bcc9606477cae8\n  patches:\n    - patches/0001-Fix-the-build-with-CMake-4.patch\n    - patches/0002-json11-include-cstdint-for-uint8_t.patch\n    - patches/0003-Assemble-asm-objects-once-before-linking.patch",
+      "recipe_repository": "https://github.com/conda-forge/x265-feedstock",
+      "recipe_commit": "c99a2f3e7c9bc7ea3056b1e306608d72c6226eec"
+    },
+    "libxml2-2.13.9-he1bc88e_0": {
+      "name": "libxml2",
+      "version": "2.13.9",
+      "build": "he1bc88e_0",
+      "license": "MIT",
+      "license_notices_package": "libxml2-2.13.9-he1bc88e_0",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libxml2-2.13.9-he1bc88e_0.conda",
+      "homepage": "http://xmlsoft.org/",
+      "upstream_repository": "https://git.gnome.org/browse/libxml2/",
+      "source_recipe": "url: https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.13.9/libxml2-v2.13.9.tar.gz\n  sha256: 8d5fa142a3ea8727db1f7988b01f75b9fad8d311b8e0505e38e9d6a42a720085\n  patches:\n    - 0002-Make-and-install-a-pkg-config-file-on-Windows.patch",
+      "recipe_repository": "https://github.com/conda-forge/libxml2-feedstock",
+      "recipe_commit": "61db1e91eb4c117414072355a0105fe816d6bcd3"
+    },
+    "libzlib-1.3.2-hbb4bfdb_3": {
+      "name": "libzlib",
+      "version": "1.3.2",
+      "build": "hbb4bfdb_3",
+      "license": "Zlib",
+      "license_notices_package": "libzlib-1.3.2-hbb4bfdb_3",
+      "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libzlib-1.3.2-hbb4bfdb_3.conda",
+      "homepage": "http://zlib.net/",
+      "upstream_repository": "https://github.com/madler/zlib",
+      "source_recipe": "url:\n    - http://zlib.net/zlib-1.3.2.tar.gz\n    - https://gnupg.org/ftp/gcrypt/zlib/zlib-1.3.2.tar.gz\n  sha256: bb329a0a2cd0274d05519d61c667c062e06990d72e125ee2dfa8de64f0119d16",
+      "recipe_repository": "https://github.com/conda-forge/zlib-feedstock",
+      "recipe_commit": "044fc2361e1c5f1a35c8f417f1434a585e627297"
+    }
+  },
+  "binaries": [
+    {
+      "binary": "ffmpeg",
+      "package": "ffmpeg-6.1.1-gpl_h5747b2d_117",
+      "original_sha256": "283085ccb46b0606ac58a4a8b6a6ad6545bcb04020af0b47123b33097378405a",
+      "bundled_sha256": "728e9574bc933b5a5b10135e4691eb28789050f9e53d84153c7e46906bbfcc1b"
+    },
+    {
+      "binary": "ffprobe",
+      "package": "ffmpeg-6.1.1-gpl_h5747b2d_117",
+      "original_sha256": "cfdfc038b7515358f44c478b9413d66bb1805144f45c39b5d5fa2a946e2e0212",
+      "bundled_sha256": "5d6920dedc0decd34ec5946978fcc5041933a2bf1a7fc66985407aef208d2d5d"
+    },
+    {
+      "binary": "libSvtAv1Enc.2.1.2.dylib",
+      "package": "svt-av1-2.1.2-hf036a51_0",
+      "original_sha256": "15b244a15d056cd8caae4dcb4be785a5e0862403b9449d12c40220318a841dfb",
+      "bundled_sha256": "ce178162b90b232196fc82afadff8aa96e9fca8de39528cdce44032f32fb9dde"
+    },
+    {
+      "binary": "libaom.3.9.1.dylib",
+      "package": "aom-3.9.1-hf036a51_0",
+      "original_sha256": "3743217ff7ec2b69516c5fe30ad9b1ddc1b756242e2b5cf7579f9fc1650482ee",
+      "bundled_sha256": "467828b2544b67ec0d3f3bb010e020a8d7913feb37274a9662e91aa394549322"
+    },
+    {
+      "binary": "libass.9.dylib",
+      "package": "libass-0.17.3-h07fa1ac_1",
+      "original_sha256": "c15a3aae8572942cbf28a0769b7310cd26805ae66ef214a2e3360ec77073628b",
+      "bundled_sha256": "8c6fc174b29e706d8105488775574fb1f40023fd9b2ff5ece34ea5a3548ff650"
+    },
+    {
+      "binary": "libavcodec.60.31.102.dylib",
+      "package": "ffmpeg-6.1.1-gpl_h5747b2d_117",
+      "original_sha256": "a111bba1437ad8a6a547ce8edc7c5b9a8b84fe2579a57a4bdc434c645de41fb5",
+      "bundled_sha256": "a88f587ef1a8a87907354018432758e440456e8276a7081939aebc901ae7f6a5"
+    },
+    {
+      "binary": "libavdevice.60.3.100.dylib",
+      "package": "ffmpeg-6.1.1-gpl_h5747b2d_117",
+      "original_sha256": "64c63bed8ed09e5ce7ced553e829ea0586971e23d7001c06f0323b798b5c34bd",
+      "bundled_sha256": "35ddbcb8341f5d74bc673cc88da67b5f1a2b68151689b604f87b7092700900c5"
+    },
+    {
+      "binary": "libavfilter.9.12.100.dylib",
+      "package": "ffmpeg-6.1.1-gpl_h5747b2d_117",
+      "original_sha256": "a83f9105811063e936c1e9270b912743d2ba4d75ec4725f0a7b7ee51eda70a57",
+      "bundled_sha256": "d6ec3ac0fe8c8d2f514eb0db9199d8f0a7aed0d0474b8b07635bafe2adcf6a97"
+    },
+    {
+      "binary": "libavformat.60.16.100.dylib",
+      "package": "ffmpeg-6.1.1-gpl_h5747b2d_117",
+      "original_sha256": "7b6792c64a8bf659957b474bdd9a15b5863c51544c50762aad4cd683c391eedd",
+      "bundled_sha256": "14c7b1a17bb56b1c49f6c5f8d679b2a7127e2781d3931397b6da3aafd50e146d"
+    },
+    {
+      "binary": "libavutil.58.29.100.dylib",
+      "package": "ffmpeg-6.1.1-gpl_h5747b2d_117",
+      "original_sha256": "3be6a22cc9eb534d7052a0efe3ba29020cee6d8c9afb3f62f9397f66929b01ab",
+      "bundled_sha256": "daf8641a093e5290e9a53fbfdbaf57129f183e53f608df5b39c87b486137b5df"
+    },
+    {
+      "binary": "libbz2.1.0.8.dylib",
+      "package": "bzip2-1.0.8-h374f1ed_10",
+      "original_sha256": "165854dfcc899f410b8eb360a3e8e4ab3c9a1a46389653d9da78cf8c74410ac4",
+      "bundled_sha256": "1b008564fe65d9df6a79988cffaa270897e57354f64c051e489c1b3b67467694"
+    },
+    {
+      "binary": "libc++.1.0.dylib",
+      "package": "libcxx-23.1.3-h19cb2f5_0",
+      "original_sha256": "1b86920a7c8c282577e00602ad28904819efc0d622646c4ebd2abef824084b4b",
+      "bundled_sha256": "4c7e4eefe920d0f9274ff5401583896bf26254556039361f705f352689d2b16d"
+    },
+    {
+      "binary": "libdav1d.6.dylib",
+      "package": "dav1d-1.2.1-h0dc2134_0",
+      "original_sha256": "75a73a1f46f45e744e098f1695facf39709691685691a391cb3d2e0b5c32708c",
+      "bundled_sha256": "3334775883c532849b1d2bebfca95159c366a1361ee7668268c94512c97d8e21"
+    },
+    {
+      "binary": "libexpat.1.12.5.dylib",
+      "package": "libexpat-2.8.5-h6e061ac_0",
+      "original_sha256": "4b1c80eda0f4da1eb0ce9d60aea96c4fd1c9cf9e1d8acdae001765c746d52592",
+      "bundled_sha256": "286624e95861f0d8d701df6cb7d1b73bab019de496112a3174f06bd6cd1a21aa"
+    },
+    {
+      "binary": "libffi.8.dylib",
+      "package": "libffi-3.4.6-h281671d_1",
+      "original_sha256": "f207187df116ee137a7184b8c68aebbf4fb35ef456fef2b9f7bf3ac40ca323ee",
+      "bundled_sha256": "79456214983a2fed246dd3ad77d6a7a44abdad74ecb1575493aa70904da9340f"
+    },
+    {
+      "binary": "libfontconfig.1.dylib",
+      "package": "fontconfig-2.18.3-h7f3b9c9_1",
+      "original_sha256": "49f4ecfcd53505677e2928c99c214bd64c105ff5c1dcaa92fdf1a2a8e8848403",
+      "bundled_sha256": "63deae3df4468e42975d742a5cc07b8cad043f032ea27de2c19237194c508154"
+    },
+    {
+      "binary": "libfreetype.6.dylib",
+      "package": "libfreetype6-2.14.3-h8afe040_2",
+      "original_sha256": "15dff6b705249b778a40f6ffd906ec1246cc2122ecdaa31d569375b8d36f9cdd",
+      "bundled_sha256": "3031705b72fb6e969b3a4ca09de5400a53c5fbf9499656cbd3bb43ff3970c123"
+    },
+    {
+      "binary": "libfribidi.0.dylib",
+      "package": "fribidi-1.0.17-hd115831_0",
+      "original_sha256": "ed1f8c6cd2622d99fa1ef2f476f948b1d76be26f9f27f533e665488be976e545",
+      "bundled_sha256": "f4b4aa5b4357982d2f323680506e7dbbc92f129de8696b7d1c37f002ecf12696"
+    },
+    {
+      "binary": "libglib-2.0.0.dylib",
+      "package": "libglib-2.86.0-h7cafd41_0",
+      "original_sha256": "a67f1ed4eaf3ab2a7ac121562793f479f7da4b70fb8dbe3c2a23dfb6cc78b613",
+      "bundled_sha256": "9a2c5083a71bbe6570a5e3f7203033825cb41795e6c49d41dcf650635accdd07"
+    },
+    {
+      "binary": "libgnutls.30.dylib",
+      "package": "gnutls-3.7.9-h1951705_0",
+      "original_sha256": "6b258859ed1e25ccc9e5207e389f99317af0d97aa386f527ee856ee53ffdf378",
+      "bundled_sha256": "c2f8347f00262c39efc14e27e79a43246986fb82ae863e9230ad6e23268c0616"
+    },
+    {
+      "binary": "libgraphite2.3.3.1.dylib",
+      "package": "graphite2-1.3.15-h2fb4741_1",
+      "original_sha256": "ed15b4a2a8d084d77e456877d513f2d57f9d1a0cb616d2b8575084ad2f4074e0",
+      "bundled_sha256": "c9092b757119f02d7c5e6b62dc1c265e33cabd742c191c5fdae32e4d56f55fc2"
+    },
+    {
+      "binary": "libharfbuzz.0.dylib",
+      "package": "harfbuzz-12.1.0-hc5d3ef4_0",
+      "original_sha256": "fbe6291d8cb29068f125f2ec58a83c62b6cec3547d39c67b2b2289a7d099908f",
+      "bundled_sha256": "3563f1d293c964741428b718c159d126c5c473d33612d904c7bf2044e096a4f0"
+    },
+    {
+      "binary": "libhogweed.6.8.dylib",
+      "package": "nettle-3.9.1-h8e11ae5_0",
+      "original_sha256": "87ad10f152f1e91db9a7dc4ba1d57425c7d38000efdb974a776693e474246929",
+      "bundled_sha256": "4221cf381560e3f205235019476065dc142e1525d4fb381f152abedcd4ff1169"
+    },
+    {
+      "binary": "libiconv.2.dylib",
+      "package": "libiconv-1.18-h4ae439b_3",
+      "original_sha256": "5b1f94296577775a4e8e474ebfaf289d9379613528f4f4e485d3b8fe667cad79",
+      "bundled_sha256": "1afa448f0a2407daeaaa854596259d1e422c59754fb688326eb55f63989e83e8"
+    },
+    {
+      "binary": "libicudata.75.1.dylib",
+      "package": "icu-75.1-h120a0e1_0",
+      "original_sha256": "cc81ffac2145ca5f1ff5a635a9f8f714dd435a247bf9adcc83e5228543f8c88a",
+      "bundled_sha256": "b900d683da7473eb16e19963b218c6ff2389a67a04d29175b87c5db06f001d68"
+    },
+    {
+      "binary": "libicuuc.75.1.dylib",
+      "package": "icu-75.1-h120a0e1_0",
+      "original_sha256": "c5a1dc5d45759d750786ebf9b78f0e31755b04612141e14911ff9192f7438e1e",
+      "bundled_sha256": "973403c89413d3dcc656bf0772af49d8857dd78fca7fdfd747e5ba075582470e"
+    },
+    {
+      "binary": "libidn2.0.dylib",
+      "package": "libidn2-2.3.8-h13f126c_1",
+      "original_sha256": "1683c27f53a956272398b66fee730ec708c97f2370850e23eaa79dd81522b444",
+      "bundled_sha256": "67a91d98e7d611766ae298efd09e0951e972efc248c0b1b51146e87ef3d2aec8"
+    },
+    {
+      "binary": "libintl.8.dylib",
+      "package": "libintl-0.25.1-h98e67c8_2",
+      "original_sha256": "119ed0b93e1a6d539b4ea4565b95e39c433d1e62720228f5bcc06b43a139587e",
+      "bundled_sha256": "c0b094c5512cdf1f94f0c80aaec5564d7f10a248a6df6599cf07fb5a11709c81"
+    },
+    {
+      "binary": "liblzma.5.dylib",
+      "package": "liblzma-5.8.3-hbb4bfdb_1",
+      "original_sha256": "b3b86fb48ec90b2d03deb66cf022d07078549042bc41f65c59c086fff955154d",
+      "bundled_sha256": "3317bf0ef1c24e5cf2826bf4c5f3db28772f21e872fc19d4bda74c85674713e0"
+    },
+    {
+      "binary": "libmp3lame.0.dylib",
+      "package": "lame-3.100-hb7f2c08_1003",
+      "original_sha256": "4a0dbfe9d415034396d87c6da7699c86d98d761be2a905a1796ee68fa92469e6",
+      "bundled_sha256": "14ba0e2621828f5dbaa799fae575391fd3f12d20927d1052403d1c8d7ee75240"
+    },
+    {
+      "binary": "libnettle.8.8.dylib",
+      "package": "nettle-3.9.1-h8e11ae5_0",
+      "original_sha256": "ffd23566faa3027b7769359df24bb77eaf93a68032fa1e38d92d81376ff6aef7",
+      "bundled_sha256": "e566a8c984b0ecc34fb02843c7dccc879479e9b355d28cfab5e7a46a81ad8a6f"
+    },
+    {
+      "binary": "libopenh264.2.4.1.dylib",
+      "package": "openh264-2.4.1-h73e2aa4_0",
+      "original_sha256": "ddcb57961a633ca3bb99e43df407bb7151eea517306cb9eacb5f88d8deb3519e",
+      "bundled_sha256": "e3832901aa67b2785550054771b27e116b3d1feeac8ca989b093370b3c715755"
+    },
+    {
+      "binary": "libopenvino.2024.3.0.dylib",
+      "package": "libopenvino-2024.3.0-h3d2f4b3_0",
+      "original_sha256": "f3e487694f39311f669bff351568a789a76415a9216a11a84e87eb51bd2bf326",
+      "bundled_sha256": "efce72d25a0084cc210d31eb24142f69e95e690dc1f6037f4ab14f6aa7fee2a4"
+    },
+    {
+      "binary": "libopenvino_c.2024.3.0.dylib",
+      "package": "libopenvino-2024.3.0-h3d2f4b3_0",
+      "original_sha256": "67c6547383dea6d105f97ab1f478697173c7c9f6d53950c8ba79ab47ec74c75f",
+      "bundled_sha256": "53e8f0665bf6d8cdb9b6357590c48e37b703ce59b342fd14d55c69f0c168ad09"
+    },
+    {
+      "binary": "libopus.0.dylib",
+      "package": "libopus-1.6.1-had63097_1",
+      "original_sha256": "a3caabe11e8aca0ec00cdf3d295c79ac1d0c37dc4941ff4cf9eaa39442e3f4f0",
+      "bundled_sha256": "8ae4b594e2d8d7093858685f5babe05fff5ced0f2d815ced3431f47789102c30"
+    },
+    {
+      "binary": "libp11-kit.0.dylib",
+      "package": "p11-kit-0.24.1-h65f8906_0",
+      "original_sha256": "6401f4c85f393c503c4bdf33c5b81cbab9579e6d5909994d719aa1f250e05aca",
+      "bundled_sha256": "0b30a2ccb6e09d023a822abba800716b47f17d3dab5c712e944faba40c3aa62c"
+    },
+    {
+      "binary": "libpcre2-8.0.14.0.dylib",
+      "package": "pcre2-10.46-ha3e7e28_0",
+      "original_sha256": "85cd65846b0dbbd512c4c307ed0f3e2cac2d2ec1b2674b7e079b1b1fcaf4909b",
+      "bundled_sha256": "398f7afcf900f55850a2bef7935a738ea4ecb635eab0c17b00004e56b378735f"
+    },
+    {
+      "binary": "libpng16.16.dylib",
+      "package": "libpng-1.6.59-h4382c61_0",
+      "original_sha256": "e50ff2d33f4be4da06292d2cc1697f3e80d2e68e6b4ec34832a76ae368c34b08",
+      "bundled_sha256": "9fed6ca7a1d4911f74244037d4b6a1d04fcaab62435a73e2fa790b4faa9cae15"
+    },
+    {
+      "binary": "libpostproc.57.3.100.dylib",
+      "package": "ffmpeg-6.1.1-gpl_h5747b2d_117",
+      "original_sha256": "e2b90b6e238c497c7356ce94149482b3120eb4353fd2ebdc76bf29e50e8eeb91",
+      "bundled_sha256": "c49800dcfa0d60f74e74146a2c53ebf88e1c0c09de566cb82e42640fc8c81057"
+    },
+    {
+      "binary": "libpugixml.1.14.dylib",
+      "package": "pugixml-1.14-he965462_0",
+      "original_sha256": "442a296ae8d6f717092cd5387b8260634a9fcd6b112a572550f4f98150cf7434",
+      "bundled_sha256": "ca16de1308949133d86ef0740f889a0289ea909e0198939126d554ee62cc439c"
+    },
+    {
+      "binary": "libswresample.4.12.100.dylib",
+      "package": "ffmpeg-6.1.1-gpl_h5747b2d_117",
+      "original_sha256": "c581144304052fc14cc70a08cc39e32d7bae5a476b8e26a9d14fb2d0eabebefa",
+      "bundled_sha256": "89c03dea1a7bba80578424e8ccdc6b8a8ef4b6d67734c95b89cbb59abbca91c5"
+    },
+    {
+      "binary": "libswscale.7.5.100.dylib",
+      "package": "ffmpeg-6.1.1-gpl_h5747b2d_117",
+      "original_sha256": "f11781cb73dba46b41a100ecfb1b176161efeb47dbcc623a21996177eecf461a",
+      "bundled_sha256": "97f9ea24a5e69338c99c9c55915efefc6e198db00ee4565cde33d0ebc57f6804"
+    },
+    {
+      "binary": "libtasn1.6.dylib",
+      "package": "libtasn1-4.21.0-ha1e9b39_1",
+      "original_sha256": "3ff6acc2fb044e1708990729f03bcca017a7c94ba13f4cd65fef418e9e1c4d94",
+      "bundled_sha256": "f6f8556e22dbead54762c1f9bdc5fdd45e474312353a81facc945b9fb31922df"
+    },
+    {
+      "binary": "libtbb.12.17.dylib",
+      "package": "tbb-2022.3.0-hf0c99ee_1",
+      "original_sha256": "e29de96f4e9234baa05186c0e685b8b07ab5b086c4bb3dee105dcfd4e099af19",
+      "bundled_sha256": "173cfc81a6bc18ccfdd7a3da1e328378f577ed209ec2239c4d40026f601d70f8"
+    },
+    {
+      "binary": "libunistring.2.dylib",
+      "package": "libunistring-0.9.10-h0d85af4_0",
+      "original_sha256": "14db688af1c84b19bcf256c1a50dfcc71bf11f7922b9fc98f8bcd7d4a73c7343",
+      "bundled_sha256": "26468bc1e4159dcd769e566522c9a3639b748435b81b98c31dd1783112ca14f0"
+    },
+    {
+      "binary": "libvpx.9.dylib",
+      "package": "libvpx-1.14.1-hf036a51_0",
+      "original_sha256": "b33962242896dd6939d28b01e4a89aa5b9e5c258b93bddffb9b71ac7f95fdb03",
+      "bundled_sha256": "fbeabe43090232cbae7bc065d4f806048446aa33677122a44cb3e364b97db673"
+    },
+    {
+      "binary": "libx264.164.dylib",
+      "package": "x264-1!164.3095-pl5321h892666e_3",
+      "original_sha256": "990c0c12b3c780cec11bc4dd26df8663f01e703e7e8002e7e91f747247119482",
+      "bundled_sha256": "c7800926acedc7f851c0590a08de91f263a7683ed157f9d5e1bcd2809ebf427c"
+    },
+    {
+      "binary": "libx265.199.dylib",
+      "package": "x265-3.5-h78a8136_4",
+      "original_sha256": "be5b3d17920f009d1e28d9bea9744c74a438707af395d44884f2250aa6619736",
+      "bundled_sha256": "9303a9e29380c5d1abd006fef2680118eeb1de1abeb6368e09bbf099402384e4"
+    },
+    {
+      "binary": "libxml2.2.dylib",
+      "package": "libxml2-2.13.9-he1bc88e_0",
+      "original_sha256": "2c5691ac03e6195fce2435b3ea40166a8621ae6c81115254e7df3c2fbe40521a",
+      "bundled_sha256": "e8732b060623c7a75ed9e63d6e0d0bbc7be162d24e2de83f576f9bcfcedb401b"
+    },
+    {
+      "binary": "libz.1.3.2.dylib",
+      "package": "libzlib-1.3.2-hbb4bfdb_3",
+      "original_sha256": "13c9e2d0a474e3f6eee34ca1733cd2c6cfc10353fc024a1e70b26cd98768b7b3",
+      "bundled_sha256": "22cc901d4408518bc3b2a5c362ffab410a16922440b132544c937355e3f71f3a"
+    }
+  ],
+  "smoke_test": {
+    "passed": true,
+    "environment": "No inherited environment or DYLD variables; system PATH only",
+    "sample": "1 second / 128x128 / 30 fps / H.264 color test pattern",
+    "output_bytes": 19332
+  },
+  "bundled_bytes": 149655904
+}

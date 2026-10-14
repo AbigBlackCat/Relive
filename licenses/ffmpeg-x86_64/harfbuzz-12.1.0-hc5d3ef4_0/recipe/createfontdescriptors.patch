@@ -1,0 +1,15 @@
+diff --git a/src/hb-coretext.cc b/src/hb-coretext.cc
+index 6c0525b..c18e33f 100644
+--- a/src/hb-coretext.cc
++++ b/src/hb-coretext.cc
+@@ -34,6 +34,10 @@
+ 
+ #include "hb-coretext.hh"
+ 
++// conda-forge: it appears that this function was added in 10.13 (the SDK version we use
++// as of 2025-03) but not added to the headers until 10.15. It's used below and has a simple
++// prototype, so we just manually declare it:
++extern "C" CFArrayRef CTFontManagerCreateFontDescriptorsFromData(CFDataRef data);
+ 
+ /**
+  * SECTION:hb-coretext

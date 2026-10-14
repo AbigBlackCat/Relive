@@ -1,0 +1,13 @@
+{
+  "name": "libass",
+  "version": "0.17.3",
+  "build": "h07fa1ac_1",
+  "license": "ISC",
+  "license_notices_package": "libass-0.17.3-h07fa1ac_1",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libass-0.17.3-h07fa1ac_1.conda",
+  "homepage": "https://github.com/libass/libass",
+  "upstream_repository": "https://github.com/libass/libass",
+  "source_recipe": "See the copied recipe files.",
+  "recipe_repository": "https://github.com/conda-forge/libass-feedstock",
+  "recipe_commit": "46cab36f1782584524eb86065c44563c8f34f84c"
+}

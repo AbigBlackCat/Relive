@@ -1,0 +1,13 @@
+{
+  "name": "pcre2",
+  "version": "10.46",
+  "build": "ha3e7e28_0",
+  "license": "BSD-3-Clause",
+  "license_notices_package": "pcre2-10.46-ha3e7e28_0",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/pcre2-10.46-ha3e7e28_0.conda",
+  "homepage": "http://www.pcre.org/",
+  "upstream_repository": "",
+  "source_recipe": "- url: https://github.com/PCRE2Project/pcre2/archive/refs/tags/pcre2-10.46.tar.gz\n    sha256: ffde0c6ead457c4f8edcd8f9ce490bbabd30adabdfd179ecaddd320946cf3872\n  - url: https://github.com/zherczeg/sljit/archive/e51eabbfb8eabc6526f56e4e88b29fb10d1ee048.tar.gz\n    sha256: 5caf31959f4c2dfa9fdbaf290b0e16538527d929d5c1c5bd1a3e6df01436c1cf\n    folder: deps/sljit",
+  "recipe_repository": "https://github.com/conda-forge/pcre2-feedstock",
+  "recipe_commit": "2f1ae03cb6acdef03df8b3d0499bfad7719dbb27"
+}

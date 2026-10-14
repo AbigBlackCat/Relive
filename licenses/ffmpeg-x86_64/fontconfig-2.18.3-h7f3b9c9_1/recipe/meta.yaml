@@ -1,0 +1,119 @@
+# This file created by conda-build 26.7.0
+# meta.yaml template originally from:
+# /Users/runner/work/1/s/recipe, last modified Fri Aug 14 00:27:00 2026
+# ------------------------------------------------
+
+package:
+  name: fontconfig
+  version: 2.18.3
+source:
+  url: https://gitlab.freedesktop.org/api/v4/projects/890/packages/generic/fontconfig/2.18.3/fontconfig-2.18.3.tar.xz
+  sha256: 4f7b554a38cdf78c033f666c8871f3749e14a094f65a07f630c91ed0b43d35e3
+  patches: null
+build:
+  number: '1'
+  binary_has_prefix_files:
+    - lib/libfontconfig.*.dylib*
+  run_exports:
+    - fontconfig >=2.18.3,<3.0a0
+    - fonts-conda-ecosystem
+  string: h7f3b9c9_1
+requirements:
+  build:
+    - bzip2 1.0.8 h374f1ed_10
+    - ca-certificates 2026.7.22 hbd8a1cb_0
+    - cctools_impl_osx-64 1030.6.3 llvm21_1_h3a5a8ea_5
+    - cctools_osx-64 1030.6.3 llvm21_1_he201b2c_5
+    - clang-21 21.1.8 default_he2ff43c_5
+    - clang_impl_osx-64 21.1.8 default_ha1a018a_5
+    - clang_osx-64 21.1.8 h64238a7_34
+    - compiler-rt 21.1.8 h694c41f_1
+    - compiler-rt21 21.1.8 he914875_1
+    - compiler-rt21_osx-64 21.1.8 he0f92a2_1
+    - compiler-rt_osx-64 21.1.8 h694c41f_1
+    - gperf 3.3 hcc62823_0
+    - ld64_osx-64 956.6 llvm21_1_h1a26d5e_5
+    - libclang-cpp21.1 21.1.8 default_he2ff43c_5
+    - libcompiler-rt 21.1.8 he914875_1
+    - libcxx 22.1.8 h19cb2f5_0
+    - libexpat 2.8.1 hcc62823_1
+    - libffi 3.7.0 h8c408c4_0
+    - libiconv 1.18 h57a12c2_2
+    - libllvm21 21.1.8 h56e7563_0
+    - liblzma 5.8.3 hbb4bfdb_1
+    - libsigtool 0.1.3 h8c25ef7_1
+    - libsqlite 3.53.4 h77d7759_0
+    - libxml2 2.15.3 h0712280_0
+    - libxml2-16 2.15.3 h0d7f165_0
+    - libzlib 1.3.2 hbb4bfdb_3
+    - llvm-tools 21.1.8 hb0207f0_0
+    - llvm-tools-21 21.1.8 h879f4bc_0
+    - macosx_deployment_target_osx-64 11.0 h0bd77a9_7
+    - meson 1.12.0 pyhcf101f3_0
+    - ncurses 6.6 hcc0dc9a_1
+    - ninja 1.13.2 hfc0b2d5_0
+    - openssl 3.6.3 hc881268_1
+    - pkg-config 0.29.2 h63fb7e2_1011
+    - python 3.12.13 hd04fa83_1_cpython
+    - readline 8.3 h68b038d_0
+    - sdkroot_env_osx-64 26.0 h62b880e_7
+    - sigtool-codesign 0.1.3 h8c25ef7_1
+    - tapi 1600.0.11.8 h44950e2_3
+    - tk 8.6.13 hb794df6_3
+    - tzdata 2026c h151e31d_0
+    - zstd 1.5.7 hbc1a06c_7
+  host:
+    - expat 2.8.1 hcc62823_1
+    - freetype 2.14.3 h694c41f_2
+    - libexpat 2.8.1 hcc62823_1
+    - libfreetype 2.14.3 h694c41f_2
+    - libfreetype6 2.14.3 h8afe040_2
+    - libiconv 1.18 h57a12c2_2
+    - libintl 0.25.1 h3184127_1
+    - libintl-devel 0.25.1 h3184127_1
+    - libpng 1.6.58 h4382c61_1
+    - libzlib 1.3.2 hbb4bfdb_3
+    - zlib 1.3.2 hbb4bfdb_3
+  run:
+    - __osx >=11.0
+    - libexpat >=2.8.1,<3.0a0
+    - libfreetype >=2.14.3
+    - libfreetype6 >=2.14.3
+    - libintl >=0.25.1,<1.0a0
+    - libzlib >=1.3.2,<2.0a0
+test:
+  commands:
+    - fc-cache --help
+    - fc-cat --help
+    - fc-list
+    - fc-match --help
+    - fc-pattern --help
+    - fc-query --help
+    - fc-scan --help
+    - fc-validate --help
+    - test -f $PREFIX/lib/libfontconfig.a
+    - test -f $PREFIX/lib/libfontconfig${SHLIB_EXT}
+about:
+  home: http://www.freedesktop.org/wiki/Software/fontconfig/
+  license: MIT
+  license_file: COPYING
+  summary: A library for configuring and customizing font access
+  description: 'Fontconfig is a library designed to provide system-wide font configuration,
+
+    customization and application access.
+
+    '
+  doc_url: https://www.freedesktop.org/software/fontconfig/fontconfig-user.html
+  dev_url: https://cgit.freedesktop.org/fontconfig/
+extra:
+  recipe-maintainers:
+    - ccordoba12
+    - jakirkham
+    - mingwandroid
+    - ocefpaf
+    - pkgw
+  final: true
+  copy_test_source_files: true
+  flow_run_id: azure_20260813.3.1
+  remote_url: https://github.com/conda-forge/fontconfig-feedstock
+  sha: 7f94a24652814e2985044aeae8b2966fae633035

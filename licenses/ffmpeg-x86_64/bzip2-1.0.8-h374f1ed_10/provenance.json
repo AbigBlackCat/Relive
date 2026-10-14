@@ -1,0 +1,13 @@
+{
+  "name": "bzip2",
+  "version": "1.0.8",
+  "build": "h374f1ed_10",
+  "license": "bzip2-1.0.6",
+  "license_notices_package": "bzip2-1.0.8-h374f1ed_10",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/bzip2-1.0.8-h374f1ed_10.conda",
+  "homepage": "https://gitlab.com/bzip2/bzip2",
+  "upstream_repository": "https://gitlab.com/bzip2/bzip2",
+  "source_recipe": "url: https://gitlab.com/bzip2/bzip2/-/archive/bzip2-1.0.8/bzip2-bzip2-1.0.8.tar.gz\n  sha256: db106b740252669664fd8f3a1c69fe7f689d5cd4b132f82ba82b9afba27627df\n  patches:\n    - patches/0001-cross.patch\n    - patches/0002-Windows-Make-library-name-lowercase.patch\n    - patches/0003-Windows-Add-dyn-lib-build-rename-libbz2_static.patch",
+  "recipe_repository": "https://github.com/conda-forge/bzip2-feedstock",
+  "recipe_commit": "f0f345e062aed39aa7f500c0746efed2dcea6971"
+}

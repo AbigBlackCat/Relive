@@ -1,0 +1,13 @@
+{
+  "name": "gnutls",
+  "version": "3.7.9",
+  "build": "h1951705_0",
+  "license": "LGPL-2.1-or-later",
+  "license_notices_package": "gnutls-3.7.9-h1951705_0",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/gnutls-3.7.9-h1951705_0.conda",
+  "homepage": "http://www.gnutls.org/index.html",
+  "upstream_repository": "https://gitlab.com/gnutls/gnutls/tree/master",
+  "source_recipe": "patches:\n    - 1794_specify_osstatus_error_signature.patch\n    - correct_ssl_test.patch\n  sha256: aaa03416cdbd54eb155187b359e3ec3ed52ec73df4df35a0edd49429ff64d844\n  url: https://www.gnupg.org/ftp/gcrypt/gnutls/v3.7/gnutls-3.7.9.tar.xz",
+  "recipe_repository": "https://github.com/conda-forge/gnutls-feedstock",
+  "recipe_commit": "cd6b4ba8a4588131b6bf0575959332861f127c93"
+}

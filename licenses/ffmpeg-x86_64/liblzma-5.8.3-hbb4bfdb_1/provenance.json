@@ -1,0 +1,13 @@
+{
+  "name": "liblzma",
+  "version": "5.8.3",
+  "build": "hbb4bfdb_1",
+  "license": "0BSD",
+  "license_notices_package": "liblzma-5.8.3-hbb4bfdb_1",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/liblzma-5.8.3-hbb4bfdb_1.conda",
+  "homepage": "http://tukaani.org/xz/",
+  "upstream_repository": "http://git.tukaani.org/",
+  "source_recipe": "url: https://github.com/tukaani-project/xz/releases/download/v5.8.3/xz-5.8.3.tar.gz\n  sha256: 3d3a1b973af218114f4f889bbaa2f4c037deaae0c8e815eec381c3d546b974a0",
+  "recipe_repository": "https://github.com/conda-forge/xz-feedstock",
+  "recipe_commit": "bc37fbf54469221332fc589c1404294a159f403b"
+}

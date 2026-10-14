@@ -1,0 +1,13 @@
+{
+  "name": "libvpx",
+  "version": "1.14.1",
+  "build": "hf036a51_0",
+  "license": "BSD-3-Clause",
+  "license_notices_package": "libvpx-1.14.1-hf036a51_0",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libvpx-1.14.1-hf036a51_0.conda",
+  "homepage": "https://www.webmproject.org/",
+  "upstream_repository": "https://chromium.googlesource.com/webm/libvpx",
+  "source_recipe": "sha256: 901747254d80a7937c933d03bd7c5d41e8e6c883e0665fadcb172542167c7977\n  url: https://download.videolan.org/contrib/vpx/libvpx-1.14.1.tar.gz",
+  "recipe_repository": "https://github.com/conda-forge/libvpx-feedstock",
+  "recipe_commit": "49e323da98865719f590a7cd98729c902337e6d9"
+}

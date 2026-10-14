@@ -4,10 +4,17 @@ on:
     branches: [main]
     paths: ['desktop/**', 'package*.json', '.github/workflows/build.yml']
   workflow_dispatch:
+    inputs:
+      platform:
+        description: Build target
+        type: choice
+        options: [all, windows, intel]
+        default: all
 permissions:
   contents: read
 jobs:
   windows:
+    if: github.event_name != 'workflow_dispatch' || inputs.platform != 'intel'
     runs-on: windows-latest
     timeout-minutes: 25
     env:
@@ -32,6 +39,11 @@ jobs:
         run: npm run test:desktop
       - name: Build Windows installer and portable ZIP
         run: npm run build:windows
+      - name: Test the packaged Windows executable
+        shell: pwsh
+        run: |
+          $process = Start-Process -FilePath '.\dist\windows\win-unpacked\Relive.exe' -ArgumentList '--smoke-test' -Wait -PassThru
+          if ($process.ExitCode -ne 0) { throw "Packaged smoke test failed with exit code $($process.ExitCode)" }
       - uses: actions/upload-artifact@v7.0.2
         with:
           name: Relive-Windows-x64
@@ -41,7 +53,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
   intel-mac:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && inputs.platform != 'windows'
     runs-on: macos-15-intel
     timeout-minutes: 30
     steps:

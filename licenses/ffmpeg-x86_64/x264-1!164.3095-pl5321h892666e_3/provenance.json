@@ -1,0 +1,13 @@
+{
+  "name": "x264",
+  "version": "1!164.3095",
+  "build": "pl5321h892666e_3",
+  "license": "GPL-2.0-or-later",
+  "license_notices_package": "x264-1!164.3095-pl5321h892666e_3",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/x264-1!164.3095-pl5321h892666e_3.conda",
+  "homepage": "http://www.videolan.org/developers/x264.html",
+  "upstream_repository": "https://code.videolan.org/videolan/x264",
+  "source_recipe": "See the copied recipe files.",
+  "recipe_repository": "https://github.com/conda-forge/x264-feedstock",
+  "recipe_commit": "8e8f340576ba8cac2b66fb21a3cbb1298788ff09"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "libopenvino",
+  "version": "2024.3.0",
+  "build": "h3d2f4b3_0",
+  "license": "",
+  "license_notices_package": "libopenvino-2024.3.0-h3d2f4b3_0",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libopenvino-2024.3.0-h3d2f4b3_0.conda",
+  "homepage": "",
+  "upstream_repository": "",
+  "source_recipe": "- patches:\n      - patches/001-fix-python-build.patch\n    sha256: 53fccad05279d0975eca84ec75517a7c360be9b0f7bcd822da29a7949c12ce70\n    url: https://github.com/openvinotoolkit/openvino/archive/refs/tags/2024.3.0.tar.gz\n  - folder: src/plugins/intel_cpu/thirdparty/onednn\n    sha256: 13bee5b8522177f297e095e3eba5948c1a7ee7a816d19d5a59ce0f717f82cedc\n    url: https://github.com/openvinotoolkit/oneDNN/archive/f0f8defe2dff5058391f2a66e775e20b5de33b08.tar.gz\n  - folder: src/plugins/intel_cpu/thirdparty/mlas\n    sha256: 0a44fbfd4b13e8609d66ddac4b11a27c90c1074cde5244c91ad197901666004c\n    url: https://github.com/openvinotoolkit/mlas/archive/d1bc25ec4660cddd87804fcf03b2411b5dfb2e94.tar.gz\n  - folder: thirdparty/onnx/onnx\n    sha256: c757132e018dd0dd171499ef74fca88b74c5430a20781ec53da19eb7f937ef68\n    url: https://github.com/onnx/onnx/archive/refs/tags/v1.15.0.tar.gz",
+  "recipe_repository": "https://github.com/conda-forge/openvino-feedstock",
+  "recipe_commit": "5e5f3726befb187b834c3c1dd5facd5f58e72ae6"
+}

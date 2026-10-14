@@ -1,0 +1,13 @@
+{
+  "name": "libiconv",
+  "version": "1.18",
+  "build": "h4ae439b_3",
+  "license": "LGPL-2.1-only",
+  "license_notices_package": "libiconv-1.18-h4ae439b_3",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libiconv-1.18-h4ae439b_3.conda",
+  "homepage": "https://www.gnu.org/software/libiconv/",
+  "upstream_repository": "",
+  "source_recipe": "url: http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.18.tar.gz\n  sha256: 3b08f5f4f9b4eb82f151a7040bfd6fe6c6fb922efe4b1659c66ea933276965e8\n  patches:\n    - utf_8_mac.patch",
+  "recipe_repository": "https://github.com/conda-forge/libiconv-feedstock",
+  "recipe_commit": "c7fdcb1b68d6579a08d0c5dc5f34cbbf38780538"
+}

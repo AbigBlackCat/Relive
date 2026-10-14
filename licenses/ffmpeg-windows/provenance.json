@@ -1,0 +1,10 @@
+{
+  "version": "9.0.2",
+  "architecture": "win32-x64",
+  "archive": "https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-9.0.2-essentials_build.zip",
+  "sha256": "60f467265b1e312373dbcd92200c2618a74850f98d3d078e94296bb3fa2047ba",
+  "publisher": "Gyan Doshi",
+  "publisher_page": "https://www.gyan.dev/ffmpeg/builds/",
+  "ffmpeg_project_reference": "https://ffmpeg.org/download.html",
+  "upstream_source": "https://ffmpeg.org/releases/ffmpeg-9.0.2.tar.xz"
+}

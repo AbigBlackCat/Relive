@@ -1,0 +1,88 @@
+{% set version = "12.1.0" %}
+
+package:
+  name: harfbuzz
+  version: {{ version }}
+
+source:
+  url: https://github.com/harfbuzz/harfbuzz/archive/{{ version }}.tar.gz
+  sha256: 0238bf7ada6b1fb92984f69f8b9cd66518af83cf24f7db1cfe60c772c42312d3
+  patches:
+    - gir-windows.patch  # [win]
+    - createfontdescriptors.patch  # [osx]
+
+build:
+  number: 0
+  run_exports:
+    # "We will never break the ABI."
+    # https://github.com/conda-forge/harfbuzz-feedstock/issues/123
+    # https://github.com/harfbuzz/harfbuzz/discussions/5245#discussioncomment-12728609
+    - harfbuzz >={{ version }}
+
+requirements:
+  build:
+    - gobject-introspection
+    - meson
+    - ninja
+    - pkg-config
+    - pthread-stubs
+    - {{ compiler("c") }}
+    - {{ stdlib("c") }}
+    - {{ compiler("cxx") }}
+    - cairo           # [build_platform != target_platform]
+    - glib            # [build_platform != target_platform]
+    - freetype        # [build_platform != target_platform]
+    - icu             # [build_platform != target_platform]
+    - graphite2       # [build_platform != target_platform]
+    # needed for development files:
+    - expat           # [build_platform != target_platform]
+    - xorg-xorgproto  # [build_platform != target_platform]
+    - zlib            # [build_platform != target_platform]
+  host:
+    - cairo
+    - glib
+    - freetype
+    - icu
+    - graphite2
+    # needed for development files:
+    - expat
+    - xorg-xorgproto
+    - zlib
+  run:
+    # Still doesn't have run export as of 2025/07/26
+    # https://github.com/conda-forge/graphite2-feedstock/pull/19
+    - graphite2
+
+test:
+  requires:
+    - pygobject
+  commands:
+    # Libraries/headers.
+    {% set libs = ["harfbuzz-cairo", "harfbuzz-gobject", "harfbuzz-icu", "harfbuzz-subset", "harfbuzz"] %}
+    {% for lib in libs %}
+    - test -f $PREFIX/lib/lib{{ lib }}${SHLIB_EXT}    # [unix]
+    - if not exist %PREFIX%\Library\bin\{{ lib }}.dll exit 1       # [win]
+    {% endfor %}
+    - test -f $PREFIX/include/harfbuzz/hb-ft.h    # [not win]
+    - if not exist %PREFIX%\Library\include\harfbuzz\hb-ft.h exit 1         # [win]
+    - test -f $PREFIX/lib/girepository-1.0/HarfBuzz-0.0.typelib    # [unix]
+    - if not exist %PREFIX%\Library\lib\girepository-1.0\HarfBuzz-0.0.typelib exit 1         # [win]
+    # CLI tests.
+    - hb-view --version  # [linux]
+
+about:
+  home: https://harfbuzz.github.io/
+  license: MIT
+  license_file: COPYING
+  summary: An OpenType text shaping engine.
+  description: |
+    HarfBuzz is a text shaping library. New Harbuzz targets various font
+    technologies while Old HarfBuzz targets only OpenType fonts.
+  doc_url: https://harfbuzz.github.io/
+  dev_url: https://github.com/harfbuzz/harfbuzz
+
+extra:
+  recipe-maintainers:
+    - ocefpaf
+    - pkgw
+    - tschoonj

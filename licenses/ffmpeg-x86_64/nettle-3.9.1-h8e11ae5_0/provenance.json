@@ -1,0 +1,13 @@
+{
+  "name": "nettle",
+  "version": "3.9.1",
+  "build": "h8e11ae5_0",
+  "license": "GPL 2 and LGPL3",
+  "license_notices_package": "nettle-3.9.1-h8e11ae5_0",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/nettle-3.9.1-h8e11ae5_0.conda",
+  "homepage": "https://www.lysator.liu.se/~nisse/nettle/",
+  "upstream_repository": "https://git.lysator.liu.se/nettle/nettle",
+  "source_recipe": "fn: nettle-3.9.1.tar.gz\n  sha256: ccfeff981b0ca71bbd6fbcb054f407c60ffb644389a5be80d6716d5b550c6ce3\n  url: https://ftp.gnu.org/gnu/nettle/nettle-3.9.1.tar.gz",
+  "recipe_repository": "",
+  "recipe_commit": ""
+}

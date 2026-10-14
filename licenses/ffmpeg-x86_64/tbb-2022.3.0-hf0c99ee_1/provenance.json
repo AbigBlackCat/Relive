@@ -1,0 +1,13 @@
+{
+  "name": "tbb",
+  "version": "2022.3.0",
+  "build": "hf0c99ee_1",
+  "license": "Apache-2.0",
+  "license_notices_package": "tbb-2022.3.0-hf0c99ee_1",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/tbb-2022.3.0-hf0c99ee_1.conda",
+  "homepage": "https://github.com/oneapi-src/oneTBB",
+  "upstream_repository": "https://github.com/oneapi-src/oneTBB",
+  "source_recipe": "url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2022.3.0.tar.gz\n  sha256: 01598a46c1162c27253a0de0236f520fd8ee8166e9ebb84a4243574f88e6e50a",
+  "recipe_repository": "https://github.com/conda-forge/tbb-feedstock",
+  "recipe_commit": "11a01d9a76f722ade959ebdbd4c7c7386798ce37"
+}

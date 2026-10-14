@@ -1,0 +1,13 @@
+{
+  "name": "fontconfig",
+  "version": "2.18.3",
+  "build": "h7f3b9c9_1",
+  "license": "MIT",
+  "license_notices_package": "fontconfig-2.18.3-h7f3b9c9_1",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/fontconfig-2.18.3-h7f3b9c9_1.conda",
+  "homepage": "http://www.freedesktop.org/wiki/Software/fontconfig/",
+  "upstream_repository": "https://cgit.freedesktop.org/fontconfig/",
+  "source_recipe": "url: https://gitlab.freedesktop.org/api/v4/projects/890/packages/generic/fontconfig/2.18.3/fontconfig-2.18.3.tar.xz\n  sha256: 4f7b554a38cdf78c033f666c8871f3749e14a094f65a07f630c91ed0b43d35e3\n  patches: null",
+  "recipe_repository": "https://github.com/conda-forge/fontconfig-feedstock",
+  "recipe_commit": "7f94a24652814e2985044aeae8b2966fae633035"
+}

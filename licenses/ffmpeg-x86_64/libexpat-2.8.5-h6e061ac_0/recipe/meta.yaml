@@ -1,0 +1,86 @@
+# This file created by conda-build 26.7.1
+# ------------------------------------------------
+
+package:
+  name: libexpat
+  version: 2.8.5
+source:
+  url: https://github.com/libexpat/libexpat/releases/download/R_2_8_5/expat-2.8.5.tar.xz
+  sha256: 1e727b8933ec51a77a9a9d9afcf8e688bce45d907c13e36ab7393fe36e703182
+build:
+  ignore_run_exports_from:
+    - clangxx_osx-64 21.*
+  number: 0
+  string: h6e061ac_0
+requirements:
+  build:
+    - ca-certificates 2026.7.22 hbd8a1cb_0
+    - cctools_impl_osx-64 1030.6.3 llvm21_1_hd9d6719_6
+    - cctools_osx-64 1030.6.3 llvm21_1_he201b2c_6
+    - clang-21 21.1.8 default_h0a1f3f9_6
+    - clang-scan-deps 21.1.8 default_h0a1f3f9_6
+    - clang_impl_osx-64 21.1.8 default_ha1a018a_6
+    - clang_osx-64 21.1.8 h64238a7_34
+    - clangxx_impl_osx-64 21.1.8 default_ha1a018a_6
+    - clangxx_osx-64 21.1.8 h64238a7_34
+    - compiler-rt 21.1.8 h694c41f_2
+    - compiler-rt21 21.1.8 h8c1e6b9_2
+    - compiler-rt21_osx-64 21.1.8 h8d5f570_2
+    - compiler-rt_osx-64 21.1.8 h694c41f_2
+    - gnuconfig 2025.07.09 hd8ed1ab_0
+    - ld64_osx-64 956.6 llvm21_1_hb373d2a_6
+    - libclang-cpp21.1 21.1.8 default_h0a1f3f9_6
+    - libclang-cpp23.1 23.1.2 default_h6e863b9_0
+    - libclang13 23.1.2 default_h3065a3b_0
+    - libcompiler-rt 21.1.8 h8c1e6b9_2
+    - libcxx 23.1.2 h19cb2f5_0
+    - libcxx-devel 21.1.8 h7c275be_3
+    - libcxx-headers 21.1.8 h707e725_3
+    - libiconv 1.18 h4ae439b_3
+    - libllvm21 21.1.8 hd11396f_1
+    - libllvm23 23.1.2 hd11396f_0
+    - liblzma 5.8.3 hbb4bfdb_1
+    - libsigtool 0.1.3 h8c25ef7_1
+    - libxml2 2.15.4 h3668fe6_0
+    - libxml2-16 2.15.4 h341e563_0
+    - libzlib 1.3.2 hbb4bfdb_3
+    - llvm-tools 21.1.8 h8c1e6b9_1
+    - llvm-tools-21 21.1.8 h36529c3_1
+    - macosx_deployment_target_osx-64 11.0 h0bd77a9_7
+    - make 4.4.1 ha1e9b39_3
+    - ncurses 6.6 hcc0dc9a_1
+    - openssl 3.6.4 h332eb6d_0
+    - sdkroot_env_osx-64 26.0 h62b880e_7
+    - sigtool-codesign 0.1.3 h8c25ef7_1
+    - tapi 1600.0.11.8 h44950e2_4
+    - zstd 1.5.7 hbc1a06c_7
+  run_constrained:
+    - expat 2.8.5.*
+  host:
+    - __osx >=11.0
+  run:
+    - __osx >=11.0
+test: {}
+about:
+  home: https://libexpat.github.io
+  dev_url: https://github.com/libexpat/libexpat
+  license: MIT
+  license_family: MIT
+  license_file: COPYING
+  summary: Expat XML parser library in C
+extra:
+  feedstock-name: expat
+  recipe-maintainers:
+    - danyeaw
+    - isuruf
+    - kwilcox
+    - mingwandroid
+    - msarahan
+    - ocefpaf
+    - pelson
+    - scopatz
+  final: true
+  copy_test_source_files: true
+  flow_run_id: azure_20260925.5.1
+  remote_url: https://github.com/conda-forge/expat-feedstock
+  sha: 9bed6b038b32ec3f0d9cd7f55d4483911a0451c4

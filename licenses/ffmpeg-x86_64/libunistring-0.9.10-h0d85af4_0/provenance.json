@@ -1,0 +1,13 @@
+{
+  "name": "libunistring",
+  "version": "0.9.10",
+  "build": "h0d85af4_0",
+  "license": "GPL-3.0-only OR LGPL-3.0-only",
+  "license_notices_package": "libunistring-0.9.10-h0d85af4_0",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libunistring-0.9.10-h0d85af4_0.tar.bz2",
+  "homepage": "https://www.gnu.org/software/libunistring",
+  "upstream_repository": "",
+  "source_recipe": "fn: libunistring-0.9.10.tar.xz\n  sha256: eb8fb2c3e4b6e2d336608377050892b54c3c983b646c561836550863003c05d7\n  url: http://ftpmirror.gnu.org/libunistring/libunistring-0.9.10.tar.xz",
+  "recipe_repository": "",
+  "recipe_commit": ""
+}

@@ -1,0 +1,13 @@
+{
+  "name": "libidn2",
+  "version": "2.3.8",
+  "build": "h13f126c_1",
+  "license": "LGPL-2.0-only",
+  "license_notices_package": "libidn2-2.3.8-h13f126c_1",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libidn2-2.3.8-h13f126c_1.conda",
+  "homepage": "https://www.gnu.org/software/libidn/#libidn2",
+  "upstream_repository": "",
+  "source_recipe": "url: https://ftp.gnu.org/gnu/libidn/libidn2-2.3.8.tar.gz\n  sha256: f557911bf6171621e1f72ff35f5b1825bb35b52ed45325dcdee931e5d3c0787a",
+  "recipe_repository": "https://github.com/conda-forge/libidn2-feedstock",
+  "recipe_commit": "6bc03881332d1ce29abb23a6a52bc99e7ca933e6"
+}

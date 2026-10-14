@@ -7,6 +7,9 @@ const{validateLivePhoto}=require('./core/live-photo.cjs');
 const{createHash}=require('node:crypto');
 
 async function run(api){
+  const bridgeSettings=await api.mainWindow.webContents.executeJavaScript('window.relive.getSettings()');
+  assert.equal(typeof bridgeSettings.outputDir,'string');
+  console.log('PASS packaged renderer IPC bridge');
   const fixtures=path.join(api.workspace,'fixtures'),output=path.join(api.workspace,'exports');
   await fs.mkdir(fixtures);await fs.mkdir(output);api.chosenDirectories.add(output);
   const job=new media.Job();

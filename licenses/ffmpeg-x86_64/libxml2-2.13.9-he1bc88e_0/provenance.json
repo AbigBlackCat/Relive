@@ -1,0 +1,13 @@
+{
+  "name": "libxml2",
+  "version": "2.13.9",
+  "build": "he1bc88e_0",
+  "license": "MIT",
+  "license_notices_package": "libxml2-2.13.9-he1bc88e_0",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libxml2-2.13.9-he1bc88e_0.conda",
+  "homepage": "http://xmlsoft.org/",
+  "upstream_repository": "https://git.gnome.org/browse/libxml2/",
+  "source_recipe": "url: https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.13.9/libxml2-v2.13.9.tar.gz\n  sha256: 8d5fa142a3ea8727db1f7988b01f75b9fad8d311b8e0505e38e9d6a42a720085\n  patches:\n    - 0002-Make-and-install-a-pkg-config-file-on-Windows.patch",
+  "recipe_repository": "https://github.com/conda-forge/libxml2-feedstock",
+  "recipe_commit": "61db1e91eb4c117414072355a0105fe816d6bcd3"
+}

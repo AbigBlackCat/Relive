@@ -1,0 +1,13 @@
+{
+  "name": "libfreetype6",
+  "version": "2.14.3",
+  "build": "h8afe040_2",
+  "license": "GPL-2.0-only OR FTL",
+  "license_notices_package": "freetype-2.14.3-h694c41f_2",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libfreetype6-2.14.3-h8afe040_2.conda",
+  "homepage": "",
+  "upstream_repository": "",
+  "source_recipe": "url: https://download.savannah.gnu.org/releases/freetype/freetype-2.14.3.tar.gz\n  sha256: e61b31ab26358b946e767ed7eb7f4bb2e507da1cfefeb7a8861ace7fd5c899a1",
+  "recipe_repository": "https://github.com/conda-forge/freetype-feedstock",
+  "recipe_commit": "3520c4122afde3a5c30609f035de7cc4f501c069"
+}

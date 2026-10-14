@@ -1,0 +1,89 @@
+# This file created by conda-build 24.5.1
+# meta.yaml template originally from:
+# /Users/runner/work/1/s/recipe, last modified Mon Jul  1 17:14:22 2024
+# ------------------------------------------------
+
+package:
+  name: svt-av1
+  version: 2.1.2
+source:
+  sha256: 65e90af18f31f8c8d2e9febf909a7d61f36172536abb25a7089f152210847cd9
+  url: https://gitlab.com/AOMediaCodec/SVT-AV1/-/archive/v2.1.2/SVT-AV1-v2.1.2.tar.gz
+build:
+  number: '0'
+  run_exports:
+    - svt-av1 >=2.1.2,<2.1.3.0a0
+  string: hf036a51_0
+requirements:
+  build:
+    - bzip2 1.0.8 h10d778d_5
+    - c-ares 1.28.1 h10d778d_0
+    - ca-certificates 2024.6.2 h8857fd0_0
+    - cctools_osx-64 986 ha1c5b94_0
+    - clang 16.0.6 default_ha3b9224_8
+    - clang-16 16.0.6 default_h4c8afb6_8
+    - clang_impl_osx-64 16.0.6 h8787910_16
+    - clang_osx-64 16.0.6 hb91bd55_16
+    - clangxx 16.0.6 default_ha3b9224_8
+    - clangxx_impl_osx-64 16.0.6 h6d92fbe_16
+    - clangxx_osx-64 16.0.6 hb91bd55_16
+    - cmake 3.29.6 h749d262_0
+    - compiler-rt 16.0.6 ha38d28d_2
+    - compiler-rt_osx-64 16.0.6 ha38d28d_2
+    - icu 73.2 hf5e326d_0
+    - krb5 1.21.3 h37d8d59_0
+    - ld64_osx-64 711 ha20a434_0
+    - libclang-cpp16 16.0.6 default_h4c8afb6_8
+    - libcurl 8.8.0 hf9fcc65_1
+    - libcxx 17.0.6 h8d2f0da_2
+    - libedit 3.1.20191231 h0678c8f_2
+    - libev 4.33 h10d778d_2
+    - libexpat 2.6.2 h73e2aa4_0
+    - libiconv 1.17 hd75f5a5_2
+    - libllvm16 16.0.6 hbedff68_3
+    - libnghttp2 1.58.0 h64cf6d3_1
+    - libssh2 1.11.0 hd019ec5_0
+    - libuv 1.48.0 h67532ce_0
+    - libxml2 2.12.7 h3e169fe_1
+    - libzlib 1.3.1 h87427d6_1
+    - llvm-tools 16.0.6 hbedff68_3
+    - macosx_deployment_target_osx-64 10.13 hbc8f3bb_1
+    - make 4.3 h22f3db7_1
+    - ncurses 6.5 h5846eda_0
+    - openssl 3.3.1 h87427d6_1
+    - rhash 1.4.4 h0dc2134_0
+    - sigtool 0.1.3 h88f4db0_0
+    - tapi 1100.0.11 h9ce4665_0
+    - xz 5.2.6 h775f41a_0
+    - yasm 1.3.0 h0d85af4_1003
+    - zstd 1.5.6 h915ae27_0
+  host:
+    - libcxx 17.0.6 h8d2f0da_2
+  run:
+    - __osx >=10.13
+    - libcxx >=16
+test:
+  commands:
+    - test -f $PREFIX/include/svt-av1/EbSvtAv1.h
+    - test -f $PREFIX/lib/libSvtAv1Enc${SHLIB_EXT}
+    - SvtAv1EncApp --help
+about:
+  description: 'The Scalable Video Technology for AV1 (SVT-AV1 Encoder and Decoder)
+    is an
+
+    AV1-compliant encoder/decoder library core.
+
+    '
+  home: https://gitlab.com/AOMediaCodec/SVT-AV1
+  license: BSD-2-Clause
+  license_family: BSD
+  license_file: LICENSE.md
+  summary: The Scalable Video Technology for AV1 encoder/decoder library.
+extra:
+  copy_test_source_files: true
+  final: true
+  flow_run_id: azure_20240701.3.1
+  recipe-maintainers:
+    - matthiasdiener
+  remote_url: https://github.com/conda-forge/svt-av1-feedstock
+  sha: 926e1e1065829a798d1bf82872ffc8887101ce0e

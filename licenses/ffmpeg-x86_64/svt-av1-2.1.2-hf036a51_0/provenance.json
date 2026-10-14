@@ -1,0 +1,13 @@
+{
+  "name": "svt-av1",
+  "version": "2.1.2",
+  "build": "hf036a51_0",
+  "license": "BSD-2-Clause",
+  "license_notices_package": "svt-av1-2.1.2-hf036a51_0",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/svt-av1-2.1.2-hf036a51_0.conda",
+  "homepage": "https://gitlab.com/AOMediaCodec/SVT-AV1",
+  "upstream_repository": "",
+  "source_recipe": "sha256: 65e90af18f31f8c8d2e9febf909a7d61f36172536abb25a7089f152210847cd9\n  url: https://gitlab.com/AOMediaCodec/SVT-AV1/-/archive/v2.1.2/SVT-AV1-v2.1.2.tar.gz",
+  "recipe_repository": "https://github.com/conda-forge/svt-av1-feedstock",
+  "recipe_commit": "926e1e1065829a798d1bf82872ffc8887101ce0e"
+}

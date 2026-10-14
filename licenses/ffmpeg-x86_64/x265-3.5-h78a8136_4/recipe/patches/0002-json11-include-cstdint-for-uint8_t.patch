@@ -1,0 +1,16 @@
+json11: include <cstdint> for uint8_t
+
+GCC 13 and newer no longer pull <cstdint> in transitively, so the
+static_cast<uint8_t> uses in dump() fail to compile with
+"'uint8_t' does not name a type".
+---
+--- a/source/dynamicHDR10/json11/json11.cpp
++++ b/source/dynamicHDR10/json11/json11.cpp
+@@ -22,6 +22,7 @@
+ #include "json11.h"
+ #include <cassert>
+ #include <cmath>
++#include <cstdint>
+ #include <cstdlib>
+ #include <cstdio>
+ #include <limits>

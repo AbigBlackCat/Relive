@@ -1,0 +1,13 @@
+{
+  "name": "libglib",
+  "version": "2.86.0",
+  "build": "h7cafd41_0",
+  "license": "LGPL-2.1-or-later",
+  "license_notices_package": "libglib-2.86.0-h7cafd41_0",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libglib-2.86.0-h7cafd41_0.conda",
+  "homepage": "https://developer.gnome.org/glib/",
+  "upstream_repository": "https://gitlab.gnome.org/GNOME/glib/",
+  "source_recipe": "url: https://download.gnome.org/sources/glib/2.86/glib-2.86.0.tar.xz\n  sha256: b5739972d737cfb0d6fd1e7f163dfe650e2e03740bb3b8d408e4d1faea580d6d\n  patches:\n    - patches/0001-Remove-hard-coded-paths.patch\n    - patches/0002-crossplatform-test-tweaks.patch\n    - patches/0006-gio-tests-socket-listener-Depend-on-libdl.patch",
+  "recipe_repository": "https://github.com/conda-forge/glib-feedstock",
+  "recipe_commit": "b90fd82b3853d3e11a537bee874ef9d59b080f27"
+}

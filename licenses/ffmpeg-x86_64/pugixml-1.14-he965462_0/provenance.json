@@ -1,0 +1,13 @@
+{
+  "name": "pugixml",
+  "version": "1.14",
+  "build": "he965462_0",
+  "license": "MIT",
+  "license_notices_package": "pugixml-1.14-he965462_0",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/pugixml-1.14-he965462_0.conda",
+  "homepage": "http://pugixml.org/",
+  "upstream_repository": "https://github.com/zeux/pugixml",
+  "source_recipe": "fn: pugixml-1.14.tar.gz\n  sha256: 610f98375424b5614754a6f34a491adbddaaec074e9044577d965160ec103d2e\n  url: https://github.com/zeux/pugixml/archive/v1.14.tar.gz",
+  "recipe_repository": "",
+  "recipe_commit": ""
+}

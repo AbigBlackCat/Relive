@@ -1,0 +1,13 @@
+{
+  "name": "libintl",
+  "version": "0.25.1",
+  "build": "h98e67c8_2",
+  "license": "LGPL-2.1-or-later",
+  "license_notices_package": "libintl-0.25.1-h98e67c8_2",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libintl-0.25.1-h98e67c8_2.conda",
+  "homepage": "https://www.gnu.org/software/gettext/",
+  "upstream_repository": "",
+  "source_recipe": "url: https://ftp.gnu.org/pub/gnu/gettext/gettext-0.25.1.tar.xz\n  sha256: 2c8294be238f03fb3fa65b8051057e5b68167f3e21f08008070cf40a7051ba22\n  patches:\n    - 0009-string-h-dont-redeclare-macro-functions.patch",
+  "recipe_repository": "https://github.com/conda-forge/gettext-feedstock",
+  "recipe_commit": "19edcefc1ebbaa06c80f9af85d8f0d32ad5d8d40"
+}

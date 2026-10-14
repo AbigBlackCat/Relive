@@ -1,0 +1,13 @@
+{
+  "name": "harfbuzz",
+  "version": "12.1.0",
+  "build": "hc5d3ef4_0",
+  "license": "MIT",
+  "license_notices_package": "harfbuzz-12.1.0-hc5d3ef4_0",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/harfbuzz-12.1.0-hc5d3ef4_0.conda",
+  "homepage": "https://harfbuzz.github.io/",
+  "upstream_repository": "https://github.com/harfbuzz/harfbuzz",
+  "source_recipe": "url: https://github.com/harfbuzz/harfbuzz/archive/12.1.0.tar.gz\n  sha256: 0238bf7ada6b1fb92984f69f8b9cd66518af83cf24f7db1cfe60c772c42312d3\n  patches:\n    - createfontdescriptors.patch",
+  "recipe_repository": "https://github.com/conda-forge/harfbuzz-feedstock",
+  "recipe_commit": "85fc363c3fd5d5d112f6cadb87f34b6b58461aa6"
+}

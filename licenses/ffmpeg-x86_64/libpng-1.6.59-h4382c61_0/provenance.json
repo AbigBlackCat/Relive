@@ -1,0 +1,13 @@
+{
+  "name": "libpng",
+  "version": "1.6.59",
+  "build": "h4382c61_0",
+  "license": "zlib-acknowledgement",
+  "license_notices_package": "libpng-1.6.59-h4382c61_0",
+  "binary_download": "https://conda.anaconda.org/conda-forge/osx-64/libpng-1.6.59-h4382c61_0.conda",
+  "homepage": "http://www.libpng.org/pub/png/libpng.html",
+  "upstream_repository": "https://sourceforge.net/p/libpng/code/ci/libpng16/tree/",
+  "source_recipe": "See the copied recipe files.",
+  "recipe_repository": "https://github.com/conda-forge/libpng-feedstock",
+  "recipe_commit": "fb861d8ff886d5bfe7fc4f01c6545d59779798ff"
+}

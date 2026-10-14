@@ -1,0 +1,76 @@
+# This file created by conda-build 26.7.0
+# ------------------------------------------------
+
+package:
+  name: libfreetype6
+  version: 2.14.3
+source:
+  url: https://download.savannah.gnu.org/releases/freetype/freetype-2.14.3.tar.gz
+  sha256: e61b31ab26358b946e767ed7eb7f4bb2e507da1cfefeb7a8861ace7fd5c899a1
+build:
+  number: '2'
+  noarch: false
+  noarch_python: false
+  python_version_independent: false
+  string: h8afe040_2
+requirements:
+  build:
+    - ca-certificates 2026.7.22 hbd8a1cb_0
+    - cctools_impl_osx-64 1030.6.3 llvm21_1_h3a5a8ea_5
+    - cctools_osx-64 1030.6.3 llvm21_1_he201b2c_5
+    - clang-21 21.1.8 default_he2ff43c_5
+    - clang_impl_osx-64 21.1.8 default_ha1a018a_5
+    - clang_osx-64 21.1.8 h64238a7_34
+    - compiler-rt 21.1.8 h694c41f_1
+    - compiler-rt21 21.1.8 he914875_1
+    - compiler-rt21_osx-64 21.1.8 he0f92a2_1
+    - compiler-rt_osx-64 21.1.8 h694c41f_1
+    - ld64_osx-64 956.6 llvm21_1_h1a26d5e_5
+    - libclang-cpp21.1 21.1.8 default_he2ff43c_5
+    - libcompiler-rt 21.1.8 he914875_1
+    - libcxx 22.1.8 h19cb2f5_0
+    - libiconv 1.18 h57a12c2_2
+    - libllvm21 21.1.8 h56e7563_0
+    - liblzma 5.8.3 hbb4bfdb_1
+    - libsigtool 0.1.3 h8c25ef7_1
+    - libxml2 2.15.3 h0712280_0
+    - libxml2-16 2.15.3 h0d7f165_0
+    - libzlib 1.3.2 hbb4bfdb_3
+    - llvm-tools 21.1.8 hb0207f0_0
+    - llvm-tools-21 21.1.8 h879f4bc_0
+    - macosx_deployment_target_osx-64 11.0 h0bd77a9_7
+    - ncurses 6.6 hcc0dc9a_1
+    - openssl 3.6.3 hc881268_1
+    - sdkroot_env_osx-64 26.0 h62b880e_7
+    - sigtool-codesign 0.1.3 h8c25ef7_1
+    - tapi 1600.0.11.8 h44950e2_3
+    - zstd 1.5.7 hbc1a06c_7
+  host:
+    - libpng 1.6.58 h4382c61_1
+    - libzlib 1.3.2 hbb4bfdb_3
+    - zlib 1.3.2 hbb4bfdb_3
+  run_constrained:
+    - freetype >=2.14.3
+  run:
+    - __osx >=11.0
+    - libpng >=1.6.58,<1.7.0a0
+    - libzlib >=1.3.2,<2.0a0
+test:
+  commands:
+    - test -f ${PREFIX}/lib/libfreetype.6.dylib
+about:
+  license: GPL-2.0-only OR FTL
+  summary: The libfreetype runtime library.
+  description: This is a runtime package only. Developers should install freetype
+    to build with libfreetype.
+extra:
+  recipe-maintainers:
+    - carterbox
+    - ccordoba12
+    - msarahan
+    - ocefpaf
+  final: true
+  copy_test_source_files: true
+  flow_run_id: azure_20260813.3.1
+  remote_url: https://github.com/conda-forge/freetype-feedstock
+  sha: 3520c4122afde3a5c30609f035de7cc4f501c069
