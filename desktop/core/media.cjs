@@ -16,22 +16,32 @@ function tool(name) {
   const base=process.resourcesPath && !process.defaultApp ? path.join(process.resourcesPath,'bin') : process.platform==='win32' ? path.join(root,'desktop/vendor/win32-x64') : path.join(root,'Resources/bin');
   return path.join(base,name+suffix);
 }
-function run(name,args,job,{duration=0,stage='正在处理素材',scale=1}={}) {
+function run(name,args,job,{duration=0,stage='正在处理素材',scale=1,cwd,onStdoutLine,captureStdout=true}={}) {
   job.check();
   return new Promise((resolve,reject)=>{
-    const child=spawn(tool(name),args,{windowsHide:true,stdio:['ignore','pipe','pipe']});
+    const child=spawn(tool(name),args,{windowsHide:true,cwd,stdio:['ignore','pipe','pipe']});
     job.child=child;
-    let stdout='',stderr='',pending='',settled=false;
+    let stdout='',stderr='',pending='',settled=false,processingError;
     const finish=(error,value)=>{if(settled)return;settled=true;if(job.child===child)job.child=null;error?reject(error):resolve(value);};
     child.stdout.setEncoding('utf8');child.stderr.setEncoding('utf8');
     child.stdout.on('data',data=>{
-      stdout=(stdout+data).slice(-4*1024*1024);pending+=data;
+      if(processingError)return;
+      if(captureStdout)stdout=(stdout+data).slice(-4*1024*1024);pending+=data;
       const lines=pending.split('\n');pending=lines.pop();
-      for(const line of lines) if(line.startsWith('out_time_us=')&&duration>0){const value=Number(line.slice(12));if(Number.isFinite(value))job.progress({stage,progress:Math.max(0,Math.min(1,value/1e6/duration))*scale});}
+      try{
+        if(pending.length>65536)throw new Error('媒体工具返回了过长的数据行。');
+        for(const line of lines){
+          onStdoutLine?.(line);
+          if(line.startsWith('out_time_us=')&&duration>0){const value=Number(line.slice(12));if(Number.isFinite(value))job.progress({stage,progress:Math.max(0,Math.min(1,value/1e6/duration))*scale});}
+        }
+      }catch(error){processingError=error;child.kill();}
     });
     child.stderr.on('data',data=>{stderr=(stderr+data).slice(-16000);});
     child.once('error',error=>finish(job.cancelled?new Cancelled():new Error('无法启动内置 '+name+'：'+error.message)));
-    child.once('close',code=>finish(job.cancelled?new Cancelled():code===0?null:new Error('媒体处理失败：'+(stderr.trim()||'退出码 '+code)),stdout));
+    child.once('close',code=>{
+      if(!settled&&!processingError&&pending&&onStdoutLine){try{onStdoutLine(pending);}catch(error){processingError=error;}}
+      finish(job.cancelled?new Cancelled():processingError||(code===0?null:new Error('媒体处理失败：'+(stderr.trim()||'退出码 '+code))),stdout);
+    });
     if(job.cancelled)child.kill();
   });
 }

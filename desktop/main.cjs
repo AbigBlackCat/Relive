@@ -8,6 +8,7 @@ const{pathToFileURL}=require('node:url');
 const media=require('./core/media.cjs');
 const{renderSVG}=require('./core/svg.cjs');
 const{writeLivePhoto,validateLivePhoto}=require('./core/live-photo.cjs');
+const{createWebP,saveWebP}=require('./core/webp.cjs');
 
 let mainWindow,workspace,activeJob,settings,settingsFile;
 const items=new Map(),exportedPaths=new Set(),chosenDirectories=new Set();
@@ -81,6 +82,23 @@ async function exportItem(config){
     }finally{if(temporary)await fs.rm(temporary,{recursive:true,force:true});await fs.rm(directory,{recursive:true,force:true});}
   });
 }
+async function exportWebP(config){
+  const item=items.get(config?.id);if(!item)throw new Error('请选择已导入的素材。');
+  if(typeof config.outputDir!=='string')throw new Error('请选择导出文件夹。');
+  const output=path.resolve(config.outputDir);
+  if(!chosenDirectories.has(output))throw new Error('请从操作台选择导出文件夹。');
+  return job(async token=>{
+    const directory=path.join(workspace,'export-'+randomUUID());await fs.mkdir(directory);
+    let destination,delivered=false;
+    try{
+      const result=await createWebP(item,config,directory,token);token.check();
+      destination=await saveWebP(result.filePath,output,safeName(item.name),token);token.check();
+      exportedPaths.add(destination);
+      emit({stage:result.isAnimated?'WebP 动图已导出 · 已通过尺寸、循环与时长检查':'静态 WebP 已导出 · 素材画面没有变化',progress:1});
+      delivered=true;return{...result,filePath:destination};
+    }finally{if(destination&&!delivered)await fs.rm(destination,{force:true});await fs.rm(directory,{recursive:true,force:true});}
+  });
+}
 function register(name,handler){ipcMain.handle(name,(event,...args)=>{
   if(!mainWindow||event.sender!==mainWindow.webContents||event.senderFrame?.url!==pathToFileURL(index).href)throw new Error('不受信任的操作来源');
   return handler(...args);
@@ -98,13 +116,14 @@ async function initialize(){
   register('settings',()=>({...settings}));
   register('pick-files',async options=>{const selected=await dialog.showOpenDialog(mainWindow,{title:'导入素材',properties:['openFile','multiSelections'],filters:[{name:'视频、GIF、SVG 与图片',extensions:[...allowed]}]});return selected.canceled?[]:importPaths(selected.filePaths,options);});
   register('import-dropped',options=>importPaths(options?.paths,options));
-  register('choose-directory',async()=>{const selected=await dialog.showOpenDialog(mainWindow,{title:'选择 Live Photo 导出位置',defaultPath:settings.outputDir,properties:['openDirectory','createDirectory']});if(selected.canceled)return null;settings.outputDir=path.resolve(selected.filePaths[0]);chosenDirectories.add(settings.outputDir);await fs.mkdir(path.dirname(settingsFile),{recursive:true});await fs.writeFile(settingsFile,JSON.stringify(settings));return settings.outputDir;});
+  register('choose-directory',async()=>{const selected=await dialog.showOpenDialog(mainWindow,{title:'选择导出位置',defaultPath:settings.outputDir,properties:['openDirectory','createDirectory']});if(selected.canceled)return null;settings.outputDir=path.resolve(selected.filePaths[0]);chosenDirectories.add(settings.outputDir);await fs.mkdir(path.dirname(settingsFile),{recursive:true});await fs.writeFile(settingsFile,JSON.stringify(settings));return settings.outputDir;});
   register('export-live-photo',exportItem);
+  register('export-webp',exportWebP);
   register('reveal',target=>{if(!exportedPaths.has(target))throw new Error('请选择本次导出的文件');shell.showItemInFolder(target);});
   register('open-result',async target=>{if(!exportedPaths.has(target))throw new Error('请选择本次导出的文件');const failure=await shell.openPath(target);if(failure)throw new Error(failure);});
   ipcMain.on('cancel',event=>{if(event.sender===mainWindow.webContents)activeJob?.cancel();});
   await mainWindow.loadFile(index);
-  return{workspace,importPaths,exportItem,items,chosenDirectories,mainWindow};
+  return{workspace,importPaths,exportItem,exportWebP,items,chosenDirectories,mainWindow};
 }
 
 app.whenReady().then(async()=>{

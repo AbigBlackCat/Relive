@@ -8,9 +8,9 @@ case "$relive_arch" in
   x86_64) relive_app="$relive_root/dist/Relive-Intel.app"; relive_resources="$relive_root/Resources/macos-x86_64"; relive_ffmpeg_licenses="$relive_root/licenses/ffmpeg-x86_64" ;;
   *) print -u2 "Usage: scripts/build.sh [arm64|x86_64]"; exit 2 ;;
 esac
-for relive_tool in ffmpeg ffprobe; do
+for relive_tool in ffmpeg ffprobe img2webp webpinfo; do
   if [[ ! -x "$relive_resources/bin/$relive_tool" ]]; then
-    print -u2 "Missing $relive_arch $relive_tool. Run scripts/prepare_intel_ffmpeg.py for Intel builds."
+    print -u2 "Missing $relive_arch $relive_tool. Prepare FFmpeg and run scripts/prepare_webp.py --target $relive_arch before building."
     exit 1
   fi
   if ! lipo -archs "$relive_resources/bin/$relive_tool" | tr ' ' '\n' | /usr/bin/grep -qx "$relive_arch"; then
@@ -19,6 +19,7 @@ for relive_tool in ffmpeg ffprobe; do
   fi
 done
 [[ -f "$relive_ffmpeg_licenses/manifest.json" ]] || { print -u2 "Missing FFmpeg license manifest: $relive_ffmpeg_licenses"; exit 1; }
+[[ -f "licenses/webp/$relive_arch.json" ]] || { print -u2 "Missing WebP license manifest: run scripts/prepare_webp.py --target $relive_arch"; exit 1; }
 rm -rf "$relive_app"
 mkdir -p "$relive_app/Contents/MacOS" "$relive_app/Contents/Resources"
 xcrun swiftc -swift-version 5 -O -target "$relive_arch-apple-macosx13.0" Sources/*.swift -o "$relive_app/Contents/MacOS/Relive" -framework SwiftUI -framework AppKit -framework AVKit -framework AVFoundation -framework Photos -framework WebKit -framework ImageIO -framework UniformTypeIdentifiers

@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld('relive',{
   importDropped:settings=>ipcRenderer.invoke('import-dropped',settings),
   chooseDirectory:()=>ipcRenderer.invoke('choose-directory'),
   exportLivePhoto:settings=>ipcRenderer.invoke('export-live-photo',settings),
+  exportWebP:settings=>ipcRenderer.invoke('export-webp',settings),
   reveal:target=>ipcRenderer.invoke('reveal',target),
   openResult:target=>ipcRenderer.invoke('open-result',target),
   cancel:()=>ipcRenderer.send('cancel'),

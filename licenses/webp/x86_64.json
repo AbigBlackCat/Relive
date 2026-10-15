@@ -1,0 +1,28 @@
+{
+  "version": "1.6.0",
+  "target": "x86_64",
+  "binaries": {
+    "img2webp": {
+      "sha256": "ea020a3acf28be047d58202347a8d39060238d303217e9bb90ce9375e3000028",
+      "bytes": 647856,
+      "architecture": "x86_64",
+      "minimum_macos": "13.0",
+      "libraries": [
+        "/usr/lib/libSystem.B.dylib"
+      ]
+    },
+    "webpinfo": {
+      "sha256": "93a1353ed3219af3f1c28661fb9ab8329165679c880259a99d15e7c98e06219a",
+      "bytes": 334848,
+      "architecture": "x86_64",
+      "minimum_macos": "13.0",
+      "libraries": [
+        "/usr/lib/libSystem.B.dylib"
+      ]
+    }
+  },
+  "smoke_test": {
+    "passed": null,
+    "reason": "Cross-architecture build; run smoke test on target hardware."
+  }
+}

@@ -2,7 +2,7 @@ name: Build Relive
 on:
   push:
     branches: [main]
-    paths: ['desktop/**', 'package*.json', '.github/workflows/build.yml']
+    paths: ['desktop/**', 'package*.json', 'scripts/prepare_webp.py', '.github/workflows/build.yml']
   workflow_dispatch:
     inputs:
       platform:
@@ -35,6 +35,8 @@ jobs:
         run: npm ci --no-audit --no-fund
       - name: Prepare checksum-pinned FFmpeg
         run: python desktop/scripts/prepare_windows_ffmpeg.py
+      - name: Prepare and validate checksum-pinned WebP tools
+        run: python scripts/prepare_webp.py --target windows-x64
       - name: Test Live Photo format and decoded media
         shell: pwsh
         run: |
@@ -74,6 +76,8 @@ jobs:
     if: github.event_name == 'workflow_dispatch' && inputs.platform != 'windows'
     runs-on: macos-15-intel
     timeout-minutes: 30
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: conda-incubator/setup-miniconda@v4.1.0
@@ -84,6 +88,8 @@ jobs:
       - name: Prepare Intel FFmpeg
         shell: bash -el {0}
         run: python3 scripts/prepare_intel_ffmpeg.py
+      - name: Build and validate Intel WebP tools for macOS 13
+        run: python3 scripts/prepare_webp.py --target x86_64
       - name: Compile and validate native Intel app
         run: |
           scripts/build.sh x86_64
@@ -95,3 +101,13 @@ jobs:
           path: dist/*Intel.dmg
           if-no-files-found: error
           retention-days: 30
+      - name: Upload Intel installer to draft release
+        if: github.event_name == 'workflow_dispatch' && inputs.publish_release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(python3 -c 'import json; print(json.load(open("package.json"))["version"])')
+          tag="v$version"
+          draft=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json isDraft --jq '.isDraft')
+          if [ "$draft" != true ]; then echo "Expected an existing draft release: $tag" >&2; exit 1; fi
+          gh release upload "$tag" "dist/Relive-$version-Intel.dmg" --repo "$GITHUB_REPOSITORY" --clobber

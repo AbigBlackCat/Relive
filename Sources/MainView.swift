@@ -77,7 +77,7 @@ struct MainView: View {
             Text("Relive")
                 .font(.system(size: 21, weight: .semibold))
             Rectangle().fill(RelivePalette.line).frame(width: 1, height: 20).padding(.horizontal, 6)
-            Text("把喜欢的瞬间，变成 Live Photo")
+            Text("把喜欢的瞬间，变成实况与动图")
                 .font(.system(size: 12))
                 .foregroundColor(RelivePalette.secondary)
             Spacer()
@@ -284,7 +284,7 @@ struct MainView: View {
                 .accessibilityHidden(true)
             Text("让瞬间再次发生")
                 .font(.system(size: 23, weight: .medium))
-            Text("导入素材，找到喜欢的一帧，导出 Live Photo。")
+            Text("导入素材，选取喜欢的片段，导出实况或 WebP 动图。")
                 .font(.system(size: 12))
                 .foregroundColor(RelivePalette.secondary)
             Button(action: model.chooseFiles) {
@@ -309,11 +309,13 @@ struct MainView: View {
                 .foregroundColor(RelivePalette.secondary)
                 .padding(.leading, 3)
             Spacer(minLength: 4)
-            Button(action: model.chooseCover) {
-                Label("当前帧设为封面", systemImage: "photo.badge.checkmark")
-                    .font(.system(size: 11, weight: .medium))
+            if model.exportFormat == .livePhoto {
+                Button(action: model.chooseCover) {
+                    Label("当前帧设为封面", systemImage: "photo.badge.checkmark")
+                        .font(.system(size: 11, weight: .medium))
+                }
+                .buttonStyle(ReliveButtonStyle())
             }
-            .buttonStyle(ReliveButtonStyle())
         }
         .padding(.horizontal, 14)
         .frame(height: 56)
@@ -330,7 +332,7 @@ struct MainView: View {
                         .font(.system(size: 10, design: .monospaced))
                         .foregroundColor(RelivePalette.secondary)
                 } else {
-                    Text("选取一帧作为封面")
+                    Text(model.exportFormat == .livePhoto ? "选取一帧作为封面" : "按原顺序播放片段")
                         .font(.system(size: 11))
                         .foregroundColor(RelivePalette.secondary)
                 }
@@ -364,8 +366,8 @@ struct MainView: View {
             .foregroundColor(RelivePalette.secondary)
             .disabled(model.current == nil || model.busy)
             HStack(spacing: 6) {
-                Image(systemName: "pin.fill").foregroundColor(RelivePalette.accent)
-                Text(model.current == nil ? "拖动定位，然后使用逐帧按钮确认封面。" : "封面：第 \(model.coverFrame) 帧 · \(timecode(model.coverTime))")
+                Image(systemName: model.exportFormat == .livePhoto ? "pin.fill" : "play.fill").foregroundColor(RelivePalette.accent)
+                Text(model.exportFormat == .webP ? "WebP 从裁切片段的首帧开始，保持原始播放顺序。" : (model.current == nil ? "拖动定位，然后使用逐帧按钮确认封面。" : "封面：第 \(model.coverFrame) 帧 · \(timecode(model.coverTime))"))
                     .foregroundColor(RelivePalette.secondary)
             }
             .font(.system(size: 10))
@@ -394,7 +396,7 @@ struct MainView: View {
                     .padding(4)
             }
             .overlay(alignment: .topTrailing) {
-                if thumbnail.id == coverID {
+                if model.exportFormat == .livePhoto && thumbnail.id == coverID {
                     Image(systemName: "pin.fill")
                         .font(.system(size: 9))
                         .foregroundColor(RelivePalette.background)
@@ -413,15 +415,21 @@ struct MainView: View {
     private var inspector: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 8) {
-                Image(systemName: "livephoto").foregroundColor(RelivePalette.accent)
-                Text("导出 Live Photo").font(.system(size: 14, weight: .semibold))
+                Image(systemName: model.exportFormat.icon).foregroundColor(RelivePalette.accent)
+                Text("导出 \(model.exportFormat.title)").font(.system(size: 14, weight: .semibold))
                 Spacer()
             }
             .padding(18)
             Divider().overlay(RelivePalette.line)
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
-                    coverSettings
+                    Picker("导出格式", selection: $model.exportFormat) {
+                        ForEach(ExportFormat.allCases) { format in Text(format.title).tag(format) }
+                    }
+                    .pickerStyle(.segmented)
+                    .disabled(model.busy)
+                    .accessibilityLabel("导出格式")
+                    if model.exportFormat == .livePhoto { coverSettings }
                     clipSettings
                     exportSettings
                     publishingHelp
@@ -517,9 +525,15 @@ struct MainView: View {
                 Text("1920").tag(1920)
             }
             .pickerStyle(.segmented)
-            Toggle("保留原声音", isOn: $model.keepAudio)
-                .toggleStyle(.switch)
-                .font(.system(size: 12))
+            if model.exportFormat == .livePhoto {
+                Toggle("保留原声音", isOn: $model.keepAudio)
+                    .toggleStyle(.switch)
+                    .font(.system(size: 12))
+            } else {
+                Text("最高 30 fps · 无限循环 · 无声音")
+                    .font(.system(size: 11))
+                    .foregroundColor(RelivePalette.secondary)
+            }
             Button(action: model.chooseOutputDirectory) {
                 HStack(spacing: 8) {
                     Image(systemName: "folder")
@@ -551,10 +565,15 @@ struct MainView: View {
     private var publishingHelp: some View {
         DisclosureGroup("如何在小红书发布", isExpanded: $showPublishingHelp) {
             VStack(alignment: .leading, spacing: 10) {
-                publishingStep("1", text: "导出后点击「导入照片」，保存到 Mac「照片」。")
-                publishingStep("2", text: "从「照片」用 AirDrop 传到 iPhone，确认相册显示 LIVE。")
-                publishingStep("3", text: "打开小红书，从相册选取这张 Live 图，再发布笔记。")
-                Text("导出文件需要先进入系统相册。小红书识别结果以手机当前版本为准。")
+                if model.exportFormat == .livePhoto {
+                    publishingStep("1", text: "导出后点击「导入照片」，保存到 Mac「照片」。")
+                    publishingStep("2", text: "从「照片」用 AirDrop 传到 iPhone，确认相册显示 LIVE。")
+                    publishingStep("3", text: "打开小红书，从相册选取这张 Live 图，再发布笔记。")
+                } else {
+                    publishingStep("1", text: "导出后点击「打开文件夹」，找到 .webp 文件。")
+                    publishingStep("2", text: "使用当前小红书客户端支持的文件上传入口选择 WebP。")
+                }
+                Text(model.exportFormat == .livePhoto ? "导出文件需要先进入系统相册。小红书识别结果以手机当前版本为准。" : "WebP 动画展示以小红书当前版本为准；静态 WebP 不包含动画。")
                     .font(.system(size: 10))
                     .foregroundColor(RelivePalette.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -599,8 +618,8 @@ struct MainView: View {
             } else {
                 Button(action: model.export) {
                     HStack(spacing: 8) {
-                        Image(systemName: "livephoto")
-                        Text("导出 Live Photo").fontWeight(.semibold)
+                        Image(systemName: model.exportFormat.icon)
+                        Text("导出 \(model.exportFormat.title)").fontWeight(.semibold)
                         Spacer()
                         Image(systemName: "arrow.right")
                     }
@@ -613,14 +632,20 @@ struct MainView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundColor(RelivePalette.accent)
-                        Text("已导出：\(model.lastExport?.deletingPathExtension().lastPathComponent ?? "Live Photo")")
+                        Text("已导出：\(model.lastExport?.lastPathComponent ?? model.exportFormat.title)")
                             .font(.system(size: 11))
                             .lineLimit(1)
                             .truncationMode(.middle)
                     }
+                    if let info = model.lastWebP {
+                        Text("\(info.width) × \(info.height) · \(info.isAnimated ? String(format: "%.3f 秒", info.duration) : "静态图片") · \(ByteCountFormatter.string(fromByteCount: info.byteCount, countStyle: .file))")
+                            .font(.system(size: 10))
+                            .foregroundColor(RelivePalette.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                     HStack(spacing: 8) {
                         Button("打开文件夹", action: model.revealOutput)
-                        Button("导入照片", action: model.openPhotos)
+                        if model.exportFormat == .livePhoto { Button("导入照片", action: model.openPhotos) }
                     }
                     .buttonStyle(ReliveButtonStyle())
                 }

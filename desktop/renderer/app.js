@@ -12,9 +12,11 @@ const ui = Object.fromEntries([
   'output-directory', 'progress-area', 'progress-stage', 'progress-percent', 'progress',
   'cancel-button', 'export-button', 'export-result', 'result-name', 'reveal-result', 'open-result',
   'error-banner', 'error-message', 'close-error', 'status-text', 'drop-overlay',
+  'export-format', 'format-hint', 'cover-settings', 'audio-setting', 'inspector-title',
+  'export-label', 'result-details', 'live-help', 'webp-help',
 ].map((id) => [id, byId(id)]));
 
-const state = { items: [], selected: null, currentFrame: 1, coverFrame: 1, outputDir: '', busy: false, result: null, dragDepth: 0 };
+const state = { items: [], selected: null, currentFrame: 1, coverFrame: 1, outputDir: '', busy: false, result: null, dragDepth: 0, format: 'livePhoto' };
 
 function timecode(seconds) {
   const safe = Number.isFinite(seconds) ? Math.max(0, seconds) : 0;
@@ -28,6 +30,29 @@ function frameAtTime(item, seconds) { return Math.max(1, Math.min(item.frameCoun
 function frameTime(item, frame) { return (frame - 1) / item.fps; }
 function integerInput(input) { return /^\d+$/.test(input.value.trim()) ? Number(input.value) : NaN; }
 function status(message) { ui['status-text'].textContent = message; }
+function isWebP() { return state.format === 'webp'; }
+function resultPath() { return state.result?.filePath || state.result?.packagePath; }
+function fileSize(bytes) {
+  const unit = bytes < 1024 ? 0 : Math.min(3, Math.floor(Math.log(bytes) / Math.log(1024)));
+  return `${(bytes / 1024 ** unit).toLocaleString('zh-CN', { maximumFractionDigits: 2 })} ${['B', 'KB', 'MB', 'GB'][unit]}`;
+}
+function updateFormat() {
+  state.format = ui['export-format'].value === 'webp' ? 'webp' : 'livePhoto';
+  state.result = null;
+  ui['export-result'].hidden = true;
+  const webp = isWebP();
+  ui['cover-settings'].hidden = webp;
+  ui['audio-setting'].hidden = webp;
+  ui['mark-cover'].hidden = webp;
+  ui['cover-summary'].hidden = webp;
+  ui['live-help'].hidden = webp;
+  ui['webp-help'].hidden = !webp;
+  ui['open-result'].hidden = webp;
+  ui['inspector-title'].textContent = ui['export-label'].textContent = webp ? '导出 WebP 动图' : '导出 Live Photo';
+  ui['format-hint'].textContent = webp ? '按片段原序循环播放，从首帧开始；无声音。' : '选取封面，制作带声音的实况照片。';
+  updateCover();
+  status(webp ? 'WebP 动图 · 保留片段原播放顺序' : 'Live Photo · 可逐帧选取封面');
+}
 
 function error(message) {
   ui['error-message'].textContent = message ? String(message) : '';
@@ -47,7 +72,7 @@ function clipValidation() {
   if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end) || start < 1 || end > item.frameCount || start > end) {
     return `请输入 1 到 ${item.frameCount} 之间的帧号，结束帧须不早于开始帧。`;
   }
-  if (state.coverFrame < start || state.coverFrame > end) return '封面须位于所选片段内，请调整片段或重新选取封面。';
+  if (!isWebP() && (state.coverFrame < start || state.coverFrame > end)) return '封面须位于所选片段内，请调整片段或重新选取封面。';
   return '';
 }
 
@@ -141,8 +166,8 @@ function updateCover() {
       if (Math.abs(thumbnail.time - coverTime) < Math.abs(item.thumbnails[nearest].time - coverTime)) nearest = index;
     });
     ui.filmstrip.querySelectorAll('.frame-thumbnail').forEach((button, index) => {
-      button.classList.toggle('is-cover', index === nearest);
-      button.querySelector('.cover-tag').hidden = index !== nearest;
+      button.classList.toggle('is-cover', !isWebP() && index === nearest);
+      button.querySelector('.cover-tag').hidden = isWebP() || index !== nearest;
     });
   }
   updateClip();
@@ -150,7 +175,7 @@ function updateCover() {
 
 function setCover(frame, seek = false) {
   const item = current();
-  if (!item || state.busy) return;
+  if (!item || state.busy || isWebP()) return;
   if (!Number.isSafeInteger(frame) || frame < 1 || frame > item.frameCount) {
     ui['cover-error'].textContent = `请输入 1 到 ${item.frameCount} 之间的整数帧号。`;
     ui['cover-error'].hidden = false;
@@ -305,16 +330,20 @@ async function exportMedia() {
   if (!state.outputDir) { error('请先选择保存文件夹。'); return; }
   try {
     state.result = null;
-    setBusy(true, '正在导出 Live Photo…');
-    const result = await bridge.exportLivePhoto({
-      id: item.id, coverFrame: state.coverFrame, startFrame: integerInput(ui['start-frame']),
+    setBusy(true, isWebP() ? '正在导出 WebP 动图…' : '正在导出 Live Photo…');
+    const config = {
+      id: item.id, startFrame: integerInput(ui['start-frame']),
       endFrame: integerInput(ui['end-frame']), maxSide: Number(ui['max-side'].value),
-      keepAudio: ui['keep-audio'].checked, outputDir: state.outputDir,
-    });
+      outputDir: state.outputDir,
+    };
+    const result = isWebP() ? await bridge.exportWebP(config) : await bridge.exportLivePhoto({ ...config, coverFrame: state.coverFrame, keepAudio: ui['keep-audio'].checked });
     state.result = result;
-    ui['result-name'].textContent = `已导出：${filename(result.packagePath)}`;
-    ui['result-name'].title = result.packagePath;
-    status(`导出完成：${filename(result.packagePath)}`);
+    ui['result-name'].textContent = `已导出：${filename(resultPath())}`;
+    ui['result-name'].title = resultPath();
+    ui['result-details'].textContent = isWebP()
+      ? `${result.width} × ${result.height} · ${result.isAnimated ? `${Number(result.duration.toFixed(3))} 秒` : '静态 WebP'} · ${fileSize(result.byteSize)}`
+      : '已完成文件结构校验。请在 iPhone 相册确认 LIVE。';
+    status(`导出完成：${filename(resultPath())}`);
   } catch (cause) {
     showError(cause);
   } finally {
@@ -357,6 +386,7 @@ ui['choose-directory'].addEventListener('click', async () => {
   try { const path = await bridge.chooseDirectory(); if (path) updateDirectory(path); } catch (cause) { showError(cause); }
 });
 ui['export-button'].addEventListener('click', exportMedia);
+ui['export-format'].addEventListener('change', updateFormat);
 ui['cancel-button'].addEventListener('click', () => {
   ui['cancel-button'].disabled = true;
   ui['progress-stage'].textContent = '正在取消…';
@@ -366,7 +396,7 @@ ui['cancel-button'].addEventListener('click', () => {
 ui['close-error'].addEventListener('click', () => error(''));
 ui['reveal-result'].addEventListener('click', async () => {
   if (!state.result || state.busy) return;
-  try { await bridge.reveal(state.result.packagePath); } catch (cause) { showError(cause); }
+  try { await bridge.reveal(resultPath()); } catch (cause) { showError(cause); }
 });
 ui['open-result'].addEventListener('click', async () => {
   if (!state.result || state.busy) return;
@@ -414,6 +444,7 @@ document.addEventListener('drop', (event) => {
 });
 
 async function initialize() {
+  updateFormat();
   updateControls();
   if (!bridge) { error('应用连接不可用，请关闭并重新打开 Relive。'); return; }
   bridge.onProgress((event) => {

@@ -1,0 +1,31 @@
+{
+  "version": "1.6.0",
+  "target": "arm64",
+  "binaries": {
+    "img2webp": {
+      "sha256": "4981c2cc51206aa140f989f9e6c79e34e2d7a5ab9b6da549b5b33187ad02a951",
+      "bytes": 535136,
+      "architecture": "arm64",
+      "minimum_macos": "13.0",
+      "libraries": [
+        "/usr/lib/libSystem.B.dylib"
+      ]
+    },
+    "webpinfo": {
+      "sha256": "13938a3a11f072410a87b8b2fc19e42f5bac2308a7817871522138f114524a5a",
+      "bytes": 283632,
+      "architecture": "arm64",
+      "minimum_macos": "13.0",
+      "libraries": [
+        "/usr/lib/libSystem.B.dylib"
+      ]
+    }
+  },
+  "smoke_test": {
+    "passed": true,
+    "cases": [
+      "2-frame PPM, 80 ms, infinite loop",
+      "single-frame WebP"
+    ]
+  }
+}

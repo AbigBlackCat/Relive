@@ -19,6 +19,13 @@ struct FrameThumbnail: Identifiable {
     let image: NSImage
 }
 
+enum ExportFormat: String, CaseIterable, Identifiable {
+    case livePhoto, webP
+    var id: Self { self }
+    var title: String { self == .livePhoto ? "Live Photo" : "WebP 动图" }
+    var icon: String { self == .livePhoto ? "livephoto" : "photo.on.rectangle.angled" }
+}
+
 @MainActor
 final class ReliveModel: ObservableObject {
     static let shared = ReliveModel()
@@ -33,6 +40,10 @@ final class ReliveModel: ObservableObject {
     @Published var progress = 0.0
     @Published var error: String?
     @Published var lastExport: URL?
+    @Published var lastWebP: WebPInfo?
+    @Published var exportFormat: ExportFormat = .livePhoto {
+        didSet { if oldValue != exportFormat { lastExport = nil; lastWebP = nil; error = nil } }
+    }
     @Published var exportDirectory = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Desktop/Relive 导出")
     @Published var maxSide = 1080
     @Published var keepAudio = true
@@ -133,7 +144,7 @@ final class ReliveModel: ObservableObject {
             if let imported { select(imported) }
             if token.isCancelled { status = "已取消，已导入的素材仍可继续编辑。" }
             else if accepted.count == failures.count { status = "没有成功导入素材，请检查提示后重新选择。" }
-            else { status = "已导入 \(accepted.count - failures.count) 个素材" + (ignored > 0 ? "，跳过 \(ignored) 个不支持的文件。" : "，选择封面后即可导出。") }
+            else { status = "已导入 \(accepted.count - failures.count) 个素材" + (ignored > 0 ? "，跳过 \(ignored) 个不支持的文件。" : (exportFormat == .livePhoto ? "，选择封面后即可导出。" : "，选择片段后即可导出 WebP。")) }
             if !failures.isEmpty { error = failures.joined(separator: "\n\n") }
         }
     }
@@ -141,7 +152,7 @@ final class ReliveModel: ObservableObject {
     func select(_ item: MediaItem) {
         guard !busy, selectedID != item.id else { return }
         player.pause(); isPlaying = false
-        lastExport = nil
+        lastExport = nil; lastWebP = nil
         selectedID = item.id; playhead = 0; coverFrame = 1
         trimStart = 0; trimEnd = item.duration
         player.replaceCurrentItem(with: AVPlayerItem(url: item.previewURL))
@@ -172,35 +183,50 @@ final class ReliveModel: ObservableObject {
         guard current != nil, !busy else { return }
         if player.rate > 0 { player.pause(); isPlaying = false } else { player.play(); isPlaying = true }
     }
-    func chooseCover() { coverFrame = currentFrame; lastExport = nil; status = "已将第 \(coverFrame) 帧设为封面。" }
+    func chooseCover() { guard exportFormat == .livePhoto else { return }; coverFrame = currentFrame; lastExport = nil; lastWebP = nil; status = "已将第 \(coverFrame) 帧设为封面。" }
     func setFirstCover() { setCoverFrame(1) }
-    func setCoverFrame(_ frame: Int) { coverFrame = min(frameCount, max(1, frame)); lastExport = nil; seek(coverTime); status = "封面：第 \(coverFrame) 帧。" }
+    func setCoverFrame(_ frame: Int) { guard exportFormat == .livePhoto else { return }; coverFrame = min(frameCount, max(1, frame)); lastExport = nil; lastWebP = nil; seek(coverTime); status = "封面：第 \(coverFrame) 帧。" }
     func chooseOutputDirectory() {
         guard !busy else { return }
-        let panel = NSOpenPanel(); panel.title = "选择 Live Photo 导出位置"; panel.canChooseDirectories = true; panel.canChooseFiles = false; panel.canCreateDirectories = true; panel.directoryURL = exportDirectory
+        let panel = NSOpenPanel(); panel.title = "选择 Relive 导出位置"; panel.canChooseDirectories = true; panel.canChooseFiles = false; panel.canCreateDirectories = true; panel.directoryURL = exportDirectory
         if panel.runModal() == .OK, let url = panel.url { exportDirectory = url; UserDefaults.standard.set(url.path, forKey: "exportDirectory") }
     }
 
     func export() {
         guard !busy, let item = current else { return }
         guard trimStart.isFinite, trimEnd.isFinite, trimStart >= 0, trimEnd <= item.duration + 0.01, clipDuration + 0.000001 >= 1 / item.fps else { error = "请设置有效的导出片段：开始时间小于结束时间，且位于素材范围内。"; return }
-        guard coverTime + 0.0001 >= trimStart, coverTime < trimEnd else { error = "封面帧必须位于导出片段内。请重新选择封面，或调整片段范围。"; return }
+        if exportFormat == .livePhoto {
+            guard coverTime + 0.0001 >= trimStart, coverTime < trimEnd else { error = "封面帧必须位于导出片段内。请重新选择封面，或调整片段范围。"; return }
+        }
         let startFrame = Int((trimStart * item.fps).rounded())
         let start = Double(startFrame) / item.fps
         let end = min(item.duration, Double(Int((trimEnd * item.fps).rounded())) / item.fps)
         let duration = end - start
         let cover = max(0, coverTime - start)
-        guard Int((end * item.fps).rounded()) > startFrame, cover < duration else { error = "导出范围不足一帧，请扩大片段。"; return }
+        guard Int((end * item.fps).rounded()) > startFrame, exportFormat == .webP || cover < duration else { error = "导出范围不足一帧，请扩大片段。"; return }
+        let format = exportFormat
         let output = exportDirectory, side = maxSide, audio = keepAudio
         let directory = workspace.appendingPathComponent("export-" + UUID().uuidString)
         let token = JobToken(); activeToken = token
         player.pause(); isPlaying = false
-        begin("正在制作 Live Photo…")
+        begin("正在制作 \(format.title)…")
         task = Task {
             defer { try? FileManager.default.removeItem(at: directory) }
             do {
                 try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
                 try FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
+                if format == .webP {
+                    let mediaInfo = MediaInfo(width: item.width, height: item.height, duration: item.duration, fps: item.fps, frames: item.frames, hasAudio: audio)
+                    let result = try await WebPEncoder.write(source: item.previewURL, info: mediaInfo, startFrame: startFrame,
+                        endFrame: Int((end * item.fps).rounded()), maxSide: side, outputDirectory: output, name: item.name,
+                        temporaryDirectory: directory, token: token) { [weak self] fraction in
+                            Task { @MainActor in self?.progress = fraction }
+                        }
+                    lastExport = result.url; lastWebP = result.info
+                    finish(); progress = 1
+                    status = result.info.isAnimated ? "WebP 动图已导出 · 保留片段原始顺序 · 无限循环" : "静态 WebP 已导出 · 片段画面相同或仅有一帧"
+                    return
+                }
                 let normalized = directory.appendingPathComponent("clip.mp4")
                 try await MediaEngine.clip(source: item.previewURL, destination: normalized, start: start, duration: duration, maxSide: side, keepAudio: audio, fps: item.fps, token: token) { [weak self] fraction in
                     Task { @MainActor in self?.progress = fraction * 0.72 }
@@ -234,11 +260,11 @@ final class ReliveModel: ObservableObject {
     }
 
     func revealOutput() { if let lastExport { NSWorkspace.shared.activateFileViewerSelecting([lastExport]) } else { NSWorkspace.shared.open(exportDirectory) } }
-    func openPhotos() { if let lastExport { NSWorkspace.shared.open(lastExport) } }
+    func openPhotos() { if exportFormat == .livePhoto, let lastExport { NSWorkspace.shared.open(lastExport) } }
     func clearError() { error = nil }
     func cancel() { activeToken?.cancel(); task?.cancel(); status = "正在取消…" }
     func cleanUp() { activeToken?.cancel(); task?.cancel(); thumbnailTask?.cancel(); player.pause(); try? FileManager.default.removeItem(at: workspace) }
-    private func begin(_ message: String) { busy = true; progress = 0; error = nil; status = message }
+    private func begin(_ message: String) { busy = true; progress = 0; error = nil; lastExport = nil; lastWebP = nil; status = message }
     private func finish() { busy = false; activeToken = nil; task = nil }
     private func safeName(_ name: String) -> String {
         let invalid = CharacterSet(charactersIn: "/:\0\n\r")

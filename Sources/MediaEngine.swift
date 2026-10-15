@@ -35,13 +35,14 @@ enum Tools {
         throw ReliveError.message("软件内的 \(name) 不完整，请重新安装 Relive。")
     }
 
-    static func run(_ name: String, _ arguments: [String], token: JobToken, progress: ((Double) -> Void)? = nil, duration: Double = 0) async throws -> Data {
+    static func run(_ name: String, _ arguments: [String], token: JobToken, progress: ((Double) -> Void)? = nil, duration: Double = 0, directory: URL? = nil, onLine: ((String) -> Void)? = nil) async throws -> Data {
         let executable = try url(name)
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.global(qos: .userInitiated).async {
                 let process = Process()
                 process.executableURL = executable
                 process.arguments = arguments
+                process.currentDirectoryURL = directory
                 let stdout = Pipe(), stderr = Pipe()
                 process.standardOutput = stdout
                 process.standardError = stderr
@@ -72,17 +73,21 @@ enum Tools {
                         if chunk.isEmpty { break }
                         output.append(chunk)
                         if output.count > 4_194_304 { output.removeFirst(output.count - 4_194_304) }
-                        if let progress, duration > 0 {
+                        if onLine != nil || (progress != nil && duration > 0) {
                             pending += String(decoding: chunk, as: UTF8.self)
                             while let newline = pending.firstIndex(of: "\n") {
                                 let line = String(pending[..<newline])
                                 pending.removeSubrange(...newline)
-                                if line.hasPrefix("out_time_us="), let microseconds = Double(line.dropFirst(12)) {
+                                onLine?(line)
+                                if let progress, duration > 0, line.hasPrefix("out_time_us="), let microseconds = Double(line.dropFirst(12)) {
                                     progress(min(1, max(0, microseconds / 1_000_000 / duration)))
                                 }
                             }
+                            // Tool diagnostics have short lines; bound a damaged tool's unterminated output.
+                            if pending.utf8.count > 65_536 { pending = String(pending.suffix(32_768)) }
                         }
                     }
+                    if !pending.isEmpty { onLine?(pending) }
                     process.waitUntilExit()
                     errorGroup.wait()
                     token.detach()

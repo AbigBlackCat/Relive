@@ -31,7 +31,7 @@
     <header class="toolbar">
       <div class="brand"><svg class="icon brand-icon" aria-hidden="true"><use href="#i-live"/></svg><h1>Relive</h1></div>
       <span class="toolbar-divider" aria-hidden="true"></span>
-      <p class="tagline">把喜欢的瞬间，变成 Live Photo</p>
+      <p class="tagline">把喜欢的瞬间，变成实况与动图</p>
       <span class="local-label">本地处理</span>
       <button class="button" id="import-button" data-edit><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>导入素材</button>
     </header>
@@ -88,9 +88,15 @@
       </section>
 
       <aside class="panel inspector" aria-label="导出设置">
-        <div class="panel-heading"><svg class="icon accent" aria-hidden="true"><use href="#i-live"/></svg><h2>导出 Live Photo</h2></div>
+        <div class="panel-heading"><svg class="icon accent" aria-hidden="true"><use href="#i-export"/></svg><h2 id="inspector-title">导出 Live Photo</h2></div>
         <div class="inspector-content">
-          <section class="setting-section" aria-labelledby="cover-heading">
+          <section class="setting-section" aria-labelledby="format-heading">
+            <h3 id="format-heading">输出格式</h3>
+            <select id="export-format" data-edit aria-labelledby="format-heading" aria-describedby="format-hint"><option value="livePhoto">Live Photo</option><option value="webp">WebP 动图</option></select>
+            <p class="hint" id="format-hint">选取封面，制作带声音的实况照片。</p>
+          </section>
+
+          <section class="setting-section" id="cover-settings" aria-labelledby="cover-heading">
             <h3 id="cover-heading"><svg class="icon" aria-hidden="true"><use href="#i-photo"/></svg>封面</h3>
             <div class="button-pair"><button class="button" id="first-cover" data-edit data-media>使用首帧</button><button class="button" id="current-cover" data-edit data-media>使用当前帧</button></div>
             <div class="frame-input-row"><label class="muted" for="cover-frame">第</label><input type="number" id="cover-frame" min="1" step="1" value="1" data-edit data-media aria-label="封面帧号，从第 1 帧开始" aria-describedby="cover-hint cover-error"><span class="muted">帧</span><button class="button" id="apply-cover" data-edit data-media>确定</button></div>
@@ -111,11 +117,11 @@
             <h3 id="output-heading"><svg class="icon" aria-hidden="true"><use href="#i-export"/></svg>输出</h3>
             <label for="max-side" class="field-label">最长边 <span class="muted">像素</span></label>
             <select id="max-side" data-edit><option value="1080">1080</option><option value="1920">1920</option></select>
-            <label class="toggle-label" for="keep-audio"><span>保留原声音</span><input id="keep-audio" type="checkbox" checked data-edit><span class="switch" aria-hidden="true"></span></label>
+            <label class="toggle-label" id="audio-setting" for="keep-audio"><span>保留原声音</span><input id="keep-audio" type="checkbox" checked data-edit><span class="switch" aria-hidden="true"></span></label>
             <button class="directory-button" id="choose-directory" data-edit><svg class="icon muted" aria-hidden="true"><use href="#i-folder"/></svg><span><span class="directory-label muted">保存位置</span><span id="output-directory" class="ellipsis">正在读取…</span></span><svg class="icon muted" aria-hidden="true"><use href="#i-arrow"/></svg></button>
           </section>
 
-          <details class="publishing-help">
+          <details class="publishing-help" id="live-help">
             <summary>如何在 iPhone 小红书发布</summary>
             <div class="details-content">
               <p>有 Mac：将导出的 .pvt 导入 Mac「照片」，从「照片」隔空投送到 iPhone。</p>
@@ -123,12 +129,16 @@
               <p>确认 iPhone 相册显示 LIVE，再从小红书相册选择。发布识别以手机当前版本为准。</p>
             </div>
           </details>
+          <details class="publishing-help" id="webp-help" hidden>
+            <summary>关于 WebP 动图</summary>
+            <div class="details-content"><p>按所选片段的原顺序循环播放，不含声音。单帧或完全静止的画面会保存为静态 WebP。</p><p>导出后显示文件大小，可通过裁切或尺寸设置调整体积。小红书是否保留动画，需在你的上传入口确认。</p></div>
+          </details>
         </div>
 
         <div class="export-actions">
           <div id="progress-area" hidden><div class="progress-label"><span id="progress-stage" role="status">正在处理…</span><span class="muted numeric" id="progress-percent">0%</span></div><progress id="progress" max="1" value="0" aria-label="处理进度"></progress><button class="button" id="cancel-button">取消</button></div>
-          <button class="button primary" id="export-button" data-edit data-media><svg class="icon" aria-hidden="true"><use href="#i-live"/></svg><span>导出 Live Photo</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
-          <div class="export-result" id="export-result" hidden><p><svg class="icon accent" aria-hidden="true"><use href="#i-check"/></svg><span id="result-name" class="ellipsis"></span></p><p class="hint">已完成文件结构校验。请在 iPhone 相册确认 LIVE。</p><div class="button-pair"><button class="button" id="reveal-result" data-edit>打开文件夹</button><button class="button" id="open-result" data-edit>打开结果</button></div></div>
+          <button class="button primary" id="export-button" data-edit data-media><svg class="icon" aria-hidden="true"><use href="#i-export"/></svg><span id="export-label">导出 Live Photo</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          <div class="export-result" id="export-result" hidden><p><svg class="icon accent" aria-hidden="true"><use href="#i-check"/></svg><span id="result-name" class="ellipsis"></span></p><p class="hint numeric" id="result-details">已完成文件结构校验。请在 iPhone 相册确认 LIVE。</p><div class="button-pair"><button class="button" id="reveal-result" data-edit>打开文件夹</button><button class="button" id="open-result" data-edit>打开结果</button></div></div>
         </div>
       </aside>
     </main>

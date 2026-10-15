@@ -1,8 +1,8 @@
 {
   "name": "relive",
   "productName": "Relive",
-  "version": "1.1.0",
-  "description": "Offline Live Photo editor for macOS and Windows",
+  "version": "1.2.0",
+  "description": "Offline Live Photo and animated WebP editor for macOS and Windows",
   "private": true,
   "license": "MIT",
   "main": "desktop/main.cjs",
@@ -38,7 +38,9 @@
         "to": "bin",
         "filter": [
           "ffmpeg.exe",
-          "ffprobe.exe"
+          "ffprobe.exe",
+          "img2webp.exe",
+          "webpinfo.exe"
         ]
       },
       {

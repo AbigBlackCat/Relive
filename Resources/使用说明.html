@@ -8,10 +8,10 @@
 </head>
 <body>
   <h1>Relive</h1>
-  <p>把喜欢的瞬间，变成 Live Photo。版本 1.1.0 · Apple Silicon / Intel Mac · Windows x64</p>
+  <p>把喜欢的瞬间，变成实况与动图。版本 1.2.0 · Apple Silicon / Intel Mac · Windows x64</p>
 
   <h2>安装与打开</h2>
-  <p>Mac 版适用于 macOS 13 或更新：选择对应芯片的 DMG，将 Relive 拖入「应用程序」。Windows 版适用于 Windows 10 / 11 x64：运行安装程序，或解压便携 ZIP 后打开 <code>Relive.exe</code>。三平台均内置 FFmpeg、ffprobe 及所需运行时，无需额外安装 Python、Node.js 或命令行工具。</p>
+  <p>Mac 版适用于 macOS 13 或更新：选择对应芯片的 DMG，将 Relive 拖入「应用程序」。Windows 版适用于 Windows 10 / 11 x64：运行安装程序，或解压便携 ZIP 后打开 <code>Relive.exe</code>。三平台均内置 FFmpeg、ffprobe、WebP 工具及所需运行时，无需额外安装 Python、Node.js 或命令行工具。</p>
   <p>Mac 包采用临时签名，未进行 Apple 公证；Windows 包未正式代码签名。第三方许可证和构建来源随软件附带。</p>
 
   <h2>制作一张实况图</h2>
@@ -21,6 +21,15 @@
     <li>默认导出完整素材。Mac 使用开始 / 结束时间裁切；Windows 使用开始 / 结束帧裁切，两端帧均保留。封面须位于片段内。最长边可选 1080 或 1920 像素，保持原比例。</li>
     <li>选择输出文件夹和是否保留声音，点击「导出 Live Photo」。生成 <code>.pvt</code> 包，内含配对 JPEG、MOV 和实况封面时间标记。Mac 原生版通过 Apple Photos 框架识别校验；Windows 版检查配对结构、媒体和时间标记。</li>
   </ol>
+
+  <h2>导出 WebP 动图</h2>
+  <ol>
+    <li>导入素材，在右侧「输出格式」选择 <strong>WebP 动图</strong>。</li>
+    <li>按需裁切片段，选择最长边 1080 或 1920 像素。WebP 保留原播放顺序，以片段首帧开始循环；不使用独立封面，也不含声音。</li>
+    <li>选择保存位置并导出。生成一个 <code>.webp</code> 文件，结果显示尺寸、实际时长和文件大小。点击「打开文件夹」取出文件。</li>
+  </ol>
+  <p>默认最长边 1080、最高 30 fps、有损质量 80、无限循环。沿用素材导入时的白色 / 黑色背景。单帧或完全静止的画面可能合并为静态 WebP，会在结果中标注。软件不自动将文件压到 10 MB，也不会为减小体积而截短片段。</p>
+  <p>WebP 的实际动画展示取决于上传入口和小红书当前版本，需要用真实账号验证。WebP 不是 Apple Live Photo，不使用下面的 JPEG / MOV 配对导入流程。</p>
 
   <h2>通过 Mac 传到 iPhone</h2>
   <ol>
@@ -32,7 +41,7 @@
   <h2>仅用 Windows 传到 iPhone</h2>
   <p>使用支持 Live Photo 配对导入的 iOS 相册工具，将 <code>.pvt</code> 包内的配对 JPEG 和 MOV 一起导入 iPhone 系统相册。也可以将 <code>.pvt</code> 交由 Mac「照片」导入，再按上面的步骤传到 iPhone。单独保存 JPEG 不会自动成为实况照片。</p>
 
-  <h2>在小红书发布</h2>
+  <h2>在小红书发布 Live Photo</h2>
   <p>先在 iPhone「照片」确认 LIVE 并可播放，再打开小红书，从相册选择这张实况照片并保留实况效果。具体界面和识别能力随小红书版本变化。</p>
   <aside><p>Relive 已通过原生 Intel CI 自测、Windows 完整转换与打包后烟雾测试。iPhone 小红书实际发布尚未测试。直接上传 JPEG、MOV 或 .pvt 不会等同于从 iPhone 相册发布 Live Photo。</p></aside>
 

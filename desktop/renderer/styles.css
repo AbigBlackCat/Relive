@@ -137,6 +137,7 @@ input[type=number]::-webkit-inner-spin-button { opacity: .6; }
 .directory-label { font-size: 10px; margin-bottom: 3px; }
 #output-directory { font-size: 12px; }
 .directory-button > .icon:last-child { width: 13px; height: 13px; }
+#audio-setting[hidden] + .directory-button { margin-top: 16px; }
 .publishing-help { margin-top: 24px; }
 .publishing-help summary { font-size: 11px; }
 .publishing-help p { color: var(--muted); font-size: 11px; line-height: 1.65; }

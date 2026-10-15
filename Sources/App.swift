@@ -37,10 +37,12 @@ struct ReliveApp: App {
         .defaultSize(width: 1360, height: 860)
         .commands {
             CommandGroup(replacing: .newItem) { Button("导入素材…", action: model.chooseFiles).keyboardShortcut("o").disabled(model.busy) }
-            CommandGroup(replacing: .saveItem) { Button("导出 Live Photo", action: model.export).keyboardShortcut("e").disabled(model.busy || model.current == nil) }
+            CommandGroup(replacing: .saveItem) { Button("导出 \(model.exportFormat.title)", action: model.export).keyboardShortcut("e").disabled(model.busy || model.current == nil) }
             CommandMenu("封面") {
-                Button("将当前帧设为封面", action: model.chooseCover).keyboardShortcut("k").disabled(model.busy || model.current == nil)
-                Button("使用首帧", action: model.setFirstCover).disabled(model.busy || model.current == nil)
+                if model.exportFormat == .livePhoto {
+                    Button("将当前帧设为封面", action: model.chooseCover).keyboardShortcut("k").disabled(model.busy || model.current == nil)
+                    Button("使用首帧", action: model.setFirstCover).disabled(model.busy || model.current == nil)
+                }
                 Button("上一帧") { model.step(-1) }.keyboardShortcut(.leftArrow, modifiers: []).disabled(model.busy || model.current == nil)
                 Button("下一帧") { model.step(1) }.keyboardShortcut(.rightArrow, modifiers: []).disabled(model.busy || model.current == nil)
             }
