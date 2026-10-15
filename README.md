@@ -1,6 +1,12 @@
 # Relive 1.2.0
 
-本地实况与动图制作台，将 SVG、GIF、MOV、MP4、MPV 等素材转换为 Apple Live Photo 或 WebP。实况照片支持逐帧选择封面，WebP 保留片段原顺序循环播放。界面参考 OpenScreen：素材栏、大预览、底部帧带与导出检查器。源码与构建记录保存在[私有 GitHub 仓库](https://github.com/AbigBlackCat/Relive)。
+这个软件的开发原因很简单，作者在想要上传动图到小红书时发现，目前小红书图文只支持live photo 或webp,现有视频转live photo的方式比较复杂并且没有操作界面，对电脑小白不友好，于是一个致力于帮你快速创作live图文，简洁好用的工具：Relive 它来了！
+
+## 注意
+目前windows 10 和 Mac Silicon macOS 13亲测可用，live图需要导出到ios手机，webp无需ios手机。
+
+## 功能
+本地实况与动图制作台，将 SVG、GIF、MOV、MP4、MPV 等素材转换为 Apple Live Photo 或 WebP。实况照片支持逐帧选择封面，WebP 保留片段原顺序循环播放。界面参考 OpenScreen：素材栏、大预览、底部帧带与导出检查器。
 
 ## 安装
 
@@ -79,4 +85,6 @@ WebP 自测覆盖变化画面、静态合并、片段顺序、毫秒时长、帧
 
 Relive 自有源码采用 MIT License。第三方组件保留各自许可。
 
-Mac 原生实现位于 `Sources/`；Windows 的 Electron 主进程、隔离桥、转换核心和操作台位于 `desktop/`。macOS 元数据实现参考 MIT makelive，操作台参考 MIT OpenScreen。第三方声明、FFmpeg 许可证和精确构建来源随包保留在 `licenses/`。
+欢迎contributor加入二次开发，让Relive适用更多场景。
+
+Mac 原生实现位于 `Sources/`；Windows 的 Electron 主进程、隔离桥、转换核心和操作台位于 `desktop/`。第三方声明、FFmpeg 许可证和精确构建来源随包保留在 `licenses/`。
