@@ -15,7 +15,3 @@ Mac 通过「照片」导入 .pvt，再同步或隔空投送到 iPhone。Windows
 ## 已知边界
 
 SVG 支持自包含 SMIL / CSS 动画，录制 1–30 秒；静态文件不会新增运动。应用不执行 SVG 脚本或外链，拒绝 DTD / 实体定义。不持久化编辑项目。Mac 导出通过 Photos 框架识别校验；Windows 导出执行配对结构、媒体与时间标记校验。原生 Intel CI 及 Windows 完整转换、打包后烟雾测试已通过，iPhone 小红书发布尚未实测。Mac 包未 Apple 公证，Windows 包未正式代码签名。
-
-## 视觉参考
-
-用户提供的 openscreen-main.zip。采用深色编辑器、大预览、侧栏参数、底部时间线；只保留实况图制作所需操作。
