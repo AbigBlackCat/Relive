@@ -12,5 +12,6 @@ Exact source URL, SHA256, build flags and the patch hash are in provenance.json.
 Per-target manifests contain the installed tool hashes and validation results.
 Rebuild: python3 scripts/prepare_webp.py --target arm64|x86_64|windows-x64
 Only the selected target is prepared. A macOS host with Xcode command-line tools
-is required to compile macOS targets; Windows builds need CMake and VS 2022 C++ tools.
+is required to compile macOS targets; Windows builds need CMake and VS 2022 or newer C++
+tools. vswhere selects the newest installed version supported by CMake's generators.
 These build tools, Conda, Homebrew and the VC redistributable are not needed to run Relive.

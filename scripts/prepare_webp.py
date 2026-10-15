@@ -103,7 +103,7 @@ def source_and_notices(archive):
         "bundled_tools": list(TOOLS),
         "macos": {"minimum_version": "13.0", "linkage": "static",
                   "configure_flags": CONFIGURE_FLAGS},
-        "windows": {"architecture": "x86_64", "generator": "Visual Studio 17 2022",
+        "windows": {"architecture": "x86_64", "generator_selection": "Newest installed C++ Visual Studio reported by vswhere with a matching CMake generator",
                     "cmake_flags": CMAKE_FLAGS, "runtime": "static MSVC CRT",
                     "unicode": False, "source_build": True},
         "source_patch": {"file": "argument-capacity.patch", "sha256": digest(LICENSES / "argument-capacity.patch"),
@@ -127,7 +127,8 @@ def source_and_notices(archive):
         "Per-target manifests contain the installed tool hashes and validation results.\n"
         "Rebuild: python3 scripts/prepare_webp.py --target arm64|x86_64|windows-x64\n"
         "Only the selected target is prepared. A macOS host with Xcode command-line tools\n"
-        "is required to compile macOS targets; Windows builds need CMake and VS 2022 C++ tools.\n"
+        "is required to compile macOS targets; Windows builds need CMake and VS 2022 or newer C++\n"
+        "tools. vswhere selects the newest installed version supported by CMake's generators.\n"
         "These build tools, Conda, Homebrew and the VC redistributable are not needed to run Relive.\n")
     return source
 
@@ -232,12 +233,50 @@ def windows_imports(data):
     return sorted(imports)
 
 
+def choose_visual_studio(instances, generators):
+    supported = {}
+    for generator in generators:
+        match = re.fullmatch(r"Visual Studio (\d+) \d{4}", generator["name"])
+        if match:
+            supported[int(match[1])] = generator["name"]
+    choices = []
+    for instance in instances:
+        version = tuple(int(part) for part in instance.get("installationVersion", "").split(".") if part.isdigit())
+        if not version or version[0] < 17 or version[0] not in supported or instance.get("isComplete") is False:
+            continue
+        if instance.get("installationPath"):
+            choices.append((version, instance))
+    if not choices:
+        installed = [instance.get("installationVersion") for instance in instances]
+        raise RuntimeError(f"No installed VS 2022 or newer C++ toolset matches a CMake generator. Installed: {installed}; supported: {list(supported.values())}")
+    version, instance = max(choices, key=lambda choice: choice[0])
+    return {"generator": supported[version[0]], "installation_path": instance["installationPath"],
+            "installation_version": instance["installationVersion"]}
+
+
+def discover_visual_studio():
+    vswhere = shutil.which("vswhere")
+    if not vswhere:
+        vswhere = str(Path(os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)"))
+                      / "Microsoft Visual Studio/Installer/vswhere.exe")
+    if not Path(vswhere).is_file():
+        raise RuntimeError("Visual Studio Installer's vswhere.exe is required to find the C++ build tools.")
+    instances = json.loads(run([vswhere, "-all", "-prerelease", "-products", "*", "-requires",
+                                "Microsoft.VisualStudio.Component.VC.Tools.x86.x64", "-format", "json", "-utf8"], encoding="utf-8-sig"))
+    capabilities = json.loads(run(["cmake", "-E", "capabilities"]))
+    return choose_visual_studio(instances, capabilities["generators"])
+
+
 def prepare_windows(source):
     if sys.platform != "win32":
-        raise RuntimeError("Compile Windows WebP tools on a Windows host with CMake and Visual Studio 2022.")
-    build = CACHE / "build-windows-x64"
+        raise RuntimeError("Compile Windows WebP tools on a Windows host with CMake and Visual Studio C++ tools.")
+    toolchain = discover_visual_studio()
+    print(f"Selected {toolchain['generator']}: {toolchain['installation_path']} ({toolchain['installation_version']})")
+    major = toolchain["installation_version"].split(".")[0]
+    build = CACHE / ("build-windows-x64-vs" + major)
     build.mkdir(exist_ok=True)
-    configure = ["cmake", "-S", source, "-B", build, "-G", "Visual Studio 17 2022", "-A", "x64",
+    configure = ["cmake", "-S", source, "-B", build, "-G", toolchain["generator"], "-A", "x64",
+                 "-DCMAKE_GENERATOR_INSTANCE=" + toolchain["installation_path"],
                  "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE=" + str(build / "bin")] + CMAKE_FLAGS
     commands = [(configure, "configure.log"),
                 (["cmake", "--build", build, "--config", "Release", "--parallel", "4",
@@ -257,7 +296,8 @@ def prepare_windows(source):
         imports = windows_imports(binary.read_bytes())
         details[name + ".exe"] = {"sha256": digest(binary), "bytes": binary.stat().st_size,
                                    "architecture": "x86_64", "source_build": True,
-                                   "unicode": False, "crt": "static", "libraries": imports}
+                                   "unicode": False, "crt": "static", "libraries": imports,
+                                   "toolchain": toolchain}
     checked = smoke_test(destination, ".exe")
     return destination, details, checked
 

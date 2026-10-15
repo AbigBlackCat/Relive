@@ -28,7 +28,7 @@
   },
   "windows": {
     "architecture": "x86_64",
-    "generator": "Visual Studio 17 2022",
+    "generator_selection": "Newest installed C++ Visual Studio reported by vswhere with a matching CMake generator",
     "cmake_flags": [
       "-DBUILD_SHARED_LIBS=OFF",
       "-DWEBP_LINK_STATIC=ON",

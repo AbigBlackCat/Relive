@@ -57,7 +57,7 @@ scripts/test.sh x86_64
 scripts/package.sh x86_64
 ```
 
-Windows 版使用 Electron。开发与构建需要 Node.js 24、Python 3、CMake 和 Visual Studio 2022 C++ 工具；FFmpeg 准备脚本下载指定版本并校验 SHA256，WebP 工具从同一官方源码静态构建。
+Windows 版使用 Electron。开发与构建需要 Node.js 24、Python 3、CMake 和 Visual Studio 2022 或更新版本的 C++ 工具，脚本自动选择已安装且被 CMake 支持的版本；FFmpeg 准备脚本下载指定版本并校验 SHA256，WebP 工具从同一官方源码静态构建。
 
 ```sh
 npm ci
