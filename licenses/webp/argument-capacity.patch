@@ -1,0 +1,11 @@
+--- a/examples/example_util.c
++++ b/examples/example_util.c
+@@ -83,7 +83,7 @@
+   }
+ }
+ 
+-#define MAX_ARGC 16384
++#define MAX_ARGC 1048576
+ int ExUtilInitCommandLineArguments(int argc, const char* argv[],
+                                    CommandLineArguments* const args) {
+   if (args == NULL || argv == NULL) return 0;

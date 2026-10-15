@@ -57,7 +57,7 @@ scripts/test.sh x86_64
 scripts/package.sh x86_64
 ```
 
-Windows 版使用 Electron。开发与构建需要 Node.js 24、Python 3；FFmpeg 准备脚本下载指定版本并校验 SHA256。
+Windows 版使用 Electron。开发与构建需要 Node.js 24、Python 3、CMake 和 Visual Studio 2022 C++ 工具；FFmpeg 准备脚本下载指定版本并校验 SHA256，WebP 工具从同一官方源码静态构建。
 
 ```sh
 npm ci
@@ -73,7 +73,7 @@ Windows 便携格式测试需要将 `RELIVE_FFMPEG` / `RELIVE_FFPROBE` 指向 `d
 
 原生 Intel CI 自测、Windows 配对格式测试、完整转换 / SVG 捕获测试，以及打包后的 Windows 可执行文件烟雾测试均已通过。测试覆盖首 / 中 / 末帧封面、裁切、声音、重名保护、坏输入与取消；这些检查不等同于 iPhone 小红书发布验证。
 
-WebP 自测覆盖变化画面、静态合并、片段顺序、毫秒时长、帧率限制、重名输出与失败清理。两个 Mac 架构从校验过的官方 libwebp 源码静态构建工具，部署目标为 macOS 13；Windows 使用同版本官方工具，下载校验值固定。新增工具的来源和许可保存在 `licenses/webp/`。
+WebP 自测覆盖变化画面、静态合并、片段顺序、毫秒时长、帧率限制、重名输出与失败清理。三平台从校验过的官方 libwebp 1.6.0 源码静态构建工具，两个 Mac 架构的部署目标为 macOS 13；Windows 关闭上游 Unicode 参数开关，以支持相对路径参数文件。参数容量的小补丁与原始许可、来源校验值随包保存在 `licenses/webp/`。
 
 ## 实现与许可
 

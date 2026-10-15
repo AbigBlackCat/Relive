@@ -33,8 +33,8 @@ function status(message) { ui['status-text'].textContent = message; }
 function isWebP() { return state.format === 'webp'; }
 function resultPath() { return state.result?.filePath || state.result?.packagePath; }
 function fileSize(bytes) {
-  const unit = bytes < 1024 ? 0 : Math.min(3, Math.floor(Math.log(bytes) / Math.log(1024)));
-  return `${(bytes / 1024 ** unit).toLocaleString('zh-CN', { maximumFractionDigits: 2 })} ${['B', 'KB', 'MB', 'GB'][unit]}`;
+  const unit = bytes < 1000 ? 0 : Math.min(3, Math.floor(Math.log(bytes) / Math.log(1000)));
+  return `${(bytes / 1000 ** unit).toLocaleString('zh-CN', { maximumFractionDigits: 2 })} ${['B', 'KB', 'MB', 'GB'][unit]}`;
 }
 function updateFormat() {
   state.format = ui['export-format'].value === 'webp' ? 'webp' : 'livePhoto';
@@ -49,7 +49,7 @@ function updateFormat() {
   ui['webp-help'].hidden = !webp;
   ui['open-result'].hidden = webp;
   ui['inspector-title'].textContent = ui['export-label'].textContent = webp ? '导出 WebP 动图' : '导出 Live Photo';
-  ui['format-hint'].textContent = webp ? '按片段原序循环播放，从首帧开始；无声音。' : '选取封面，制作带声音的实况照片。';
+  ui['format-hint'].textContent = webp ? '按片段原序循环播放，从首帧开始；无声音。' : '选取独立封面，可保留原声音。';
   updateCover();
   status(webp ? 'WebP 动图 · 保留片段原播放顺序' : 'Live Photo · 可逐帧选取封面');
 }

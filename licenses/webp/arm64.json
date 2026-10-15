@@ -3,7 +3,7 @@
   "target": "arm64",
   "binaries": {
     "img2webp": {
-      "sha256": "4981c2cc51206aa140f989f9e6c79e34e2d7a5ab9b6da549b5b33187ad02a951",
+      "sha256": "47a8fb7dc8128cfcdb9985758c1a3a31dfae56917872f26aba3723e7aeed06b0",
       "bytes": 535136,
       "architecture": "arm64",
       "minimum_macos": "13.0",
@@ -24,8 +24,9 @@
   "smoke_test": {
     "passed": true,
     "cases": [
-      "2-frame PPM, 80 ms, infinite loop",
-      "single-frame WebP"
+      "relative argument file in Unicode cwd: 2 frames, 80 ms, infinite loop",
+      "single-frame WebP",
+      "6000 repeated frames, >16384 tokens, static merge"
     ]
   }
 }

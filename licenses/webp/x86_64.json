@@ -3,7 +3,7 @@
   "target": "x86_64",
   "binaries": {
     "img2webp": {
-      "sha256": "ea020a3acf28be047d58202347a8d39060238d303217e9bb90ce9375e3000028",
+      "sha256": "e00b534ce2f9370c80c4d14d01c9a2c03896a0aeac28ab35e3adb9d369a4aea3",
       "bytes": 647856,
       "architecture": "x86_64",
       "minimum_macos": "13.0",

@@ -35,7 +35,7 @@ jobs:
         run: npm ci --no-audit --no-fund
       - name: Prepare checksum-pinned FFmpeg
         run: python desktop/scripts/prepare_windows_ffmpeg.py
-      - name: Prepare and validate checksum-pinned WebP tools
+      - name: Compile and validate WebP argument-file tools with static MSVC CRT
         run: python scripts/prepare_webp.py --target windows-x64
       - name: Test Live Photo format and decoded media
         shell: pwsh
