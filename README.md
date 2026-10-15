@@ -1,11 +1,39 @@
+<div align="center">
+
+<img src="docs/assets/relive-mark.svg" width="112" height="112" alt="Relive 标识">
+
 # Relive 1.2.0
 
 这个软件的开发原因很简单，作者在想要上传动图到小红书时发现，目前小红书图文只支持live photo 或webp,现有视频转live photo的方式比较复杂并且没有操作界面，对电脑小白不友好，于是一个致力于帮你快速创作live图文，简洁好用的工具：Relive 它来了！
 
+<p>
+  <a href="https://github.com/AbigBlackCat/Relive/releases/tag/v1.2.0"><img src="https://img.shields.io/badge/version-1.2.0-34B27B?style=flat-square&amp;labelColor=121416" alt="版本 1.2.0"></a>
+  <img src="https://img.shields.io/badge/macOS-13%2B-111111?style=flat-square&amp;labelColor=121416" alt="macOS 13 或更新">
+  <img src="https://img.shields.io/badge/Windows-10%20%2F%2011-111111?style=flat-square&amp;labelColor=121416" alt="Windows 10 / 11">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square&amp;labelColor=121416" alt="MIT License"></a>
+</p>
+
+<p>
+  <a href="https://github.com/AbigBlackCat/Relive/releases/tag/v1.2.0">下载安装</a> ·
+  <a href="#功能">功能</a> ·
+  <a href="#制作与发布">制作与发布</a> ·
+  <a href="#webp-动图">WebP 动图</a> ·
+  <a href="#构建与验证">构建与验证</a> ·
+  <a href="#实现与许可">实现与许可</a>
+</p>
+
+<img src="docs/assets/hero.svg" width="880" alt="Relive 本地实况与动图制作台，支持 Live Photo 与 WebP">
+
+</div>
+
+---
+
 ## 注意
+
 目前windows 10 和 Mac Silicon macOS 13亲测可用，live图需要导出到ios手机，webp无需ios手机。
 
 ## 功能
+
 本地实况与动图制作台，将 SVG、GIF、MOV、MP4、MPV 等素材转换为 Apple Live Photo 或 WebP。实况照片支持逐帧选择封面，WebP 保留片段原顺序循环播放。界面参考 OpenScreen：素材栏、大预览、底部帧带与导出检查器。
 
 ## 安装
@@ -20,7 +48,13 @@ Mac 打开对应芯片的 DMG，将 Relive 拖入「应用程序」。Windows �
 
 macOS 包采用 ad-hoc 签名，未 Apple 公证；Windows 包未正式代码签名。
 
+---
+
 ## 制作与发布
+
+<p align="center">
+  <img src="docs/assets/export-flow.svg" width="880" alt="素材导入、裁切与尺寸调整，再分别导出 Live Photo 配对文件或 WebP 动图的流程">
+</p>
 
 打开 Relive → 导入素材 → 选择输出格式 → 调整片段 / 尺寸 → 导出。默认保留完整视频，最长边默认 1080 像素，也可选择 1920，保持原比例且不放大。
 
@@ -33,6 +67,8 @@ macOS 包采用 ad-hoc 签名，未 Apple 公证；Windows 包未正式代码签
 
 在 iPhone「照片」确认 LIVE 标识并可播放后，再从小红书相册选择。单独导入 JPEG 或直接上传 `.pvt` 不会自动成为实况照片。iPhone 小红书实际发布尚未测试，识别结果以手机当前版本为准。
 
+---
+
 ### WebP 动图
 
 选择 **WebP 动图** 后，封面与声音设置隐藏。输出一个 `.webp` 文件，按所选片段原顺序、从首帧开始无限循环，不含声音。最高 30 fps，固定有损质量 80；界面显示实际尺寸、时长和文件大小，可通过裁切或尺寸控制体积。单帧及完全静止的素材可能被编码器合并为静态 WebP，软件会明确标注。
@@ -42,6 +78,8 @@ WebP 没有 Live Photo 的独立封面时间标记。导出不自动限制为 10
 SVG 支持 SMIL / CSS 动画，导入前可设置录制 1–30 秒及白色 / 黑色背景。静态 SVG 不自动添加运动；外链和脚本不执行，DTD 与实体定义不接受。请使用 UTF-8，并内嵌图片 / 字体。素材预览规范化为 H.264，长边最高 1920 像素、帧率最高 60 fps；视频解码范围由内置 FFmpeg 决定。MPV 是 MPEG 视频文件。
 
 全部转换在本机执行，不上传素材。编辑列表仅保留当前会话；关闭软件后清理临时预览，已导出的作品保留。
+
+---
 
 ## 构建与验证
 
@@ -80,6 +118,8 @@ Windows 便携格式测试需要将 `RELIVE_FFMPEG` / `RELIVE_FFPROBE` 指向 `d
 原生 Intel CI 自测、Windows 配对格式测试、完整转换 / SVG 捕获测试，以及打包后的 Windows 可执行文件烟雾测试均已通过。测试覆盖首 / 中 / 末帧封面、裁切、声音、重名保护、坏输入与取消；这些检查不等同于 iPhone 小红书发布验证。
 
 WebP 自测覆盖变化画面、静态合并、片段顺序、毫秒时长、帧率限制、重名输出与失败清理。三平台从校验过的官方 libwebp 1.6.0 源码静态构建工具，两个 Mac 架构的部署目标为 macOS 13；Windows 关闭上游 Unicode 参数开关，以支持相对路径参数文件。参数容量的小补丁与原始许可、来源校验值随包保存在 `licenses/webp/`。
+
+---
 
 ## 实现与许可
 
