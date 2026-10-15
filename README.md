@@ -5,6 +5,7 @@
 # Relive 1.2.0
 
 这个软件的开发原因很简单，作者在想要上传动图到小红书时发现，目前小红书图文只支持live photo 或webp,现有视频转live photo的方式比较复杂并且没有操作界面，对电脑小白不友好，于是一个致力于帮你快速创作live图文，简洁好用的工具：Relive 它来了！
+作者发布的obsidian插件Magical Cards小红书帖子live图，就是用这个工具转换的：https://www.xiaohongshu.com/explore/6acf58e1000000001c00fbc5?xsec_token=ABksjbrfj9lxpg8GukU_srrf0l4QTh_cXworX3U8UR9R4=&xsec_source=pc_user 
 
 <p>
   <a href="https://github.com/AbigBlackCat/Relive/releases/tag/v1.2.0"><img src="https://img.shields.io/badge/version-1.2.0-34B27B?style=flat-square&amp;labelColor=121416" alt="版本 1.2.0"></a>
