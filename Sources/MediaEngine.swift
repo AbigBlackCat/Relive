@@ -143,7 +143,8 @@ enum MediaEngine {
         return MediaInfo(width: width, height: height, duration: safeSeconds, fps: fps, frames: max(1, frames), hasAudio: streams.contains { $0["codec_type"] as? String == "audio" })
     }
 
-    static func normalize(source: URL, destination: URL, durationForImage: Double, background: String, token: JobToken, progress: @escaping (Double) -> Void) async throws -> MediaInfo {
+    static func normalize(source: URL, destination: URL, durationForImage: Double, background: String, maxSide: Int = 1920,
+                          lossless: Bool = false, token: JobToken, progress: @escaping (Double) -> Void) async throws -> MediaInfo {
         let info = try await probe(source, token: token)
         let still = ["png", "jpg", "jpeg", "heic", "heif", "bmp", "tif", "tiff", "webp"].contains(source.pathExtension.lowercased()) && info.duration <= 0
         let duration = still ? durationForImage : info.duration
@@ -152,21 +153,23 @@ enum MediaEngine {
         if still { args += ["-loop", "1"] }
         args += ["-i", source.path]
         let hex = background == "#000000" ? "0x000000" : "0xFFFFFF"
-        let scale = "scale=w='max(2,min(1920,iw))':h='max(2,min(1920,ih))':force_original_aspect_ratio=decrease:force_divisible_by=2,setsar=1"
+        let scale = scaleFilter(maxSide)
         let filter = "[0:v:0]\(scale),format=rgba,split=2[base][fg];[base]drawbox=x=0:y=0:w=iw:h=ih:color=\(hex):t=fill:replace=1[bg];[bg][fg]overlay=shortest=1:format=auto,format=yuv420p[v]"
         args += ["-filter_complex", filter, "-map", "[v]", "-map", "0:a?"]
         // Videos, including raw MPV with no duration, are decoded through EOF without trimming.
         if still { args += ["-t", String(duration)] }
-        args += ["-r", String(fps), "-c:v", "libx264", "-preset", "fast", "-crf", "18", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart", destination.path]
+        args += ["-r", String(fps)]
+        args += lossless ? ["-c:v", "ffv1", "-c:a", "flac"] : ["-c:v", "libx264", "-preset", "fast", "-crf", "18", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart"]
+        args.append(destination.path)
         _ = try await Tools.run("ffmpeg", args, token: token, progress: progress, duration: duration)
         return try await probe(destination, token: token)
     }
 
-    static func clip(source: URL, destination: URL, start: Double, duration: Double, maxSide: Int, keepAudio: Bool, fps: Double, token: JobToken, progress: @escaping (Double) -> Void) async throws {
-        let side = maxSide == 1920 ? 1920 : 1080
+    static func clip(source: URL, destination: URL, start: Double, duration: Double, maxSide: Int, keepAudio: Bool, fps: Double,
+                     quality: ExportQuality = .standard, crop: CropRegion = .full, token: JobToken, progress: @escaping (Double) -> Void) async throws {
         var args = ["-v", "error", "-nostdin", "-nostats", "-progress", "pipe:1", "-i", source.path, "-ss", String(start), "-t", String(duration), "-map", "0:v:0"]
         if keepAudio { args += ["-map", "0:a?"] } else { args += ["-an"] }
-        args += ["-vf", "scale=w='max(2,min(\(side),iw))':h='max(2,min(\(side),ih))':force_original_aspect_ratio=decrease:force_divisible_by=2,setsar=1", "-r", String(fps), "-c:v", "libx264", "-preset", "fast", "-crf", "18", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", destination.path]
+        args += ["-vf", crop.ffmpeg + scaleFilter(maxSide), "-r", String(fps), "-c:v", "libx264", "-preset", "fast", "-crf", quality.h264, "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", quality.audioRate, "-movflags", "+faststart", destination.path]
         _ = try await Tools.run("ffmpeg", args, token: token, progress: progress, duration: duration)
     }
 

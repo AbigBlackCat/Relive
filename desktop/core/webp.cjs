@@ -1,7 +1,6 @@
 'use strict';
 const fs=require('node:fs/promises');
 const path=require('node:path');
-const{constants}=require('node:fs');
 const media=require('./media.cjs');
 
 function exportGeometry(item,config){
@@ -9,8 +8,7 @@ function exportGeometry(item,config){
   if(![startFrame,endFrame].every(Number.isSafeInteger))throw new Error('请输入整数帧号。');
   if(!(1<=startFrame&&startFrame<=endFrame&&endFrame<=item.frameCount))throw new Error('请选择有效的导出片段。');
   if(!(Number.isFinite(item.fps)&&item.fps>0&&item.fps<=60&&item.width>0&&item.height>0))throw new Error('素材尺寸或帧率不正确。');
-  const side=config.maxSide===1920?1920:1080,ratio=Math.min(1,side/Math.max(item.width,item.height));
-  const width=Math.max(2,Math.floor(item.width*ratio/2)*2),height=Math.max(2,Math.floor(item.height*ratio/2)*2);
+  const{width,height}=media.geometry(item,config);
   const sourceFrames=endFrame-startFrame+1,duration=sourceFrames/item.fps;
   const frameCount=Math.max(1,Math.floor(duration*Math.min(30,item.fps)+1e-7)),totalMilliseconds=Math.round(duration*1000);
   const fps=frameCount/duration,samplingRatio=sourceFrames/frameCount;
@@ -63,20 +61,24 @@ async function inspectWebP(filename,job){
   return{...metadata,byteSize:(await fs.stat(filename)).size};
 }
 async function createWebP(item,config,directory,job,{statfs=fs.statfs}={}){
-  const geometry=exportGeometry(item,config),frames=path.join(directory,'webp-frames'),filename=path.join(directory,'animation.webp');
+  const grade=media.quality(config),geometry=exportGeometry(item,config),frames=path.join(directory,'webp-frames'),filename=path.join(directory,'animation.webp');
   // PPM is uncompressed, so the estimate does not depend on source compressibility.
   const required=BigInt(geometry.frameCount)*(BigInt(geometry.width)*BigInt(geometry.height)*3n+128n)+192n*1024n*1024n;
   await checkDiskSpace(directory,required,statfs);job.check();
   await fs.mkdir(frames);let complete=false;
   try{
     const selection=geometry.samplingRatio>1?`,select='gte(n,floor(selected_n*${geometry.samplingRatio}+0.0000001))'`:'';
-    const filter=`trim=start_frame=${config.startFrame-1}:end_frame=${config.endFrame}${selection},setpts=N/(${geometry.fps}*TB),scale=${geometry.width}:${geometry.height},setsar=1`;
+    const shape=media.geometry(item,config),times=media.clipTimes(item,config);
+    // Decoder tails may lack timestamps (raw MPV); hold its last frame to match the preview interval.
+    const chain=item.sourcePath&&item.sourcePath!==item.previewPath?`setpts=PTS-STARTPTS,tpad=stop_mode=clone:stop_duration=${times.start+times.duration},trim=start=${times.start}:duration=${times.duration},setpts=PTS-STARTPTS,fps=${geometry.fps}:start_time=0:round=near:eof_action=pass,${shape.filter}`:`trim=start_frame=${config.startFrame-1}:end_frame=${config.endFrame}${selection},setpts=N/(${geometry.fps}*TB),${shape.filter}`;
+    const filter=media.visualFilter(item,chain);
     job.progress({stage:'正在提取 WebP 动图画面',progress:0});
-    await media.run('ffmpeg',['-v','error','-nostdin','-nostats','-progress','pipe:1','-i',item.previewPath,'-map','0:v:0','-an','-vf',filter,'-fps_mode','vfr','-c:v','ppm','-f','image2',path.join(frames,'frame-%09d.ppm')],job,{duration:geometry.duration,stage:'正在提取 WebP 动图画面',scale:0.55});
+    await media.run('ffmpeg',['-v','error','-nostdin','-nostats','-progress','pipe:1',...media.inputArgs(item),'-map',filter.map,'-an',...filter.args,'-frames:v',String(geometry.frameCount),'-fps_mode','vfr','-c:v','ppm','-f','image2',path.join(frames,'frame-%09d.ppm')],job,{duration:geometry.duration,stage:'正在提取 WebP 动图画面',scale:0.55});
     const files=(await fs.readdir(frames)).filter(name=>/^frame-\d{9}\.ppm$/.test(name)).sort();
     if(files.length!==geometry.frameCount)throw new Error('提取画面数量与导出片段不一致，请重新导入素材。');
     const delays=frameDelays(geometry),argumentsFile=path.join(frames,'arguments.txt');
-    const argumentsText=['-loop 0 -lossy -q 80 -m 4',...files.map((name,i)=>'-d '+delays[i]+' '+name),'-o ../animation.webp'].join('\n');
+    const encoding=grade==='original'?'-lossless -q 100':'-lossy -q '+({high:92,standard:80,small:60}[grade]);
+    const argumentsText=['-loop 0 '+encoding+' -m 4',...files.map((name,i)=>'-d '+delays[i]+' '+name),'-o ../animation.webp'].join('\n');
     await fs.writeFile(argumentsFile,argumentsText,'ascii');job.check();
     job.progress({stage:'正在编码 WebP 动图',progress:0.6});
     await media.run('img2webp',['arguments.txt'],job,{cwd:frames,captureStdout:false});job.check();
@@ -87,25 +89,5 @@ async function createWebP(item,config,directory,job,{statfs=fs.statfs}={}){
     return{filePath:filename,width:checked.width,height:checked.height,frameCount:checked.frameCount,duration:checked.isAnimated?checked.durationMilliseconds/1000:null,byteSize:checked.byteSize,isAnimated:checked.isAnimated};
   }finally{await fs.rm(frames,{recursive:true,force:true});if(!complete)await fs.rm(filename,{force:true});}
 }
-async function saveWebP(source,output,stem,job){
-  if(!stem||path.basename(stem)!==stem)throw new Error('导出文件名不正确。');
-  await fs.mkdir(output,{recursive:true});await fs.access(output,constants.W_OK);
-  let number=1,destination,writer;
-  while(!writer){
-    job.check();destination=path.join(output,stem+(number===1?'':' '+number)+'.webp');
-    try{writer=await fs.open(destination,'wx');}catch(error){if(error.code==='EEXIST'){number++;continue;}throw error;}
-  }
-  let reader,complete=false;
-  try{
-    reader=await fs.open(source,'r');const buffer=Buffer.allocUnsafe(1024*1024);
-    while(true){
-      job.check();const{bytesRead}=await reader.read(buffer,0,buffer.length,null);if(!bytesRead)break;
-      let written=0;while(written<bytesRead){job.check();const amount=(await writer.write(buffer,written,bytesRead-written,null)).bytesWritten;if(amount<1)throw new Error('无法写入导出文件。');written+=amount;}
-    }
-    await reader.close();reader=null;await writer.close();writer=null;job.check();complete=true;return destination;
-  }finally{
-    await reader?.close();await writer?.close();
-    if(!complete)await fs.rm(destination,{force:true});
-  }
-}
+async function saveWebP(source,output,stem,job){return media.saveFile(source,output,stem,'webp',job);}
 module.exports={createWebP,inspectWebP,saveWebP,exportGeometry,frameDelays,checkDiskSpace,metadataParser};

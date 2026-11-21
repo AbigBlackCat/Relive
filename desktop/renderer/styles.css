@@ -82,8 +82,32 @@ input[type=number]::-webkit-inner-spin-button { opacity: .6; }
 .preview-heading { padding: 14px 16px; }
 .preview-heading > #preview-name { font-size: 11px; }
 .aspect-label { margin-left: auto; white-space: nowrap; font-size: 10px; }
+.preview-crop-button { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; margin-left: 4px; }
+.preview-crop-button .icon { width: 13px; height: 13px; }
+.preview-crop-button[aria-pressed=true] { color: var(--accent); }
 .preview-stage { display: flex; align-items: center; justify-content: center; background: #060708; flex: 1; min-height: 0; overflow: hidden; position: relative; }
 #preview { height: 100%; width: 100%; object-fit: contain; }
+.crop-overlay { position: absolute; overflow: hidden; pointer-events: none; touch-action: none; }
+.crop-overlay.is-editing { pointer-events: auto; cursor: crosshair; }
+.crop-selection { position: absolute; border: 1px solid rgb(255 255 255 / 75%); box-shadow: 0 0 0 3000px rgb(0 0 0 / 62%); }
+.is-editing .crop-selection { border-color: var(--accent); cursor: move; }
+.crop-selection:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
+.crop-grid { position: absolute; inset: 0; background: linear-gradient(to right, transparent 33.1%, rgb(255 255 255 / 25%) 33.1%, rgb(255 255 255 / 25%) 33.5%, transparent 33.5%, transparent 66.4%, rgb(255 255 255 / 25%) 66.4%, rgb(255 255 255 / 25%) 66.8%, transparent 66.8%), linear-gradient(to bottom, transparent 33.1%, rgb(255 255 255 / 25%) 33.1%, rgb(255 255 255 / 25%) 33.5%, transparent 33.5%, transparent 66.4%, rgb(255 255 255 / 25%) 66.4%, rgb(255 255 255 / 25%) 66.8%, transparent 66.8%); pointer-events: none; }
+.crop-handle { position: absolute; display: block; width: 14px; height: 14px; padding: 0; border: 2px solid var(--accent); border-radius: 2px; background: var(--panel); transform: translate(-50%, -50%); }
+.crop-handle:hover { background: var(--accent); }
+.crop-nw { left: 0; top: 0; cursor: nwse-resize; }
+.crop-n { left: 50%; top: 0; cursor: ns-resize; }
+.crop-ne { left: 100%; top: 0; cursor: nesw-resize; }
+.crop-e { left: 100%; top: 50%; cursor: ew-resize; }
+.crop-se { left: 100%; top: 100%; cursor: nwse-resize; }
+.crop-s { left: 50%; top: 100%; cursor: ns-resize; }
+.crop-sw { left: 0; top: 100%; cursor: nesw-resize; }
+.crop-w { left: 0; top: 50%; cursor: ew-resize; }
+.crop-overlay:not(.is-editing) .crop-handle, .crop-overlay:not(.is-editing) .crop-grid { display: none; }
+.crop-toolbar { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-top: 1px solid var(--line); }
+.crop-toolbar > span { flex: 1; font-size: 10px; line-height: 1.5; }
+.crop-toolbar > button { flex-shrink: 0; }
+.crop-toolbar .button { font-size: 11px; min-height: 29px; padding: 6px 9px; }
 .preview-empty { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 25px; }
 .empty-live { height: 52px; width: 52px; color: #6c7e74; margin-bottom: 22px; stroke-width: 1; }
 .preview-empty h2 { font-size: 18px; font-weight: 500; letter-spacing: -.02em; margin-bottom: 12px; }

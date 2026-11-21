@@ -2,16 +2,24 @@
 
 ## 产品目标
 
-用户在 Apple Silicon Mac、Intel Mac 或 Windows 上将 SVG、GIF、MOV、MP4、MPV 等文件制作成实况图或 WebP 动图。软件名为 Relive，提供简便操作台、预览、裁切、实况任选封面和可安装的软件包。iPhone 是用户确认的实况发布设备；GitHub 仓库 https://github.com/AbigBlackCat/Relive 当前为 private。
+用户在 Apple Silicon Mac、Intel Mac 或 Windows 上将 SVG、GIF、MOV、MP4、MPV 等文件制作成实况图、常用视频与动图，或提取音频。软件名为 Relive，提供简便操作台、预览、片段裁切、画面裁剪、实况任选封面和可安装的软件包。iPhone 是用户确认的实况发布设备；GitHub 仓库 https://github.com/AbigBlackCat/Relive 当前为公开仓库。
 
 ## 实现范围
 
-1.2.0 交付 Apple Silicon 与 Intel 的原生 macOS 工作台（macOS 13+），以及 Windows 10 / 11 x64 的 Electron 安装版与便携 ZIP。三平台均内置 FFmpeg、ffprobe，全程本地处理。Live Photo 以 JPEG / MOV 配对和封面时间标记输出到 .pvt 包，原文件保留，重名自动编号。支持首帧、当前帧、从 1 开始的数值帧号、完整视频或裁切片段、1080 / 1920 像素最长边和声音开关。
+1.2.0 已交付 Apple Silicon 与 Intel 的原生 macOS 工作台（macOS 13+），以及 Windows 10 / 11 x64 的 Electron 安装版与便携 ZIP。三平台均内置 FFmpeg、ffprobe，全程本地处理。Live Photo 以 JPEG / MOV 配对和封面时间标记输出到 .pvt 包，原文件保留，重名自动编号。支持首帧、当前帧、从 1 开始的数值帧号、完整视频或裁切片段和声音开关。
+
+v1.3.0 为画面裁剪、更多导出格式和画质档位提供新版安装包。v1.2.0 不包含这些功能，仍可从历史发布页下载。
 
 Mac 通过「照片」导入 .pvt，再同步或隔空投送到 iPhone。Windows 用户需要支持 Live Photo 配对导入的 iOS 相册工具处理 JPEG + MOV，或经 Mac「照片」转入 iPhone；单独 JPEG 不会自动成为实况图。
 
-新增 WebP 导出：格式选择默认 Live Photo，切换 WebP 后隐藏独立封面、音频和导入照片操作，保留裁切和尺寸设置。按片段原序播放，以首帧开始无限循环；最长边默认 1080、可选 1920，最高 30 fps，有损质量 80。导出显示尺寸、实际时长和体积；单帧/静止素材可合法输出静态 WebP。用户已选择不做自动体积压缩或额外质量面板。三平台统一内置 libwebp 1.6.0 工具，Mac 最低版本继续为 13。
+本次扩展输出为 Live Photo、WebP、MP4、MOV、MKV、WebM、GIF、MP3、WAV。Live Photo 保留独立封面；普通视频按所选片段顺序播放，不携带实况配对信息。WebM 使用 VP9 及可选 Opus；MP3 / WAV 提取有声音素材的音轨，无音轨时提示无法导出，不使用画面裁剪与封面。音频档位只描述对应编码设置，不承诺原音轨逐位复制。
+
+统一画质选择为原画质、高清（最长边 1920）、标准（1080）、省空间（720），所有档位保持比例且不主动放大素材；后三档按最长边上限缩小。原画质通常使用源素材画布；画面裁剪后使用裁剪区域的尺寸，满足编码格式的偶数尺寸要求。原画质仍需重编码，不承诺逐位无损、原始编码或 HDR 色彩 / 元数据完全保留。预览仍限制最长边 1920、最高 60 fps；原画质导出使用原素材或保留的渲染源，而非用预览尺寸冒充原始画布。
+
+画面裁剪参考 OpenScreen：打开「裁剪画面」，在预览中拖动边缘 / 四角调整范围，拖动选区移动，可重置。裁剪应用于封面及所有视觉导出，在输出缩放前执行；与时间片段裁切独立，对音频输出不生效。
+
+WebP 与 GIF 按片段原序、从首帧开始无限循环，最高 30 fps，不使用独立封面或声音。WebP 单帧 / 静止素材可合法输出静态文件；GIF 最多 256 色，可能产生色带、抖动或较大文件。透明区域沿用导入时选择的背景。导出显示尺寸、实际时长和体积，不自动限制为 10 MB、不为压缩体积截短片段。WebP 仅作为通用动图输出，不作为小红书发布方式推荐；小红书实况发布只说明 Live Photo 经 iPhone 相册的流程。三平台使用 libwebp 1.6.0 工具，Mac 最低版本继续为 13。
 
 ## 已知边界
 
-SVG 支持自包含 SMIL / CSS 动画，录制 1–30 秒；静态文件不会新增运动。应用不执行 SVG 脚本或外链，拒绝 DTD / 实体定义。不持久化编辑项目。Mac 导出通过 Photos 框架识别校验；Windows 导出执行配对结构、媒体与时间标记校验。原生 Intel CI 及 Windows 完整转换、打包后烟雾测试已通过，iPhone 小红书发布尚未实测。Mac 包未 Apple 公证，Windows 包未正式代码签名。
+SVG 支持自包含 SMIL / CSS 动画，录制 1–30 秒，原画质模式录制最长边上限 4096；静态文件不会新增运动。应用不执行 SVG 脚本或外链，拒绝 DTD / 实体定义。不持久化编辑项目。Mac Live Photo 导出通过 Photos 框架识别校验；Windows Live Photo 导出执行配对结构、媒体与时间标记校验。1.2.0 已有原生 Intel CI 及 Windows 完整转换、打包后烟雾测试的通过记录；这不表示本次新增格式、画质与画面裁剪已完成跨平台构建及实机验证。iPhone 小红书发布尚未实测。Mac 包未 Apple 公证，Windows 包未正式代码签名。

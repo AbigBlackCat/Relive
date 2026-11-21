@@ -77,7 +77,7 @@ struct MainView: View {
             Text("Relive")
                 .font(.system(size: 21, weight: .semibold))
             Rectangle().fill(RelivePalette.line).frame(width: 1, height: 20).padding(.horizontal, 6)
-            Text("把喜欢的瞬间，变成实况与动图")
+            Text("实况 · 动图 · 音视频转换")
                 .font(.system(size: 12))
                 .foregroundColor(RelivePalette.secondary)
             Spacer()
@@ -247,26 +247,55 @@ struct MainView: View {
                             .truncationMode(.middle)
                     }
                     Spacer(minLength: 8)
-                    Image(systemName: "rectangle.dashed")
-                        .foregroundColor(RelivePalette.secondary)
-                        .accessibilityHidden(true)
-                    Text("保持原比例")
-                        .font(.system(size: 10))
-                        .foregroundColor(RelivePalette.secondary)
+                    if model.current != nil && !model.exportFormat.isAudioOnly {
+                        if model.editingCrop {
+                            Button("重置") { model.crop = .full }
+                                .buttonStyle(ReliveButtonStyle())
+                                .help("恢复完整画面")
+                            Button("完成") { model.editingCrop = false }
+                                .buttonStyle(ReliveButtonStyle(primary: true))
+                        } else {
+                            Button {
+                                if model.isPlaying { model.togglePlayback() }
+                                model.editingCrop = true
+                            } label: {
+                                Label("裁剪画面", systemImage: "crop")
+                                    .font(.system(size: 11))
+                            }
+                            .buttonStyle(ReliveButtonStyle())
+                        }
+                    }
                 }
                 .padding(.horizontal, 16)
                 .frame(height: 44)
+                .disabled(model.busy)
                 ZStack {
                     RelivePalette.background
-                    if model.current != nil {
-                        RelivePlayerView(player: model.player)
-                            .padding(10)
-                            .accessibilityLabel("素材视频预览")
+                    if let item = model.current {
+                        GeometryReader { geometry in
+                            let bounds = fittedMediaRect(width: item.width, height: item.height, in: geometry.size)
+                            RelivePlayerView(player: model.player)
+                                .padding(10)
+                                .accessibilityLabel("素材视频预览")
+                            if !model.exportFormat.isAudioOnly && (model.editingCrop || model.crop != .full) {
+                                CropOverlay(region: $model.crop, editing: model.editingCrop, accent: RelivePalette.accent)
+                                    .frame(width: bounds.width, height: bounds.height)
+                                    .position(x: bounds.midX, y: bounds.midY)
+                                    .disabled(model.busy)
+                            }
+                        }
                     } else {
                         emptyPreview
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                if model.editingCrop && !model.exportFormat.isAudioOnly {
+                    Text("拖动边缘或四角调整范围，拖动框内移动画面。")
+                        .font(.system(size: 11))
+                        .foregroundColor(RelivePalette.secondary)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                }
                 playbackControls
             }
             .background(RelivePalette.panel)
@@ -284,7 +313,7 @@ struct MainView: View {
                 .accessibilityHidden(true)
             Text("让瞬间再次发生")
                 .font(.system(size: 23, weight: .medium))
-            Text("导入素材，选取喜欢的片段，导出实况或 WebP 动图。")
+            Text("导入素材，选取片段与画面，导出实况、动图或音视频。")
                 .font(.system(size: 12))
                 .foregroundColor(RelivePalette.secondary)
             Button(action: model.chooseFiles) {
@@ -309,7 +338,7 @@ struct MainView: View {
                 .foregroundColor(RelivePalette.secondary)
                 .padding(.leading, 3)
             Spacer(minLength: 4)
-            if model.exportFormat == .livePhoto {
+            if model.exportFormat == .livePhoto && !model.editingCrop {
                 Button(action: model.chooseCover) {
                     Label("当前帧设为封面", systemImage: "photo.badge.checkmark")
                         .font(.system(size: 11, weight: .medium))
@@ -367,7 +396,9 @@ struct MainView: View {
             .disabled(model.current == nil || model.busy)
             HStack(spacing: 6) {
                 Image(systemName: model.exportFormat == .livePhoto ? "pin.fill" : "play.fill").foregroundColor(RelivePalette.accent)
-                Text(model.exportFormat == .webP ? "WebP 从裁切片段的首帧开始，保持原始播放顺序。" : (model.current == nil ? "拖动定位，然后使用逐帧按钮确认封面。" : "封面：第 \(model.coverFrame) 帧 · \(timecode(model.coverTime))"))
+                Text(model.exportFormat == .livePhoto
+                     ? (model.current == nil ? "拖动定位，然后使用逐帧按钮确认封面。" : "封面：第 \(model.coverFrame) 帧 · \(timecode(model.coverTime))")
+                     : "从所选片段的开头导出，保持原始播放顺序。")
                     .foregroundColor(RelivePalette.secondary)
             }
             .font(.system(size: 10))
@@ -426,13 +457,13 @@ struct MainView: View {
                     Picker("导出格式", selection: $model.exportFormat) {
                         ForEach(ExportFormat.allCases) { format in Text(format.title).tag(format) }
                     }
-                    .pickerStyle(.segmented)
+                    .pickerStyle(.menu)
                     .disabled(model.busy)
                     .accessibilityLabel("导出格式")
                     if model.exportFormat == .livePhoto { coverSettings }
                     clipSettings
                     exportSettings
-                    publishingHelp
+                    if model.exportFormat == .livePhoto { publishingHelp }
                 }
                 .padding(18)
             }
@@ -514,22 +545,19 @@ struct MainView: View {
     private var exportSettings: some View {
         VStack(alignment: .leading, spacing: 11) {
             inspectorHeading("输出", systemImage: "square.and.arrow.up")
-            HStack {
-                Text("最长边")
-                Spacer()
-                Text("像素").foregroundColor(RelivePalette.secondary)
+            Picker("导出质量", selection: $model.quality) {
+                ForEach(ExportQuality.allCases) { quality in Text(quality.title).tag(quality) }
             }
-            .font(.system(size: 11))
-            Picker("输出最长边", selection: $model.maxSide) {
-                Text("1080").tag(1080)
-                Text("1920").tag(1920)
-            }
-            .pickerStyle(.segmented)
-            if model.exportFormat == .livePhoto {
+            .pickerStyle(.menu)
+            Text(qualityHint)
+                .font(.system(size: 11))
+                .foregroundColor(RelivePalette.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            if model.exportFormat.keepsAudioOption {
                 Toggle("保留原声音", isOn: $model.keepAudio)
                     .toggleStyle(.switch)
                     .font(.system(size: 12))
-            } else {
+            } else if model.exportFormat == .webP || model.exportFormat == .gif {
                 Text("最高 30 fps · 无限循环 · 无声音")
                     .font(.system(size: 11))
                     .foregroundColor(RelivePalette.secondary)
@@ -565,15 +593,10 @@ struct MainView: View {
     private var publishingHelp: some View {
         DisclosureGroup("如何在小红书发布", isExpanded: $showPublishingHelp) {
             VStack(alignment: .leading, spacing: 10) {
-                if model.exportFormat == .livePhoto {
-                    publishingStep("1", text: "导出后点击「导入照片」，保存到 Mac「照片」。")
-                    publishingStep("2", text: "从「照片」用 AirDrop 传到 iPhone，确认相册显示 LIVE。")
-                    publishingStep("3", text: "打开小红书，从相册选取这张 Live 图，再发布笔记。")
-                } else {
-                    publishingStep("1", text: "导出后点击「打开文件夹」，找到 .webp 文件。")
-                    publishingStep("2", text: "使用当前小红书客户端支持的文件上传入口选择 WebP。")
-                }
-                Text(model.exportFormat == .livePhoto ? "导出文件需要先进入系统相册。小红书识别结果以手机当前版本为准。" : "WebP 动画展示以小红书当前版本为准；静态 WebP 不包含动画。")
+                publishingStep("1", text: "导出后点击「导入照片」，保存到 Mac「照片」。")
+                publishingStep("2", text: "从「照片」用 AirDrop 传到 iPhone，确认相册显示 LIVE。")
+                publishingStep("3", text: "打开小红书，从相册选取这张 Live 图，再发布笔记。")
+                Text("导出文件需要先进入系统相册。小红书识别结果以手机当前版本为准。")
                     .font(.system(size: 10))
                     .foregroundColor(RelivePalette.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -643,6 +666,12 @@ struct MainView: View {
                             .foregroundColor(RelivePalette.secondary)
                             .fixedSize(horizontal: false, vertical: true)
                     }
+                    if let info = model.lastMedia {
+                        Text(mediaSummary(info))
+                            .font(.system(size: 10))
+                            .foregroundColor(RelivePalette.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                     HStack(spacing: 8) {
                         Button("打开文件夹", action: model.revealOutput)
                         if model.exportFormat == .livePhoto { Button("导入照片", action: model.openPhotos) }
@@ -704,6 +733,31 @@ struct MainView: View {
                 .accessibilityHidden(true)
             Text(title).font(.system(size: 12, weight: .semibold))
         }
+    }
+
+    private var qualityHint: String {
+        if model.exportFormat.isAudioOnly {
+            return model.exportFormat == .wav ? "WAV 为无损音频，质量选项调整位深与采样率。" : "质量越高，音频码率与文件体积越大。"
+        }
+        if model.quality == .original { return "保留素材分辨率，裁剪后按所选范围输出。" }
+        return "最长边 \(model.quality.maxSide) 像素，保持比例，小尺寸素材保持原尺寸。"
+    }
+
+    private func mediaSummary(_ info: MediaExportInfo) -> String {
+        var parts: [String] = []
+        if let width = info.width, let height = info.height { parts.append("\(width) × \(height)") }
+        parts.append(String(format: "%.3f 秒", info.duration))
+        parts.append(ByteCountFormatter.string(fromByteCount: info.byteCount, countStyle: .file))
+        if info.width != nil { parts.append(info.hasAudio ? "有声" : "无声") }
+        return parts.joined(separator: " · ")
+    }
+
+    private func fittedMediaRect(width: Int, height: Int, in size: CGSize) -> CGRect {
+        let available = CGSize(width: max(1, size.width - 20), height: max(1, size.height - 20))
+        let scale = min(available.width / CGFloat(max(1, width)), available.height / CGFloat(max(1, height)))
+        let fitted = CGSize(width: CGFloat(max(1, width)) * scale, height: CGFloat(max(1, height)) * scale)
+        return CGRect(x: (size.width - fitted.width) / 2, y: (size.height - fitted.height) / 2,
+                      width: fitted.width, height: fitted.height)
     }
 
     private func iconButton(_ image: String, label: String, action: @escaping () -> Void) -> some View {

@@ -94,6 +94,51 @@ enum SelfTests {
             throw ReliveError.message("SVG 实体隔离失败。")
         } catch { if error.localizedDescription == "SVG 实体隔离失败。" { throw error }; print("PASS SVG entities rejected") }
         try await webPTests(directory: directory)
+        try await mediaExportTests(directory: directory)
+    }
+
+    @MainActor private static func mediaExportTests(directory: URL) async throws {
+        let token = JobToken(), output = directory.appendingPathComponent("自由裁剪 导出")
+        let fm = FileManager.default
+        try fm.createDirectory(at: output, withIntermediateDirectories: true)
+        let source = output.appendingPathComponent("原片.mp4")
+        _ = try await Tools.run("ffmpeg", ["-v", "error", "-f", "lavfi", "-i", "color=red:size=2200x800:rate=12", "-f", "lavfi", "-i", "sine=frequency=440:sample_rate=48000", "-vf", "drawbox=x=1100:y=0:w=1100:h=800:color=blue:t=fill", "-t", "1", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-c:a", "aac", source.path], token: token)
+        let original = try Data(contentsOf: source)
+        let crop = CropRegion(x: 0.5, y: 0.25, width: 0.5, height: 0.5)
+        for format in [ExportFormat.mp4, .mov, .mkv, .webm, .gif, .mp3, .wav] {
+            let target = output.appendingPathComponent("裁剪." + format.rawValue)
+            let info = try await MediaEngine.writeMedia(source: source, destination: target, format: format, quality: .original, start: 0.25,
+                duration: 0.5, crop: crop, keepAudio: format != .mov, fps: 12, token: token, progress: { _ in })
+            guard abs(info.duration - 0.5) < 0.16, info.byteCount > 0, info.hasAudio == (format != .mov && format != .gif),
+                  format.isAudioOnly ? info.width == nil : (info.width == 1100 && info.height == 400) else {
+                throw ReliveError.message("\(format.title) 输出的画面、音轨或时长错误。")
+            }
+        }
+        let full = try await MediaEngine.writeMedia(source: source, destination: output.appendingPathComponent("全画幅.mp4"),
+            format: .mp4, quality: .original, start: 0, duration: 0.5, crop: .full, keepAudio: true, fps: 12, token: token, progress: { _ in })
+        guard full.width == 2200, full.height == 800 else { throw ReliveError.message("原画质输出发生意外缩放。") }
+        let lower = try await MediaEngine.writeMedia(source: source, destination: output.appendingPathComponent("省空间.mp4"),
+            format: .mp4, quality: .small, start: 0, duration: 0.5, crop: crop, keepAudio: false, fps: 12, token: token, progress: { _ in })
+        guard lower.width == 720, (260...262).contains(lower.height ?? 0) else { throw ReliveError.message("裁剪与缩放顺序错误。") }
+
+        let sourceInfo = try await MediaEngine.probe(source, token: token)
+        let webP = try await WebPEncoder.write(source: source, info: sourceInfo, startFrame: 0, endFrame: 4, maxSide: 0,
+            outputDirectory: output, name: "裁剪", temporaryDirectory: output, token: token, quality: .original, crop: crop, progress: { _ in })
+        guard webP.info.width == 1100, webP.info.height == 400 else { throw ReliveError.message("WebP 画面裁剪尺寸错误。") }
+        try checkWebPColor(webP.url, frame: 0, blue: true)
+        let clip = output.appendingPathComponent("实况裁剪.mp4")
+        try await MediaEngine.clip(source: source, destination: clip, start: 0, duration: 0.5, maxSide: 0,
+            keepAudio: true, fps: 12, quality: .original, crop: crop, token: token, progress: { _ in })
+        let pair = try await LivePhotoWriter.write(video: clip, coverTime: 0.25, outputDirectory: output, name: "实况")
+        try await LivePhotoWriter.validate(package: pair)
+        guard let cover = try fm.contentsOfDirectory(at: pair, includingPropertiesForKeys: nil).first(where: { $0.pathExtension.lowercased() == "jpg" }),
+              let image = NSBitmapImageRep(data: try Data(contentsOf: cover)), image.pixelsWide == 1100, image.pixelsHigh == 400,
+              let color = image.colorAt(x: 20, y: 20)?.usingColorSpace(.deviceRGB), color.blueComponent > color.redComponent else {
+            throw ReliveError.message("实况封面没有使用裁剪后的画面。")
+        }
+        let first = try MediaEngine.saveExport(clip, output: output, name: "原片", token: token)
+        guard first.lastPathComponent == "原片 2.mp4", try Data(contentsOf: source) == original else { throw ReliveError.message("导出覆盖了已有文件。") }
+        print("PASS 7 media formats, source resolution above 1920, spatial crop before scaling, WebP + Live cover, original untouched")
     }
 
     @MainActor private static func webPTests(directory: URL) async throws {

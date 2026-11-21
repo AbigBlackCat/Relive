@@ -11,6 +11,8 @@ struct MediaItem: Identifiable {
     let duration: Double, fps: Double
     let frames: Int
     let thumbnail: NSImage?
+    var originalInput: URL? = nil
+    var background: String = "#FFFFFF"
 }
 
 struct FrameThumbnail: Identifiable {
@@ -20,10 +22,15 @@ struct FrameThumbnail: Identifiable {
 }
 
 enum ExportFormat: String, CaseIterable, Identifiable {
-    case livePhoto, webP
+    case livePhoto, webP, mp4, mov, mkv, webm, gif, mp3, wav
     var id: Self { self }
-    var title: String { self == .livePhoto ? "Live Photo" : "WebP 动图" }
-    var icon: String { self == .livePhoto ? "livephoto" : "photo.on.rectangle.angled" }
+    var title: String {
+        switch self { case .livePhoto: return "Live Photo"; case .webP: return "WebP 动图"; case .gif: return "GIF 动图"
+        case .webm: return "WebM"; default: return rawValue.uppercased() }
+    }
+    var icon: String { self == .livePhoto ? "livephoto" : isAudioOnly ? "waveform" : self == .webP || self == .gif ? "photo.on.rectangle.angled" : "film" }
+    var isAudioOnly: Bool { self == .mp3 || self == .wav }
+    var keepsAudioOption: Bool { !isAudioOnly && self != .webP && self != .gif }
 }
 
 @MainActor
@@ -41,11 +48,17 @@ final class ReliveModel: ObservableObject {
     @Published var error: String?
     @Published var lastExport: URL?
     @Published var lastWebP: WebPInfo?
+    @Published var lastMedia: MediaExportInfo?
     @Published var exportFormat: ExportFormat = .livePhoto {
-        didSet { if oldValue != exportFormat { lastExport = nil; lastWebP = nil; error = nil } }
+        didSet { if oldValue != exportFormat { lastExport = nil; lastWebP = nil; lastMedia = nil; error = nil; editingCrop = false } }
     }
     @Published var exportDirectory = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Desktop/Relive 导出")
-    @Published var maxSide = 1080
+    @Published var quality: ExportQuality = .standard
+    @Published var editingCrop = false
+    @Published var crop: CropRegion = .full {
+        didSet { if let id = selectedID { crops[id] = crop } }
+    }
+    private var crops: [UUID: CropRegion] = [:]
     @Published var keepAudio = true
     @Published var svgDuration = 3.0
     @Published var backgroundHex = "#FFFFFF"
@@ -133,7 +146,7 @@ final class ReliveModel: ObservableObject {
                     guard info.duration > 0 else { throw ReliveError.message("素材时长为零。") }
                     let thumbnail = try? MediaEngine.image(preview, at: 0, size: CGSize(width: 200, height: 200))
                     // Audio encoder padding is longer than the picture in some files; only real video frames are selectable.
-                    let item = MediaItem(id: id, sourceURL: source, previewURL: preview, name: source.deletingPathExtension().lastPathComponent, kind: source.pathExtension.uppercased(), width: info.width, height: info.height, duration: Double(info.frames) / info.fps, fps: info.fps, frames: info.frames, thumbnail: thumbnail)
+                    let item = MediaItem(id: id, sourceURL: source, previewURL: preview, name: source.deletingPathExtension().lastPathComponent, kind: source.pathExtension.uppercased(), width: info.width, height: info.height, duration: Double(info.frames) / info.fps, fps: info.fps, frames: info.frames, thumbnail: thumbnail, originalInput: input, background: background)
                     items.append(item); imported = item
                 } catch {
                     if token.isCancelled { break }
@@ -144,7 +157,7 @@ final class ReliveModel: ObservableObject {
             if let imported { select(imported) }
             if token.isCancelled { status = "已取消，已导入的素材仍可继续编辑。" }
             else if accepted.count == failures.count { status = "没有成功导入素材，请检查提示后重新选择。" }
-            else { status = "已导入 \(accepted.count - failures.count) 个素材" + (ignored > 0 ? "，跳过 \(ignored) 个不支持的文件。" : (exportFormat == .livePhoto ? "，选择封面后即可导出。" : "，选择片段后即可导出 WebP。")) }
+            else { status = "已导入 \(accepted.count - failures.count) 个素材" + (ignored > 0 ? "，跳过 \(ignored) 个不支持的文件。" : (exportFormat == .livePhoto ? "，选择封面后即可导出。" : "，选择片段后即可导出。")) }
             if !failures.isEmpty { error = failures.joined(separator: "\n\n") }
         }
     }
@@ -152,8 +165,9 @@ final class ReliveModel: ObservableObject {
     func select(_ item: MediaItem) {
         guard !busy, selectedID != item.id else { return }
         player.pause(); isPlaying = false
-        lastExport = nil; lastWebP = nil
+        lastExport = nil; lastWebP = nil; lastMedia = nil
         selectedID = item.id; playhead = 0; coverFrame = 1
+        editingCrop = false; crop = crops[item.id] ?? .full
         trimStart = 0; trimEnd = item.duration
         player.replaceCurrentItem(with: AVPlayerItem(url: item.previewURL))
         thumbnails = []
@@ -203,33 +217,66 @@ final class ReliveModel: ObservableObject {
         let end = min(item.duration, Double(Int((trimEnd * item.fps).rounded())) / item.fps)
         let duration = end - start
         let cover = max(0, coverTime - start)
-        guard Int((end * item.fps).rounded()) > startFrame, exportFormat == .webP || cover < duration else { error = "导出范围不足一帧，请扩大片段。"; return }
+        guard Int((end * item.fps).rounded()) > startFrame, exportFormat != .livePhoto || cover < duration else { error = "导出范围不足一帧，请扩大片段。"; return }
         let format = exportFormat
-        let output = exportDirectory, side = maxSide, audio = keepAudio
+        let output = exportDirectory, quality = quality, audio = keepAudio, crop = crop
         let directory = workspace.appendingPathComponent("export-" + UUID().uuidString)
         let token = JobToken(); activeToken = token
-        player.pause(); isPlaying = false
+        player.pause(); isPlaying = false; editingCrop = false
         begin("正在制作 \(format.title)…")
         task = Task {
             defer { try? FileManager.default.removeItem(at: directory) }
             do {
                 try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
                 try FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
+                let update: (Double) -> Void = { [weak self] value in Task { @MainActor in self?.progress = value } }
+                var source = item.previewURL
+                var sourceInfo = MediaInfo(width: item.width, height: item.height, duration: item.duration, fps: item.fps, frames: item.frames, hasAudio: false)
+                var offset = 0.0
+                if let original = item.originalInput {
+                    let composited = ["svg", "gif", "apng", "png", "jpg", "jpeg", "heic", "heif", "webp", "bmp", "tif", "tiff"].contains(original.pathExtension.lowercased())
+                    // Work from the unchanged private input. The scaled preview is only for editing.
+                    if format.isAudioOnly || (!composited && item.kind != "MPV" && format != .webP) {
+                        source = original
+                    } else if quality == .original || quality == .high && format == .webP {
+                        source = directory.appendingPathComponent("source.mkv")
+                        if item.kind == "SVG" {
+                            sourceInfo = try await SVGRenderer().render(source: original, destination: source, duration: item.duration,
+                                background: item.background, maxSide: quality == .original ? 4096 : 1920, lossless: true, token: token) { update($0 * 0.30) }
+                        } else {
+                            sourceInfo = try await MediaEngine.normalize(source: original, destination: source, durationForImage: item.duration,
+                                background: item.background, maxSide: quality.maxSide, lossless: true, token: token) { update($0 * 0.30) }
+                        }
+                        offset = 0.30
+                    }
+                }
                 if format == .webP {
-                    let mediaInfo = MediaInfo(width: item.width, height: item.height, duration: item.duration, fps: item.fps, frames: item.frames, hasAudio: audio)
-                    let result = try await WebPEncoder.write(source: item.previewURL, info: mediaInfo, startFrame: startFrame,
-                        endFrame: Int((end * item.fps).rounded()), maxSide: side, outputDirectory: output, name: item.name,
-                        temporaryDirectory: directory, token: token) { [weak self] fraction in
-                            Task { @MainActor in self?.progress = fraction }
+                    let result = try await WebPEncoder.write(source: source, info: sourceInfo, startFrame: startFrame,
+                        endFrame: Int((end * item.fps).rounded()), maxSide: quality.maxSide, outputDirectory: output, name: item.name,
+                        temporaryDirectory: directory, token: token, quality: quality, crop: crop) { fraction in
+                            update(offset + (1 - offset) * fraction)
                         }
                     lastExport = result.url; lastWebP = result.info
                     finish(); progress = 1
                     status = result.info.isAnimated ? "WebP 动图已导出 · 保留片段原始顺序 · 无限循环" : "静态 WebP 已导出 · 片段画面相同或仅有一帧"
                     return
                 }
+                if format != .livePhoto {
+                    let encoded = directory.appendingPathComponent("media." + format.rawValue)
+                    let info = try await MediaEngine.writeMedia(source: source, destination: encoded, format: format, quality: quality,
+                        start: start, duration: duration, crop: crop, keepAudio: audio, fps: item.fps, token: token) { fraction in
+                            update(offset + (0.93 - offset) * fraction)
+                        }
+                    lastExport = try MediaEngine.saveExport(encoded, output: output, name: safeName(item.name), token: token)
+                    lastMedia = info
+                    finish(); progress = 1
+                    status = format.title + " 已导出"
+                    return
+                }
                 let normalized = directory.appendingPathComponent("clip.mp4")
-                try await MediaEngine.clip(source: item.previewURL, destination: normalized, start: start, duration: duration, maxSide: side, keepAudio: audio, fps: item.fps, token: token) { [weak self] fraction in
-                    Task { @MainActor in self?.progress = fraction * 0.72 }
+                try await MediaEngine.clip(source: source, destination: normalized, start: start, duration: duration,
+                    maxSide: quality.maxSide, keepAudio: audio, fps: item.fps, quality: quality, crop: crop, token: token) { fraction in
+                    update(offset + (0.72 - offset) * fraction)
                 }
                 try token.check()
                 status = "正在写入封面和实况时间标记…"; progress = 0.78
@@ -264,7 +311,7 @@ final class ReliveModel: ObservableObject {
     func clearError() { error = nil }
     func cancel() { activeToken?.cancel(); task?.cancel(); status = "正在取消…" }
     func cleanUp() { activeToken?.cancel(); task?.cancel(); thumbnailTask?.cancel(); player.pause(); try? FileManager.default.removeItem(at: workspace) }
-    private func begin(_ message: String) { busy = true; progress = 0; error = nil; lastExport = nil; lastWebP = nil; status = message }
+    private func begin(_ message: String) { busy = true; progress = 0; error = nil; lastExport = nil; lastWebP = nil; lastMedia = nil; status = message }
     private func finish() { busy = false; activeToken = nil; task = nil }
     private func safeName(_ name: String) -> String {
         let invalid = CharacterSet(charactersIn: "/:\0\n\r")

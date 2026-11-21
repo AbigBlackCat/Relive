@@ -35,6 +35,15 @@ async function run(api){
     assert.ok(Math.abs(webp.duration-item.duration)<=0.001);
     console.log('PASS desktop '+item.kind+' → animated WebP, original duration');
   }
+  const cropped=await api.mainWindow.webContents.executeJavaScript('window.relive.exportMedia('+JSON.stringify({id:imported[0].id,format:'mp4',startFrame:1,endFrame:30,maxSide:0,quality:'high',crop:{x:.5,y:0,width:.5,height:1},name:'视频:裁切',outputDir:output})+')');
+  assert.equal(cropped.width,160);assert.equal(cropped.height,240);assert.equal(cropped.hasAudio,true);assert.equal(path.basename(cropped.filePath),'视频_裁切.mp4');
+  const repeated=await api.exportMedia({id:imported[0].id,format:'mp4',startFrame:1,endFrame:3,maxSide:720,quality:'small',crop:{x:.5,y:0,width:.5,height:1},name:'视频:裁切',outputDir:output});
+  assert.equal(path.basename(repeated.filePath),'视频_裁切 2.mp4');
+  const sound=await api.exportMedia({id:imported[0].id,format:'wav',startFrame:1,endFrame:30,quality:'small',crop:{ignored:true},outputDir:output});
+  assert.equal(sound.hasAudio,true);assert.equal((await media.inspect(sound.filePath,job)).streams[0].sample_rate,'32000');
+  await assert.rejects(api.exportMedia({id:imported[3].id,format:'mp3',startFrame:1,endFrame:10,outputDir:output}),/没有声音/);
+  await assert.rejects(api.exportMedia({id:imported[0].id,format:'mov',startFrame:1,endFrame:10,outputDir:fixtures}),/操作台/);
+  console.log('PASS real exportMedia IPC, original-source crop, renamed duplicate protection, WAV small and silent SVG audio rejection');
   const first=imported[0];
   const result=await api.exportItem({id:first.id,coverFrame:16,startFrame:16,endFrame:16,maxSide:1080,keepAudio:false,outputDir:output});
   assert.equal((await validateLivePhoto(result)).coverTime,0);

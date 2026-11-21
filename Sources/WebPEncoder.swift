@@ -20,7 +20,7 @@ enum WebPEncoder {
     // Input frame bounds are zero based, with an exclusive end, like FFmpeg's trim filter.
     static func write(source: URL, info: MediaInfo, startFrame: Int, endFrame: Int, maxSide: Int,
                       outputDirectory: URL, name: String, temporaryDirectory: URL,
-                      token: JobToken, availableBytes: Int64? = nil,
+                      token: JobToken, availableBytes: Int64? = nil, quality: ExportQuality = .standard, crop: CropRegion = .full,
                       progress: @escaping (Double) -> Void) async throws -> WebPExport {
         try token.check()
         guard info.fps.isFinite, info.fps > 0, startFrame >= 0, endFrame > startFrame, endFrame <= info.frames else {
@@ -37,23 +37,25 @@ enum WebPEncoder {
             throw ReliveError.message("素材的时长或帧率信息不正确。")
         }
         let frameCount = Int(frameEstimate)
-        let side = maxSide == 1920 ? 1920 : 1080
-        let scale = min(1, Double(side) / Double(max(info.width, info.height)))
-        let width = max(2, Int(ceil(Double(info.width) * scale)))
-        let height = max(2, Int(ceil(Double(info.height) * scale)))
+        let (cropWidth, cropHeight) = crop.size(width: info.width, height: info.height)
+        let side = maxSide == 0 ? max(cropWidth, cropHeight) : maxSide
+        let scale = min(1, Double(side) / Double(max(cropWidth, cropHeight)))
+        let width = max(2, Int(ceil(Double(cropWidth) * scale)))
+        let height = max(2, Int(ceil(Double(cropHeight) * scale)))
+        guard Double(width) <= 16383, Double(height) <= 16383 else { throw ReliveError.message("画面超出 WebP 的尺寸限制，请选择较低的清晰度或裁剪。") }
         // PPM is uncompressed RGB. Include headers, a possible encoded copy, and 256 MiB headroom.
         let required = Double(frameCount) * Double(width) * Double(height) * 3 * 1.15 + 268_435_456
         let free = try availableBytes ?? freeBytes(at: job)
         guard required.isFinite, required <= Double(free) else {
             let neededBytes = required < Double(Int64.max) ? Int64(max(0, required)) : Int64.max
             let needed = ByteCountFormatter.string(fromByteCount: neededBytes, countStyle: .file)
-            throw ReliveError.message("临时磁盘空间不足。此片段约需 \(needed) 可用空间，请缩短片段、选择 1080 像素或清理磁盘后重试。")
+            throw ReliveError.message("临时磁盘空间不足。此片段约需 \(needed) 可用空间，请缩短片段、降低清晰度或清理磁盘后重试。")
         }
         try token.check()
         // Distribute pictures over the whole clip instead of appending a tiny tail frame.
         // selected_n counts already selected pictures, so the first picture is always n=0.
         let ratio = String(format: "%.12f", locale: Locale(identifier: "en_US_POSIX"), Double(endFrame - startFrame) / Double(frameCount))
-        let filter = "trim=start_frame=\(startFrame):end_frame=\(endFrame),setpts=PTS-STARTPTS,select='eq(n,floor(selected_n*\(ratio)+0.0000001))',scale=w='max(2,min(\(side),iw))':h='max(2,min(\(side),ih))':force_original_aspect_ratio=decrease:force_divisible_by=2,setsar=1"
+        let filter = "trim=start_frame=\(startFrame):end_frame=\(endFrame),setpts=PTS-STARTPTS,select='eq(n,floor(selected_n*\(ratio)+0.0000001))'," + crop.ffmpeg + MediaEngine.scaleFilter(maxSide)
         _ = try await Tools.run("ffmpeg", ["-v", "error", "-nostdin", "-nostats", "-progress", "pipe:1", "-i", source.path,
             "-map", "0:v:0", "-an", "-vf", filter, "-vsync", "0", "-frames:v", String(frameCount),
             "-c:v", "ppm", "-pix_fmt", "rgb24", "-start_number", "0", "frame-%08d.ppm"], token: token,
@@ -61,7 +63,7 @@ enum WebPEncoder {
         let frames = try fm.contentsOfDirectory(atPath: job.path).filter { $0.hasPrefix("frame-") && $0.hasSuffix(".ppm") }.sorted()
         guard frames.count == frameCount else { throw ReliveError.message("素材的实际帧数与片段不符，请重新导入素材。") }
         try token.check()
-        var arguments = "-loop 0 -lossy -q 80 -m 4\n"
+        var arguments = "-loop 0 \(quality.webP) -m 4\n"
         var previous = 0
         for (index, frame) in frames.enumerated() {
             let boundary = Double(index + 1) * duration / Double(frameCount)

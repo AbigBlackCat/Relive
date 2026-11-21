@@ -9,7 +9,7 @@ final class SVGRenderer: NSObject, WKNavigationDelegate {
     private var navigation: CheckedContinuation<Void, Error>?
     private var navigationTimeout: Task<Void, Never>?
 
-    static func dimensions(_ document: XMLDocument) throws -> CGSize {
+    static func dimensions(_ document: XMLDocument, maxSide: Int = 1920) throws -> CGSize {
         guard let root = document.rootElement(), root.localName == "svg" || root.name == "svg" else { throw ReliveError.message("这个文件不是有效的 SVG。") }
         func number(_ value: String?) -> Double? {
             guard let value else { return nil }
@@ -25,11 +25,12 @@ final class SVGRenderer: NSObject, WKNavigationDelegate {
         }
         let w = width ?? 1080, h = height ?? 1080
         guard w / h < 100, h / w < 100 else { throw ReliveError.message("SVG 的宽高比例过大，请调整画布后再导入。") }
-        let scale = min(1, 1920 / max(w, h))
+        let scale = min(1, Double(maxSide) / max(w, h))
         return CGSize(width: max(2, floor(w * scale / 2) * 2), height: max(2, floor(h * scale / 2) * 2))
     }
 
-    func render(source: URL, destination: URL, duration: Double, background: String, token: JobToken, progress: @escaping (Double) -> Void) async throws -> MediaInfo {
+    func render(source: URL, destination: URL, duration: Double, background: String, maxSide: Int = 1920,
+                lossless: Bool = false, token: JobToken, progress: @escaping (Double) -> Void) async throws -> MediaInfo {
         let attributes = try FileManager.default.attributesOfItem(atPath: source.path)
         guard ((attributes[.size] as? NSNumber)?.intValue ?? 0) <= 20_971_520 else { throw ReliveError.message("SVG 超过 20 MB，请先精简文件。") }
         let data = try Data(contentsOf: source)
@@ -37,7 +38,7 @@ final class SVGRenderer: NSObject, WKNavigationDelegate {
         guard let text = String(data: data, encoding: .utf8) else { throw ReliveError.message("请将 SVG 保存为 UTF-8 编码后再导入。") }
         guard !text.uppercased().contains("<!DOCTYPE"), !text.uppercased().contains("<!ENTITY") else { throw ReliveError.message("SVG 包含 DTD 或实体定义，请先导出为普通 SVG。") }
         let document = try XMLDocument(data: data, options: [.nodeLoadExternalEntitiesNever])
-        let size = try Self.dimensions(document)
+        let size = try Self.dimensions(document, maxSide: maxSide)
         guard let root = document.rootElement() else { throw ReliveError.message("SVG 没有可读取的画面。") }
         root.removeAttribute(forName: "width"); root.removeAttribute(forName: "height")
         root.addAttribute(XMLNode.attribute(withName: "width", stringValue: "100%") as! XMLNode)
@@ -90,7 +91,8 @@ final class SVGRenderer: NSObject, WKNavigationDelegate {
             try png.write(to: frames.appendingPathComponent(String(format: "%06d.png", index)))
             progress(Double(index + 1) / Double(count) * 0.8)
         }
-        _ = try await Tools.run("ffmpeg", ["-v", "error", "-nostdin", "-framerate", "30", "-i", frames.appendingPathComponent("%06d.png").path, "-vf", "scale=\(Int(size.width)):\(Int(size.height)),format=yuv420p", "-c:v", "libx264", "-preset", "fast", "-crf", "18", "-movflags", "+faststart", destination.path], token: token)
+        let codec = lossless ? ["-c:v", "ffv1"] : ["-c:v", "libx264", "-preset", "fast", "-crf", "18", "-movflags", "+faststart"]
+        _ = try await Tools.run("ffmpeg", ["-v", "error", "-nostdin", "-framerate", "30", "-i", frames.appendingPathComponent("%06d.png").path, "-vf", "scale=\(Int(size.width)):\(Int(size.height))" + (lossless ? "" : ",format=yuv420p")] + codec + [destination.path], token: token)
         progress(1)
         return try await MediaEngine.probe(destination, token: token)
     }

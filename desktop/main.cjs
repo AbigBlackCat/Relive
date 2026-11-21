@@ -42,10 +42,14 @@ async function importPaths(paths,options){
         const input=path.join(directory,'input.'+extension),preview=path.join(directory,'preview.mp4');
         await fs.copyFile(source,input);token.check();
         emit({stage:'正在读取 '+path.basename(source),progress:0});
-        if(extension==='svg')await renderSVG(input,preview,config,token);else await media.normalize(input,preview,config,token);
+        let sourceInfo,svgDimensions;
+        if(extension==='svg')svgDimensions=await renderSVG(input,preview,config,token);else{sourceInfo=await media.probe(input,token);await media.normalize(input,preview,config,token);}
         emit({stage:'正在生成帧预览',progress:0.9});
         const item=await media.describe(preview,source,id,directory,token);
-        items.set(id,{...item,previewPath:preview});imported.push(item);
+        const sourceWidth=svgDimensions?.sourceWidth||sourceInfo.width,sourceHeight=svgDimensions?.sourceHeight||sourceInfo.height;
+        const originalInfo={sourceWidth,sourceHeight,hasAudio:Boolean(sourceInfo?.hasAudio)};
+        const sourceIsStill=extension!=='svg'&&['png','jpg','jpeg','heic','heif','bmp','tif','tiff','webp'].includes(extension)&&sourceInfo.duration<=0;
+        items.set(id,{...item,...originalInfo,previewPath:preview,sourcePath:extension==='svg'?preview:input,sourceIsStill,sourceHasAlpha:sourceInfo?.hasAlpha||false,svgPath:extension==='svg'?input:null,background:config.background,svgDuration:config.svgDuration});imported.push({...item,...originalInfo});
       }catch(error){await fs.rm(directory,{recursive:true,force:true});if(token.cancelled)throw error;failures.push(path.basename(source)+'：'+error.message);}
     }
     if(!imported.length)throw new Error(failures.join('\n')||'未导入素材');
@@ -53,7 +57,17 @@ async function importPaths(paths,options){
     return imported;
   });
 }
-function safeName(text){const name=String(text).replace(/[<>:"/\\|?*\x00-\x1f]/g,'_').replace(/[. ]+$/g,'').slice(0,90)||'Relive';return /^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i.test(name)?'Relive_'+name:name;}
+function safeName(text){const name=String(text).replace(/[<>:"/\\|?*\x00-\x1f]/g,'_').slice(0,90).replace(/[. ]+$/g,'')||'Relive';return /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(name)?'Relive_'+name:name;}
+function exportName(item,config){if(config.name!==undefined&&typeof config.name!=='string')throw new Error('请输入有效的文件名。');return safeName(config.name??item.name);}
+async function exportSource(item,config,directory,token){
+  if(!item.svgPath)return item;
+  const native={...item,sourceWidth:item.width,sourceHeight:item.height};
+  const requested=media.geometry(item,config),available=media.geometry(native,{...config,maxSide:0});
+  if(requested.width<=available.width&&requested.height<=available.height)return native;
+  const sourcePath=path.join(directory,'svg-original.mp4');
+  const dimensions=await renderSVG(item.svgPath,sourcePath,{svgDuration:item.svgDuration,background:item.background,maxSide:0},token);
+  return{...item,sourcePath,sourceWidth:dimensions.width,sourceHeight:dimensions.height};
+}
 async function exportItem(config){
   const item=items.get(config?.id);if(!item)throw new Error('请选择已导入的素材。');
   if(typeof config.outputDir!=='string')throw new Error('请选择导出文件夹。');
@@ -63,12 +77,13 @@ async function exportItem(config){
     const directory=path.join(workspace,'export-'+randomUUID());await fs.mkdir(directory);
     let temporary;
     try{
-      const prepared=await media.exportClip(item,config,directory,token);
+      const original=await exportSource(item,config,directory,token);
+      const prepared=await media.exportClip(original,config,directory,token);
       emit({stage:'正在写入实况封面和时间标记',progress:0.8});
       const result=await writeLivePhoto({jpegPath:prepared.jpeg,movPath:prepared.movie,outputDir:directory,name:'LivePhoto',coverTime:prepared.coverTime,fps:prepared.fps});
       token.check();await validateLivePhoto({packagePath:result.packagePath});
       await fs.mkdir(output,{recursive:true});
-      let name=safeName(item.name),destination=path.join(output,name+'.pvt'),number=2;
+      let name=exportName(item,config),destination=path.join(output,name+'.pvt'),number=2;
       while(await fs.stat(destination).then(()=>true,()=>false)){destination=path.join(output,name+' '+number+'.pvt');number++;}
       temporary=path.join(output,'.Relive-'+randomUUID()+'.pvt');await fs.cp(result.packagePath,temporary,{recursive:true,errorOnExist:true,force:false});token.check();
       // Claim a new empty destination before moving files so even concurrent exporters cannot overwrite a package.
@@ -91,10 +106,28 @@ async function exportWebP(config){
     const directory=path.join(workspace,'export-'+randomUUID());await fs.mkdir(directory);
     let destination,delivered=false;
     try{
-      const result=await createWebP(item,config,directory,token);token.check();
-      destination=await saveWebP(result.filePath,output,safeName(item.name),token);token.check();
+      const original=await exportSource(item,config,directory,token);
+      const result=await createWebP(original,config,directory,token);token.check();
+      destination=await saveWebP(result.filePath,output,exportName(item,config),token);token.check();
       exportedPaths.add(destination);
       emit({stage:result.isAnimated?'WebP 动图已导出 · 已通过尺寸、循环与时长检查':'静态 WebP 已导出 · 素材画面没有变化',progress:1});
+      delivered=true;return{...result,filePath:destination};
+    }finally{if(destination&&!delivered)await fs.rm(destination,{force:true});await fs.rm(directory,{recursive:true,force:true});}
+  });
+}
+async function exportMedia(config){
+  const item=items.get(config?.id);if(!item)throw new Error('请选择已导入的素材。');
+  if(typeof config.outputDir!=='string')throw new Error('请选择导出文件夹。');
+  const output=path.resolve(config.outputDir);if(!chosenDirectories.has(output))throw new Error('请从操作台选择导出文件夹。');
+  if(!media.mediaFormats.has(config.format))throw new Error('请选择支持的导出格式。');
+  return job(async token=>{
+    const directory=path.join(workspace,'export-'+randomUUID());await fs.mkdir(directory);
+    let destination,delivered=false;
+    try{
+      const original=config.format==='mp3'||config.format==='wav'?item:await exportSource(item,config,directory,token);
+      const result=await media.createMedia(original,config,directory,token);token.check();
+      destination=await media.saveFile(result.filePath,output,exportName(item,config),config.format,token);token.check();
+      exportedPaths.add(destination);emit({stage:config.format.toUpperCase()+' 已导出 · 已通过媒体检查',progress:1});
       delivered=true;return{...result,filePath:destination};
     }finally{if(destination&&!delivered)await fs.rm(destination,{force:true});await fs.rm(directory,{recursive:true,force:true});}
   });
@@ -106,7 +139,7 @@ function register(name,handler){ipcMain.handle(name,(event,...args)=>{
 async function initialize(){
   workspace=await fs.mkdtemp(path.join(os.tmpdir(),'Relive-'));
   settingsFile=path.join(app.getPath('userData'),'settings.json');
-  settings={outputDir:path.join(app.getPath('pictures'),'Relive 导出'),svgDuration:3,background:'#FFFFFF',maxSide:1080,keepAudio:true};
+  settings={outputDir:path.join(app.getPath('pictures'),'Relive 导出'),svgDuration:3,background:'#FFFFFF',maxSide:1080,quality:'standard',keepAudio:true};
   try{const stored=JSON.parse(await fs.readFile(settingsFile,'utf8'));if(typeof stored.outputDir==='string')settings.outputDir=path.resolve(stored.outputDir);}catch{}
   chosenDirectories.add(path.resolve(settings.outputDir));
   session.defaultSession.setPermissionRequestHandler((_contents,_permission,callback)=>callback(false));
@@ -119,11 +152,12 @@ async function initialize(){
   register('choose-directory',async()=>{const selected=await dialog.showOpenDialog(mainWindow,{title:'选择导出位置',defaultPath:settings.outputDir,properties:['openDirectory','createDirectory']});if(selected.canceled)return null;settings.outputDir=path.resolve(selected.filePaths[0]);chosenDirectories.add(settings.outputDir);await fs.mkdir(path.dirname(settingsFile),{recursive:true});await fs.writeFile(settingsFile,JSON.stringify(settings));return settings.outputDir;});
   register('export-live-photo',exportItem);
   register('export-webp',exportWebP);
+  register('export-media',exportMedia);
   register('reveal',target=>{if(!exportedPaths.has(target))throw new Error('请选择本次导出的文件');shell.showItemInFolder(target);});
   register('open-result',async target=>{if(!exportedPaths.has(target))throw new Error('请选择本次导出的文件');const failure=await shell.openPath(target);if(failure)throw new Error(failure);});
   ipcMain.on('cancel',event=>{if(event.sender===mainWindow.webContents)activeJob?.cancel();});
   await mainWindow.loadFile(index);
-  return{workspace,importPaths,exportItem,exportWebP,items,chosenDirectories,mainWindow};
+  return{workspace,importPaths,exportItem,exportWebP,exportMedia,items,chosenDirectories,mainWindow};
 }
 
 app.whenReady().then(async()=>{

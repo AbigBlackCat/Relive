@@ -19,6 +19,7 @@
     <symbol id="i-next" viewBox="0 0 24 24"><path d="M18 5v14M6 5l10 7-10 7Z"/></symbol>
     <symbol id="i-photo" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8" cy="9" r="1.5"/><path d="m4 18 6-6 4 4 3-3 4 5"/></symbol>
     <symbol id="i-scissors" viewBox="0 0 24 24"><circle cx="5" cy="6" r="3"/><circle cx="5" cy="18" r="3"/><path d="m7.5 7.5 13 13M7.5 16.5l13-13"/></symbol>
+    <symbol id="i-crop" viewBox="0 0 24 24"><path d="M6 3v15h15M3 6h15v15"/></symbol>
     <symbol id="i-export" viewBox="0 0 24 24"><path d="M12 15V3m-4 4 4-4 4 4M4 12v9h16v-9"/></symbol>
     <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 20V4h7l2 3h9v13Z"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-5-5 5 5-5 5"/></symbol>
@@ -31,7 +32,7 @@
     <header class="toolbar">
       <div class="brand"><svg class="icon brand-icon" aria-hidden="true"><use href="#i-live"/></svg><h1>Relive</h1></div>
       <span class="toolbar-divider" aria-hidden="true"></span>
-      <p class="tagline">把喜欢的瞬间，变成实况与动图</p>
+      <p class="tagline">实况、动图与影音转换</p>
       <span class="local-label">本地处理</span>
       <button class="button" id="import-button" data-edit><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>导入素材</button>
     </header>
@@ -58,16 +59,30 @@
 
       <section class="editor" aria-label="预览与时间线">
         <div class="panel preview-panel">
-          <div class="panel-heading preview-heading"><h2>预览</h2><span id="preview-name" class="muted ellipsis"></span><span class="aspect-label muted">原始比例</span></div>
+          <div class="panel-heading preview-heading"><h2>预览</h2><span id="preview-name" class="muted ellipsis"></span><span class="aspect-label muted" id="aspect-label">原始比例</span><button class="text-button preview-crop-button" id="edit-crop" data-edit data-media aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-crop"/></svg><span id="crop-button-label">裁切画面</span></button></div>
           <div class="preview-stage" id="preview-stage">
             <video id="preview" playsinline preload="metadata" hidden aria-label="素材预览"></video>
+            <div class="crop-overlay" id="crop-overlay" hidden aria-label="画面裁切编辑区域">
+              <div class="crop-selection" id="crop-selection" tabindex="0" role="group" aria-label="裁切选框，可拖动移动，方向键微调位置">
+                <span class="crop-grid" aria-hidden="true"></span>
+                <button type="button" class="crop-handle crop-nw" data-crop-handle="nw" aria-label="调整裁切左上角"></button>
+                <button type="button" class="crop-handle crop-n" data-crop-handle="n" aria-label="调整裁切上边缘"></button>
+                <button type="button" class="crop-handle crop-ne" data-crop-handle="ne" aria-label="调整裁切右上角"></button>
+                <button type="button" class="crop-handle crop-e" data-crop-handle="e" aria-label="调整裁切右边缘"></button>
+                <button type="button" class="crop-handle crop-se" data-crop-handle="se" aria-label="调整裁切右下角"></button>
+                <button type="button" class="crop-handle crop-s" data-crop-handle="s" aria-label="调整裁切下边缘"></button>
+                <button type="button" class="crop-handle crop-sw" data-crop-handle="sw" aria-label="调整裁切左下角"></button>
+                <button type="button" class="crop-handle crop-w" data-crop-handle="w" aria-label="调整裁切左边缘"></button>
+              </div>
+            </div>
             <div class="preview-empty" id="preview-empty">
               <svg class="icon empty-live" aria-hidden="true"><use href="#i-live"/></svg>
-            <h2>制作实况与动图</h2>
-            <p>导入视频、GIF 或 SVG<br>选取喜欢的片段，然后导出。</p>
+            <h2>把素材变成你需要的格式</h2>
+            <p>导入视频、GIF 或 SVG<br>选取片段，导出实况、动图、视频或音频。</p>
               <button class="button" id="empty-import-button" data-edit><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>导入素材</button>
             </div>
           </div>
+          <div class="crop-toolbar" id="crop-toolbar" hidden><span id="crop-summary" class="muted numeric" role="status">拖动画面选取范围，拖动边角调整</span><button class="text-button" id="reset-crop" data-edit>恢复完整画面</button><button class="button" id="done-crop" data-edit>完成裁切</button></div>
           <div class="player-controls">
             <div class="transport">
               <button class="button icon-button" id="previous-frame" data-edit data-media aria-label="上一帧" title="上一帧 · ←"><svg class="icon" aria-hidden="true"><use href="#i-back"/></svg></button>
@@ -92,7 +107,12 @@
         <div class="inspector-content">
           <section class="setting-section" aria-labelledby="format-heading">
             <h3 id="format-heading">输出格式</h3>
-            <select id="export-format" data-edit aria-labelledby="format-heading" aria-describedby="format-hint"><option value="livePhoto">Live Photo</option><option value="webp">WebP 动图</option></select>
+            <select id="export-format" data-edit aria-labelledby="format-heading" aria-describedby="format-hint">
+              <optgroup label="实况"><option value="livePhoto">Live Photo</option></optgroup>
+              <optgroup label="动图"><option value="webp">WebP 动图</option><option value="gif">GIF 动图</option></optgroup>
+              <optgroup label="视频"><option value="mp4">MP4 视频</option><option value="mov">MOV 视频</option><option value="mkv">MKV 视频</option><option value="webm">WebM 视频</option></optgroup>
+              <optgroup label="音频"><option value="mp3">MP3 音频</option><option value="wav">WAV 音频</option></optgroup>
+            </select>
             <p class="hint" id="format-hint">选取独立封面，可保留原声音。</p>
           </section>
 
@@ -115,8 +135,11 @@
 
           <section class="setting-section" aria-labelledby="output-heading">
             <h3 id="output-heading"><svg class="icon" aria-hidden="true"><use href="#i-export"/></svg>输出</h3>
-            <label for="max-side" class="field-label">最长边 <span class="muted">像素</span></label>
-            <select id="max-side" data-edit><option value="1080">1080</option><option value="1920">1920</option></select>
+            <label for="max-side" class="field-label" id="quality-label">清晰度</label>
+            <select id="max-side" data-edit aria-describedby="quality-hint">
+              <option value="0">原画质</option><option value="1920">高清</option><option value="1080" selected>标准</option><option value="720">省空间</option>
+            </select>
+            <p class="hint" id="quality-hint">最长边不超过 1080 像素，兼顾清晰度与体积。</p>
             <label class="toggle-label" id="audio-setting" for="keep-audio"><span>保留原声音</span><input id="keep-audio" type="checkbox" checked data-edit><span class="switch" aria-hidden="true"></span></label>
             <button class="directory-button" id="choose-directory" data-edit><svg class="icon muted" aria-hidden="true"><use href="#i-folder"/></svg><span><span class="directory-label muted">保存位置</span><span id="output-directory" class="ellipsis">正在读取…</span></span><svg class="icon muted" aria-hidden="true"><use href="#i-arrow"/></svg></button>
           </section>
@@ -131,7 +154,11 @@
           </details>
           <details class="publishing-help" id="webp-help" hidden>
             <summary>关于 WebP 动图</summary>
-            <div class="details-content"><p>按所选片段的原顺序循环播放，不含声音。单帧或完全静止的画面会保存为静态 WebP。</p><p>导出后显示文件大小，可通过裁切或尺寸设置调整体积。小红书是否保留动画，需在你的上传入口确认。</p></div>
+            <div class="details-content"><p>按所选片段的原顺序循环播放，不含声音。单帧或完全静止的画面会保存为静态 WebP。</p><p>WebP 是通用图片格式，适合支持 WebP 动画的网页和应用。可通过片段与清晰度调整文件体积。</p></div>
+          </details>
+          <details class="publishing-help" id="media-help" hidden>
+            <summary id="media-help-title">关于视频导出</summary>
+            <div class="details-content"><p id="media-help-text"></p></div>
           </details>
         </div>
 

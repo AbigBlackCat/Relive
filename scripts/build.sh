@@ -26,6 +26,16 @@ xcrun swiftc -swift-version 5 -O -target "$relive_arch-apple-macosx13.0" Sources
 cp Resources/Info.plist "$relive_app/Contents/Info.plist"
 ditto "$relive_resources/bin" "$relive_app/Contents/Resources/bin"
 ditto "$relive_resources/lib" "$relive_app/Contents/Resources/lib"
+# A native app can still invoke Rosetta if any bundled helper was copied from the other build.
+while IFS= read -r -d '' relive_binary; do
+  if [[ "$(/usr/bin/file -b "$relive_binary")" == *Mach-O* ]]; then
+    relive_slices="$(lipo -archs "$relive_binary")"
+    if [[ "$relive_slices" != "$relive_arch" ]]; then
+      print -u2 "Unexpected architecture in $relive_binary: $relive_slices (expected $relive_arch)"
+      exit 1
+    fi
+  fi
+done < <(find "$relive_app/Contents" -type f -print0)
 mkdir -p "$relive_app/Contents/Resources/licenses"
 for relive_license in licenses/*; do
   [[ "${relive_license:t}" == ffmpeg* ]] && continue
